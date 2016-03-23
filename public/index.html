@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html ng-app="cosmoApp">
+<head>
+	<meta text="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Cosmopolitos</title>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="core.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+
+<body ng-controller="WorldController">
+	<div class="container">
+		
+		<div ng-include="header.html"></div>
+
+		<div class="row" id="gamespace">
+    
+		    <div class="col-xs-12 col-md-push-3 col-md-6">
+
+		        <div class="row">
+		            <div class="col-md-12">
+		                <h3 id="sim-name">{{currentSimulation.name}} -- {{currentSimulation.date}}</h3>
+		            </div>
+		        </div>
+<!-- 
+		        <div class="row">
+		            <div class="col-md-12" >
+		                <canvas id="canvas" width="800px" height="600px"></canvas>
+		                <canvas id="backCanvas" width="800px" height="600px" style="display:none;"></canvas>
+		            </div>
+		        </div> -->
+
+		        <div class="row">
+		            <div class="col-md-12">
+		                <h4>Map Settings:</h4>
+		                <div class="hidden-xs">
+		                    <div class="btn-group btn-group-md" data-toggle="buttons">
+		                        <label onclick='changeType("depth")' class="btn btn-default">
+		                            <input type="radio" value="1" /> Depth
+		                        </label>
+		                        <label onclick='changeType("height")' class="btn btn-default">
+		                            <input type="radio" value="2" /> Height
+		                        </label>
+		                        <label onclick='changeType("tectonic")' class="btn btn-default">
+		                            <input type="radio" value="3" /> Tectonic
+		                        </label>
+		                        <label onclick='changeType("satellite")' class="btn btn-default down">
+		                            <input type="radio" value="4" /> Satellite
+		                        </label>
+
+
+		                        <label  onclick='changeType("sunlight")' class="btn btn-default">
+		                            <input type="radio" value="5" /> Sunlight
+		                        </label>
+		                        <label onclick='changeType("rainfall")' class="btn btn-default">
+		                            <input type="radio" value="6" /> Rainfall
+		                        </label>
+
+
+		                        <label onclick='changeType("soilNutro")' class="btn btn-default">
+		                            <input type="radio" value="7" /> Avg. Soil Nutro
+		                        </label>
+		                        <label onclick='changeType("soilNucium")' class="btn btn-default">
+		                            <input type="radio" value="8" /> Avg. Soil Nucium
+		                        </label>
+		                        <label onclick='changeType("soilNutrients")' class="btn btn-default">
+		                            <input type="radio" value="9" /> Avg. Soil Nutrients
+		                        </label>                        
+
+
+		                        <label onclick='changeType("nutroStores")' class="btn btn-default">
+		                            <input type="radio" value="10" /> Avg. Nutro Stores
+		                        </label>
+		                        <label onclick='changeType("nuciumStores")' class="btn btn-default">
+		                            <input type="radio" value="11" /> Avg. Nucium Stores
+		                        </label>
+		                        <label onclick='changeType("waterStores")' class="btn btn-default">
+		                            <input type="radio" value="12" /> Avg. Water Stores
+		                        </label>
+		                    </div>
+		                    <button class="btn btn-default" data-toggle="button" onclick='toggleShowPlantCount()' type="button">Toggle Plant Count</button>
+		                </div>
+		                <div class="visible-xs">
+		                    <select class="form-control" id="mapSettingsOptions">
+		                        <option value="depth"> Depth </option>
+		                        <option value="height"> Height </option>
+		                        <option value="tectonic"> Tectonic </option>
+		                        <option value="satellite"> Satellite </option>
+		                        <option value="sunlight"> Sunlight </option>
+		                        <option value="rainfall"> Rainfall </option>
+		                    </select>
+		                </div>
+		                
+		            </div>
+		        </div>
+		    </div>
+
+		    <div class="col-xs-6 col-md-pull-6 col-md-3" id="left-sidebar"> 
+		        <div class="row sidebar">
+		            <h3>Worlds</h3>
+		            <form>
+	                    <div class="form-group">
+
+	                        <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+	                        Name
+	                        <input type="text" class="form-control input-lg text-center" ng-model="formData.name">
+	                        <button type="submit" class="btn btn-primary btn-lg" ng-click="randomName()">Generate Name</button>
+	                        <button type="submit" class="btn btn-primary btn-lg" ng-click="createSim()">Create New World</button>
+	                    </div>
+	                    
+	                </form>
+		            <div ng-repeat="sim in sims">
+	                    <label>
+	                    	<div class="clickable" ng-click="pickSim(sim)">{{sim.name}} -- Anno Domini {{sim.date}}</div>&nbsp;
+	                    	<div class="clickable" ng-click="deleteSim(sim._id)">x</div>
+	                    </label>
+	                    
+	                </div>
+		        </div>
+		    </div>
+
+		    <div class="col-xs-6 col-md-3" id="right-sidebar">
+		    
+		    </div>
+		</div>
+		
+		<div id="sim-form" class="row">
+			<div class="col-sm-8 col-sm-offset-2 text-center">
+				
+		</div>
+	</div>
+</body>
+</html>
