@@ -7,8 +7,9 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var methodOverride = require('method-override');
 
-var app = express();
+var cosmo = require('cosmo');
 
+var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({'extended':'true'}));
@@ -43,6 +44,13 @@ var Simulations = mongoose.model('Simulations',
 //  Add a new simulation
 app.post('/apis/worlds', function(req,res)
 {	
+	cosmo.createSimulation(
+		req.body.name,
+		function(err, cosmoSim) {
+			if(err)
+				res.send(err);
+		});
+
 	//Create world
 	Simulations.create(
 		{
@@ -158,3 +166,5 @@ app.post('/apis/worlds/stop/:worldname',function(req,res)
 });
 
 app.listen(3000);
+
+
