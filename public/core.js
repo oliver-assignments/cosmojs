@@ -5,6 +5,66 @@ function($scope,$http){
 	$scope.formData = {};
 	$scope.currentSimulation = {};
 
+	$scope.requestData = {};
+
+	$scope.getSimulationRequests = function()
+	{
+		$http.get('/apis/requests')
+			.success(function(data){
+				$scope.simulationRequests = data;
+			})
+			.error(function(data)
+			{
+				console.log('Get simulation requests error: ' + data);
+			});
+	};
+	$scope.createSimulationRequest = function(name,years)
+	{
+		//console.log('Creating simulation request for ' + name + ' for ' + years + ' year.');
+
+		$http.post('/apis/requests', {name:name,years:years})
+			.success(function(data){
+				$scope.requestData = {};
+				$scope.simulationRequests = data;
+			})
+			.error(function(data)
+			{
+				console.log('Create simulation requests error: ' + data);
+			});
+	};
+	$scope.clearSimulationRequests = function()
+	{
+		$http.delete('/apis/requests')
+			.success(function(data){
+				$scope.simulationRequests = data;
+			})
+			.error(function(data){
+				console.log('Clear simulation requests error: ' + data);
+			});
+	};
+	$scope.deleteSimulationsRequests = function(name)
+	{
+		console.log('Attempting to delete all ' + name + " requests.")
+		$http.delete('/apis/requests/' + name)
+			.success(function(data){
+				$scope.simulationRequests = data;
+			})
+			.error(function(data){
+				console.log('Delete ' + name +' simulation request error: ' + data);
+			});
+	};
+	$scope.processSimulationRequests = function()
+	{
+		$http.post('/apis/requests/process')
+		.success(function(data){
+			$scope.simulationRequests = data.requests;
+			$scope.sims = data.simulations;
+		})
+		.error(function(data){
+			console.log('Process simulation requests error: ' + data);
+		});	
+	};
+
 	$scope.pickFirstSim = function()
 	{
 		if($scope.sims.length>0){
@@ -37,18 +97,17 @@ function($scope,$http){
 			})
 			.error(function(data)
 			{
-				console.log('Cannot find simulations.');
+				console.log('Cannot find simulations. ' +data);
 			});
 	};
 
 	$scope.createSim = function()
 	{
-		console.log("Attempting to create " + $scope.formData.name);
+		//console.log("Attempting to create " + $scope.formData.name);
 
 		$http.post('/apis/worlds', $scope.formData)
 			.success(function(data){
 				$scope.formData = {};
-				$scope.randomName();
 				$scope.sims = data;
 				$scope.pickLastSim();
 			})
@@ -59,7 +118,9 @@ function($scope,$http){
 	};
 	$scope.deleteSim = function(id) 
 	{
-		console.log("Attempting to delete " + id);
+		//console.log("Attempting to delete " + id);
+		
+		$scope.deleteSimulationsRequests(id);
 
 		$http.delete('/apis/worlds/' + id)
 			.success(function(data)
@@ -102,7 +163,7 @@ function($scope,$http){
 
 	$scope.deleteSims = function()
 	{
-		console.log('Attempting to delete all sims.');
+		//console.log('Attempting to delete all sims.');
 
 		$http.delete('/apis/worlds/' + id)
 			.success(function(data)
@@ -117,81 +178,22 @@ function($scope,$http){
 			});	
 	};
 
-	$scope.startApp = function(){
-		$http.get('/apis/worlds')
-			.success(function(data){
-				$scope.sims = data;
-				
-				$scope.pickFirstSim();
-			})
-			.error(function(data)
-			{
-				console.log('Cannot find simulations.');
-			});
+	$scope.startApp = function() { 
+		
+		$scope.getSims();
+		$scope.getSimulationRequests();
 	};
 
-	$scope.startSimulation = function(sim)
-	{
-		$http.post('/apis/worlds/start/' + sim.name)
-		.success(function(){
+	// $scope.startSimulation = function(sim)
+	// {
+	// 	$http.post('/apis/worlds/start/' + sim.name)
+	// 	.success(function(){
 
-		})
-		.error(function(){
+	// 	})
+	// 	.error(function(){
 
-		});
-	};
-	
-	$scope.generateName = function()
-	{
-		var name = "";
-        for (var i = 0; i < 6; i++)
-        {
-            if (i % 2 == 0)//We want a consonant
-            {
-                var index = 0;
-
-                //If you found a vowel keep looking
-                while (index == 0 || index == 4 || index == 8 || index == 14 || index == 20)
-                {
-                    index = Math.floor(Math.random() * 26);  
-                }
-
-                //We found our consonant
-                var next_letter = String.fromCharCode(97 + index);
-
-                //Add the character
-                name += next_letter;
-
-                //If its a q add the u
-                if (next_letter == 'q')
-                {
-                    name += "u";
-                }
-            }
-            else//We are looking for a vowel
-            {
-                var index = 1;
-
-                //If you found a vowel keep looking
-                while (index != 0 && index != 4 && index != 8 && index != 14 && index != 20)
-                {
-                    index = Math.floor(Math.random() * 26);
-                }
-
-                var next_letter = String.fromCharCode(97 + index);
-
-                //Add the character
-                name += next_letter;
-            }
-        }
-        return name.charAt(0).toUpperCase() + name.slice(1);
-	};
-
-	$scope.randomName = function()
-	{
-		$scope.formData.name = $scope.generateName();
-	};
+	// 	});
+	// };
 	
 	$scope.startApp();
-	$scope.randomName();
 }]);

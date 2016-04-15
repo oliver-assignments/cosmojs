@@ -1,6 +1,6 @@
 // var http = require('http');
 // var dispatch = require("httpdispatcher");
-var express = require("express");
+var express = require('express');
 var path = require('path');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
@@ -17,8 +17,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({type:'application/vnd.api+json'}));
 app.use(methodOverride());
 
-mongoose.connect('mongodb://localhost/cosmo');
 
+
+//  Pages
 app.get('/new-sim', function(req,res)
 {
 	res.sendFile(path.join(__dirname + '/public/new-sim.html'));
@@ -29,129 +30,170 @@ app.get('/about', function(req,res)
 	res.sendFile(path.join(__dirname + 'public/about.html'));
 });
 
+//  Load main page with top world, playing at newest possibel date
 app.get('/', function(req,res)
 {
 	res.sendFile(path.join(__dirname + 'public/index.html'));
 });
-
-//  Cosmo API	//
-var Simulations = mongoose.model('Simulations', 
+//  Load main page with inputted world, playing at newest possible date
+app.get('/worlds/:worldname',function(req,res)
 {
-	name: String,
-	date: String
+	res.sendFile(path.join(__dirname + 'public/index.html'));
 });
+//  Load main page with inputted world at date, not playing
+app.get('/worlds/:worldname/:year/:month/:day',function(req,res)
+{
+	res.sendFile(path.join(__dirname + 'public/index.html'));
+});
+
+//  API's 	//
+
+//  Request API
+
+//  Get all simulation requests
+app.get('/apis/requests',function(req,res)
+{
+	cosmo.getSimulationRequests(function(err,requests)
+		{
+			if(err)
+				res.send(err);
+			res.json(requests);
+		});
+});
+//  Post new simulation request
+app.post('/apis/requests',function(req,res)
+{
+	cosmo.queueSimulationRequest(req.body,
+		function(err,requests)
+		{
+			if(err)
+				res.send(err);
+			res.json(requests);
+		});
+});
+//  Clear simulation requests
+app.delete('/apis/requests',function(req,res)
+{
+	console.log("Deleting requests with: " + req.body);
+
+	cosmo.clearSimulationRequests(
+		function(err,requests)
+		{
+			if(err)
+				res.send(err);
+			res.json(requests);
+		});
+});
+//  Delete all simulation requests of worldname
+app.delete('/apis/requests/:name',function(req,res)
+{
+	cosmo.deleteSimulationRequestsForWorld(req.params,
+		function(err,requests)
+		{
+			if(err)
+				res.send(err);
+			res.json(requests);
+		});
+});
+app.post('/apis/requests/process',function(req,res)
+{
+	cosmo.processSimulationRequests(
+		function(err,requestsAndSimulations)
+		{
+			if(err)
+				res.send(err);
+			res.json(requestsAndSimulations);
+		});
+});
+
+//  Renderer API
+
+//  Return color delta file comparing what is passed to what is requested
+app.get('/apis/renderer/:worldname/:year/:month/:day',function(req,res)
+{
+
+});
+
+//  Simulation Information API
 
 //  Add a new simulation
 app.post('/apis/worlds', function(req,res)
 {	
-	cosmo.createSimulation(
-		req.body.name,
-		function(err, cosmoSim) {
-			if(err)
-				res.send(err);
-		});
-
-	//Create world
-	Simulations.create(
-		{
-			name: req.body.name,
-			date: "Jannon 1st, 0 B.C."
-		}, 
-		function(err,sim)
+	cosmo.createSimulation(req.body, 
+		function(err,sims)
 		{
 			if(err)
 				res.send(err);
 
-			//  Now that we have a new sim
-			Simulations.find(function(err,sims) {
-				
-				if(err)
-					res.send(err);
-
-				res.json(sims);			
-			});
+			res.json(sims);			
+			
 		});	
 });
 
 //  Get all the simulations
 app.get('/apis/worlds', function(req,res)
 {
-	Simulations.find(function(err,sims){
+	cosmo.getSimulations(
+		function(err,sims)
+		{
 			if(err)
 				res.send(err);
 
 			res.json(sims);			
-		});
+			
+		});	
 });
 
-//  Detele a simulation
-app.delete('/apis/worlds/:sim_id', function(req,res)
+//  Deletse a simulation
+app.delete('/apis/worlds/:name', function(req,res)
 {
-	Simulations.remove({
-		_id : req.params.sim_id
-
-	}, function(err,sim){
-
-		if(err)
-			res.send(err);
-
-		Simulations.find(function(err,sims){
+	cosmo.deleteSimulation(req.params.name,
+		function(err,sims)
+		{
 			if(err)
 				res.send(err);
 
 			res.json(sims);			
-		});
 	});
 });
 
-app.delete('/api/worlds/', function(req,res)
+app.delete('/apis/worlds/', function(req,res)
 {
-	Simulations.remove({}, 
-		function(err,sim){
-
-		if(err)
-			res.send(err);
-
-		Simulations.find(function(err,sims){
+	cosmo.clearSimulations(
+		function(err,sims)
+		{
 			if(err)
 				res.send(err);
 
 			res.json(sims);			
-		});
 	});
 });
 
-// //  Navigate to index but with this world selected
-// app.get('/apis/worlds/:worldname', function(req,res)
-// {
-	
-// 	console.log(req.params.worldname);
-// });
 
-// //  Gets the current date of all the sims
-// app.get('/apis/worlds/current-date', function(req,res)
-// {
+//  Gets the current date of all the sims
+app.get('/apis/worlds/current-date', function(req,res)
+{
 
-// });
+});
 
-// //  Gets the current date of the simulation so that you dont pull redundant data
-// app.get('/apis/worlds/current-date/:worldname', function(req,res)
-// {
+//  Gets the current date of the simulation so that you dont pull redundant data
+app.get('/apis/worlds/current-date/:worldname', function(req,res)
+{
 
-// });
+});
 
-// //  Gets the current data of a world
-// app.get('/apis/worlds/current-world-data/:worldname', function(req,res)
-// {
+//  Gets the current data of a world
+app.get('/apis/worlds/current-world-data/:worldname', function(req,res)
+{
 	 
-// 	console.log(req.params.worldname);
-// });
+	console.log(req.params.worldname);
+});
 
-// //  Get teh world data at a specifc date
-// app.get('/apis/worlds/world-data/:worldname/:day/:month/:year', function(req,res)
-// {
+//  Get teh world data at a specifc date
+app.get('/apis/worlds/world-data/:worldname/:day/:month/:year', function(req,res)
+{
 
-// });
+});
 
 //  Starts a simulation if it is not currently running
 app.post('/apis/worlds/start/:worldname',function(req,res)

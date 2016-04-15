@@ -6,10 +6,11 @@
 
 	<title>Cosmopolitos</title>
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+
     <script src="core.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
 
 </head>
 
@@ -24,7 +25,7 @@
 
 		        <div class="row">
 		            <div class="col-md-12">
-		                <h3 id="sim-name">{{currentSimulation.name}} -- {{currentSimulation.date}}</h3>
+		                <h3 id="sim-name">{{currentSimulation.name}} -- {{currentSimulation.year}}</h3>
 		            </div>
 		        </div>
 <!-- 
@@ -101,23 +102,40 @@
 		    </div>
 
 		    <div class="col-xs-6 col-md-pull-6 col-md-3" id="left-sidebar"> 
+		    	<div class="row sidebar">
+		    		<h3>Simulation Requests</h3>
+		    		<button ng-click="processSimulationRequests()">Process</button>
+		    		<div ng-repeat="request in simulationRequests">
+		    			<label>
+		    				<p>{{request.name}} for {{request.years}} years
+		    				<span class="clickable" ng-click="deleteSimulationsRequests(request.name)">X</span></p>
+		    			</label>
+		    		</div>
+		    	</div>
+		    	 
 		        <div class="row sidebar">
 		            <h3>Worlds</h3>
 		            <form>
 	                    <div class="form-group">
-
-	                        <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
 	                        Name
 	                        <input type="text" class="form-control input-lg text-center" ng-model="formData.name">
-	                        <button type="submit" class="btn btn-primary btn-lg" ng-click="randomName()">Generate Name</button>
-	                        <button type="submit" class="btn btn-primary btn-lg" ng-click="createSim()">Create New World</button>
+	                        <button type="submit" class="btn btn-primary btn-lg" ng-click="createSim()">Create World</button>
 	                    </div>
-	                    
 	                </form>
 		            <div ng-repeat="sim in sims">
 	                    <label>
-	                    	<div class="clickable" ng-click="pickSim(sim)">{{sim.name}} -- Anno Domini {{sim.date}}</div>&nbsp;
-	                    	<div class="clickable" ng-click="deleteSim(sim._id)">x</div>
+	                    	<span class="clickable" ng-click="pickSim(sim)">{{sim.name}}</span> 
+	                    	Anno Domini {{sim.month}} {{sim.day}}, {{sim.year}}
+
+	                    	Request simulation for:
+	                    	<span class="clickable" ng-click="createSimulationRequest(sim.name,1)">1</span>,
+	                    	<span class="clickable" ng-click="createSimulationRequest(sim.name,10)">10</span>,
+	                    	<span class="clickable" ng-click="createSimulationRequest(sim.name,25)">25</span>,
+	                    	<span class="clickable" ng-click="createSimulationRequest(sim.name,100)">100</span>
+	                    	(years)
+	                    	<span class="clickable" ng-click="deleteSim(sim.name)">x</span>
+
+	                    	
 	                    </label>
 	                    
 	                </div>
