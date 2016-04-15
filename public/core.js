@@ -3,15 +3,25 @@ var cosmoApp = angular.module('cosmoApp', []);
 cosmoApp.controller('WorldController', ['$scope',"$http",
 function($scope,$http){
 	$scope.formData = {};
-	$scope.currentSimulation = {};
-
 	$scope.requestData = {};
+
+
 
 	$scope.months = [
 	"January", "February", "March", "April",
 	"May", "June", "July", "August", 
 	"September", "October","November","December"
 	];
+	$scope.modes = [
+		{name:"Geo",     modes : ["Depth","Height","Tectonic","Satellite"]},
+		{name:"Weather", modes : ["Sunlight", "Rainfall"]},
+		{name:"Soil",    modes : ["Nutro", "Nucium", "Nutrients"]},
+		{name:"Plant",   modes : ["Nutro Stores", "Nucium Stores", "Water Stores", "Nutrient Stores"]}
+	];
+
+	$scope.currentSimulation = {};
+	$scope.currentMapSetting = $scope.modes[0].modes[0];
+	$scope.playing = false;
 
 	$scope.getSimulationRequests = function()
 	{
@@ -190,16 +200,13 @@ function($scope,$http){
 		$scope.getSimulationRequests();
 	};
 
-	// $scope.startSimulation = function(sim)
-	// {
-	// 	$http.post('/apis/worlds/start/' + sim.name)
-	// 	.success(function(){
+	$scope.changeMapMode = function(mode)
+	{
+		if(mode != $scope.currentMapSetting)
+		{
+			$scope.currentMapSetting = mode;
+		}
+	};
 
-	// 	})
-	// 	.error(function(){
-
-	// 	});
-	// };
-	
 	$scope.startApp();
 }]);

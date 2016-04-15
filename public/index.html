@@ -65,7 +65,7 @@
     	    </div>
     	    <div class="col-sm-8">
     	        <div class="row-fluid">
-                    <h3 id="sim-name">{{currentSimulation.name}} -- {{currentSimulation.year}}</h3>
+                    <h3 id="sim-name">{{currentSimulation.name}} -- Anno Domini {{currentSimulation.year}}</h3>
 
                 </div>
                 <div class="row-fluid">
@@ -73,53 +73,21 @@
                     <canvas id="backCanvas" width="960px" height="600px" style="display:none;"></canvas>
                 </div>
                 <div class="row-fluid">
-                
-                    <h4>Map Settings:</h4>
-                    <div class="btn-group btn-group-md" data-toggle="buttons">
-                        <label onclick='changeType("depth")' class="btn btn-default">
-                            <input type="radio" value="1" /> Depth
-                        </label>
-                        <label onclick='changeType("height")' class="btn btn-default">
-                            <input type="radio" value="2" /> Height
-                        </label>
-                        <label onclick='changeType("tectonic")' class="btn btn-default">
-                            <input type="radio" value="3" /> Tectonic
-                        </label>
-                        <label onclick='changeType("satellite")' class="btn btn-default down">
-                            <input type="radio" value="4" /> Satellite
-                        </label>
-
-
-                        <label  onclick='changeType("sunlight")' class="btn btn-default">
-                            <input type="radio" value="5" /> Sunlight
-                        </label>
-                        <label onclick='changeType("rainfall")' class="btn btn-default">
-                            <input type="radio" value="6" /> Rainfall
-                        </label>
-
-
-                        <label onclick='changeType("soilNutro")' class="btn btn-default">
-                            <input type="radio" value="7" /> Avg. Soil Nutro
-                        </label>
-                        <label onclick='changeType("soilNucium")' class="btn btn-default">
-                            <input type="radio" value="8" /> Avg. Soil Nucium
-                        </label>
-                        <label onclick='changeType("soilNutrients")' class="btn btn-default">
-                            <input type="radio" value="9" /> Avg. Soil Nutrients
-                        </label>                        
-
-
-                        <label onclick='changeType("nutroStores")' class="btn btn-default">
-                            <input type="radio" value="10" /> Avg. Nutro Stores
-                        </label>
-                        <label onclick='changeType("nuciumStores")' class="btn btn-default">
-                            <input type="radio" value="11" /> Avg. Nucium Stores
-                        </label>
-                        <label onclick='changeType("waterStores")' class="btn btn-default">
-                            <input type="radio" value="12" /> Avg. Water Stores
-                        </label>
+                    <div class="col-md-4">
+                        <h4>Timeline</h4>
+                        <div ng-repeat="date in timeline">
+                            <div><span class="clickable" ng-click="changeDate(date)">{{date}}</span></div>
+                        </div>
                     </div>
-                    <button class="btn btn-default" data-toggle="button" onclick='toggleShowPlantCount()' type="button">Toggle Plant Count</button>
+                    <div class="col-md-8">
+                        <h4>Map Setting: {{currentMapSetting}}</h4>
+                        <div ng-repeat="mode in modes">
+                            <h4>{{mode.name}}</h4>
+                            <div ng-repeat="map in mode.modes">
+                                <div><span class="clickable" ng-click="changeMapMode(map)">{{map}}</span></div>
+                            </div> 
+                        </div> 
+                    </div>
                 </div>
     		</div>
         </div>
