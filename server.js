@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({type:'application/vnd.api+json'}));
 app.use(methodOverride());
 
-
+app.use(express.static(__dirname + '/public/css'));
 
 //  Pages
 app.get('/new-sim', function(req,res)

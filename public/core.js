@@ -7,6 +7,12 @@ function($scope,$http){
 
 	$scope.requestData = {};
 
+	$scope.months = [
+	"January", "February", "March", "April",
+	"May", "June", "July", "August", 
+	"September", "October","November","December"
+	];
+
 	$scope.getSimulationRequests = function()
 	{
 		$http.get('/apis/requests')
@@ -23,14 +29,14 @@ function($scope,$http){
 		//console.log('Creating simulation request for ' + name + ' for ' + years + ' year.');
 
 		$http.post('/apis/requests', {name:name,years:years})
-			.success(function(data){
-				$scope.requestData = {};
-				$scope.simulationRequests = data;
-			})
-			.error(function(data)
-			{
-				console.log('Create simulation requests error: ' + data);
-			});
+		.success(function(data){
+			$scope.requestData = {};
+			$scope.simulationRequests = data;
+		})
+		.error(function(data)
+		{
+			console.log('Create simulation requests error: ' + data);
+		});
 	};
 	$scope.clearSimulationRequests = function()
 	{
@@ -161,11 +167,11 @@ function($scope,$http){
 			});
 	};
 
-	$scope.deleteSims = function()
+	$scope.clearSims = function()
 	{
 		//console.log('Attempting to delete all sims.');
 
-		$http.delete('/apis/worlds/' + id)
+		$http.delete('/apis/worlds/')
 			.success(function(data)
 			{
 				$scope.sims = data;

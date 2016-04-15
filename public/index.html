@@ -6,11 +6,13 @@
 
 	<title>Cosmopolitos</title>
 
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     <script src="core.js"></script>
-    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
 
 </head>
 
@@ -28,13 +30,13 @@
 		                <h3 id="sim-name">{{currentSimulation.name}} -- {{currentSimulation.year}}</h3>
 		            </div>
 		        </div>
-<!-- 
+
 		        <div class="row">
 		            <div class="col-md-12" >
 		                <canvas id="canvas" width="800px" height="600px"></canvas>
 		                <canvas id="backCanvas" width="800px" height="600px" style="display:none;"></canvas>
 		            </div>
-		        </div> -->
+		        </div>
 
 		        <div class="row">
 		            <div class="col-md-12">
@@ -120,12 +122,13 @@
 	                        Name
 	                        <input type="text" class="form-control input-lg text-center" ng-model="formData.name">
 	                        <button type="submit" class="btn btn-primary btn-lg" ng-click="createSim()">Create World</button>
+	                        <button class="btn btn-primary btn-lg" ng-click="clearSims()">Clear Worlds</button>
 	                    </div>
 	                </form>
 		            <div ng-repeat="sim in sims">
 	                    <label>
 	                    	<span class="clickable" ng-click="pickSim(sim)">{{sim.name}}</span> 
-	                    	Anno Domini {{sim.month}} {{sim.day}}, {{sim.year}}
+	                    	{{months[sim.month]}} {{sim.day+1}}, {{sim.year}}
 
 	                    	Request simulation for:
 	                    	<span class="clickable" ng-click="createSimulationRequest(sim.name,1)">1</span>,
