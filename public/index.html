@@ -107,8 +107,8 @@
 		    		<button ng-click="processSimulationRequests()">Process</button>
 		    		<div ng-repeat="request in simulationRequests">
 		    			<label>
-		    				<p>{{request.name}} for {{request.years}} years
-		    				<span class="clickable" ng-click="deleteSimulationsRequests(request.name)">X</span></p>
+		    				{{request.name}} for {{request.years}} years
+		    				<span class="clickable" ng-click="deleteSimulationsRequests(request.name)">X</span>
 		    			</label>
 		    		</div>
 		    	</div>
