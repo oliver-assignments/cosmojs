@@ -169,42 +169,32 @@ app.delete('/apis/worlds/', function(req,res)
 	});
 });
 
-
-//  Gets the current date of all the sims
-app.get('/apis/worlds/current-date', function(req,res)
+//  Get the basic pacakge of world
+app.get('/apis/worlds/:name/package', function(req,res)
 {
+	//  Return name, dimensions 
+	cosmo.getSimulationPackage(
+		req.params.name,
+		function(err,glimpse)
+		{
+			if(err)
+				res.send(err);
 
-});
-
-//  Gets the current date of the simulation so that you dont pull redundant data
-app.get('/apis/worlds/current-date/:worldname', function(req,res)
-{
-
+			res.json(glimpse);			
+	});
 });
 
 //  Gets the current data of a world
-app.get('/apis/worlds/current-world-data/:worldname', function(req,res)
+app.get('/apis/worlds/:name/current/:mode', function(req,res)
 {
 	 
 	console.log(req.params.worldname);
 });
 
 //  Get teh world data at a specifc date
-app.get('/apis/worlds/world-data/:worldname/:day/:month/:year', function(req,res)
+app.get('/apis/worlds/:name/:year/:month/:day/:mode', function(req,res)
 {
 
-});
-
-//  Starts a simulation if it is not currently running
-app.post('/apis/worlds/start/:worldname',function(req,res)
-{
-
-});
-
-//  Stops a simulation if it is currently running
-app.post('/apis/worlds/stop/:worldname',function(req,res)
-{
-	
 });
 
 //  Utility

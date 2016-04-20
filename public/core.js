@@ -5,13 +5,15 @@ function($scope,$http){
 	$scope.formData = {};
 	$scope.requestData = {};
 
-
+	$scope.canvas = document.getElementById("canvas");
+	$scope.canvasCtx = canvas.getContext("2d");
 
 	$scope.months = [
 	"Janruary", "February", "March", "April",
 	"May", "June", "July", "August", 
 	"September", "October","November","December"
 	];
+
 	$scope.modes = [
 		{name:"Geo",     modes : ["Depth","Height","Tectonic","Satellite"]},
 		{name:"Weather", modes : ["Sunlight", "Rainfall"]},
@@ -19,7 +21,16 @@ function($scope,$http){
 		{name:"Plant",   modes : ["Nutro Stores", "Nucium Stores", "Water Stores", "Nutrient Stores"]}
 	];
 
-	$scope.currentSimulation = {};
+	$scope.currentSimulation = 
+	{
+		name:"No Simulation",
+		month:1,
+		day:1,
+		year:1,
+		columns: 1,
+		rows: 1,
+		colors: {}
+	};
 	$scope.currentMapSetting = $scope.modes[0].modes[0];
 	$scope.playing = false;
 
@@ -83,10 +94,7 @@ function($scope,$http){
 	$scope.pickFirstSim = function()
 	{
 		if($scope.sims.length>0){
-			$scope.currentSimulation = $scope.sims[0];
-		}
-		else{
-			$scope.currentSimulation = {};
+			$scope.currentSimulation = $scope.pickSim($scope.sims[0]);
 		}
 	};
 
@@ -101,7 +109,32 @@ function($scope,$http){
 
 	$scope.pickSim = function(sim)
 	{
-		$scope.currentSimulation = sim;
+		//$scope.currentSimulation = sim;
+		$http.get('/apis/worlds/'+sim.name+'/package')
+		.success(function(data){
+			$scope.currentSimulation.name = data.name;
+			$scope.currentSimulation.columns = data.columns;
+			$scope.currentSimulation.rows = data.rows;
+
+			$scope.currentSimulation.colors = new Array(data.columns*data.rows);
+
+			for(var z = 0 ; z < data.columns*data.rows ; z++)
+			{
+				$scope.currentSimulation.colors = "#99999";
+				$scope.updateColors();
+			}
+		})
+		.error(function(data){
+			console.log('Simulation package error ' + data);
+		});
+	};
+
+	$scope.updateColors = function()
+	{
+		$scope.canvasCtx.save();
+		$scope.canvasCtx.fillStyle = '#aaaaff';
+		$scope.canvasCtx.fillRect(0,0,800,600);
+		$scope.canvasCtx.restore();
 	};
 
 	$scope.getSims = function()
