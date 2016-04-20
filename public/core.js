@@ -8,7 +8,7 @@ function($scope,$http){
 
 
 	$scope.months = [
-	"January", "February", "March", "April",
+	"Janruary", "February", "March", "April",
 	"May", "June", "July", "August", 
 	"September", "October","November","December"
 	];
@@ -122,8 +122,11 @@ function($scope,$http){
 
 		$http.post('/apis/worlds', $scope.formData)
 			.success(function(data){
-				console.log(data);
+				
+				//console.log(data);
+				
 				$scope.formData = {};
+				$scope.fillNameBlank();
 				$scope.sims = data;
 				$scope.pickLastSim();
 			})
@@ -198,6 +201,7 @@ function($scope,$http){
 		
 		$scope.getSims();
 		$scope.getSimulationRequests();
+		$scope.fillNameBlank();
 	};
 
 	$scope.changeMapMode = function(mode)
@@ -206,6 +210,20 @@ function($scope,$http){
 		{
 			$scope.currentMapSetting = mode;
 		}
+	};
+
+	$scope.fillNameBlank = function()
+	{
+		$http.get('/apis/utility/name/generate')
+			.success(function(data)
+			{
+				$scope.formData.name = data;
+			})	
+			.error(function(data)
+			{
+				console.log('Generate name error: ' + data);
+			
+			});	
 	};
 
 	$scope.startApp();

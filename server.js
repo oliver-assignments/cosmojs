@@ -207,6 +207,12 @@ app.post('/apis/worlds/stop/:worldname',function(req,res)
 	
 });
 
+//  Utility
+app.get('/apis/utility/name/generate',function(req,res)
+{
+	res.send(utility.generateName(utility.randomNumberBetween(5,10)));
+});
+
 app.listen(3000);
 
 
