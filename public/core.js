@@ -116,25 +116,41 @@ function($scope,$http){
 			$scope.currentSimulation.columns = data.columns;
 			$scope.currentSimulation.rows = data.rows;
 
-			$scope.currentSimulation.colors = new Array(data.columns*data.rows);
-
-			for(var z = 0 ; z < data.columns*data.rows ; z++)
-			{
-				$scope.currentSimulation.colors = "#99999";
-				$scope.updateColors();
-			}
+			//$scope.currentSimulation.colors = new Array(data.columns*data.rows);
+			$scope.updateColors($scope.currentSimulation.name,$scope.currentMapSetting);
 		})
 		.error(function(data){
 			console.log('Simulation package error ' + data);
 		});
 	};
 
-	$scope.updateColors = function()
+	$scope.updateColors = function(name,mode)
 	{
-		$scope.canvasCtx.save();
-		$scope.canvasCtx.fillStyle = '#aaaaff';
-		$scope.canvasCtx.fillRect(0,0,800,600);
-		$scope.canvasCtx.restore();
+		//canvas.width;
+
+		var width = (canvas.width) / $scope.currentSimulation.columns;
+		var height = canvas.height /$scope.currentSimulation.rows;
+
+		$http.get('/apis/worlds/'+name+'/current/'+mode)
+		.success(function(data) {
+			for(var x = 0 ; x < $scope.currentSimulation.columns;x++){
+				for(var y = 0 ; y < $scope.currentSimulation.rows;y++){
+					var z = (y*$scope.currentSimulation.columns)+x;
+					$scope.canvasCtx.save();
+					$scope.canvasCtx.fillStyle =data[z];
+
+					$scope.canvasCtx.fillRect(width*x,height*y,width,height);
+
+					$scope.canvasCtx.restore();
+
+				}
+			}	
+		})
+		.error(function(data) {
+			console.log("Error updating colors: " + data);
+		});
+
+		
 	};
 
 	$scope.getSims = function()

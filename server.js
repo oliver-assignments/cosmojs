@@ -9,6 +9,7 @@ var methodOverride = require('method-override');
 
 var cosmo = require('cosmo');
 
+
 var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
@@ -187,8 +188,12 @@ app.get('/apis/worlds/:name/package', function(req,res)
 //  Gets the current data of a world
 app.get('/apis/worlds/:name/current/:mode', function(req,res)
 {
-	 
-	console.log(req.params.worldname);
+	cosmo.renderSimulation({name:req.params.name,mode:req.params.mode},
+		function(err,colors) {
+			if(err)res.send(err);
+			res.json(colors);
+		});
+	
 });
 
 //  Get teh world data at a specifc date
@@ -200,7 +205,7 @@ app.get('/apis/worlds/:name/:year/:month/:day/:mode', function(req,res)
 //  Utility
 app.get('/apis/utility/name/generate',function(req,res)
 {
-	res.send(utility.generateName(utility.randomNumberBetween(5,10)));
+	res.send(utility.generateName(utility.randomNumberBetween(5,8)));
 });
 
 app.listen(3000);
