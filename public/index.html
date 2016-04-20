@@ -34,7 +34,7 @@
                         <li ng-repeat="sim in sims">
     	                    
                         	<span class="clickable" ng-click="pickSim(sim)">{{sim.name}}</span> 
-                        	{{months[sim.month]}} {{sim.day+1}}, {{sim.year}} -- Request
+                        	{{months[sim.month-1]}} {{sim.day}}, {{sim.year}} -- Request
                         	<span class="clickable" ng-click="createSimulationRequest(sim.name,1)"> 1</span>,
                         	<span class="clickable" ng-click="createSimulationRequest(sim.name,10)">10</span>,
                         	<span class="clickable" ng-click="createSimulationRequest(sim.name,25)">25</span>,

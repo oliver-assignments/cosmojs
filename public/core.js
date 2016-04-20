@@ -37,7 +37,6 @@ function($scope,$http){
 	$scope.createSimulationRequest = function(name,years)
 	{
 		//console.log('Creating simulation request for ' + name + ' for ' + years + ' year.');
-
 		$http.post('/apis/requests', {name:name,years:years})
 		.success(function(data){
 			$scope.requestData = {};
@@ -123,6 +122,7 @@ function($scope,$http){
 
 		$http.post('/apis/worlds', $scope.formData)
 			.success(function(data){
+				console.log(data);
 				$scope.formData = {};
 				$scope.sims = data;
 				$scope.pickLastSim();
