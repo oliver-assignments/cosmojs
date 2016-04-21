@@ -2,7 +2,7 @@ var cosmoApp = angular.module('cosmoApp', []);
 
 cosmoApp.controller('WorldController', ['$scope',"$http",
 function($scope,$http){
-	$scope.formData = {name:"Test"};
+	$scope.formData = {};
 	$scope.requestData = {};
 
 	$scope.canvas = document.getElementById("canvas");
@@ -251,7 +251,7 @@ function($scope,$http){
 		$scope.getSims();
 		$scope.getSimulationRequests();
 		$scope.fillNameBlank();
-		$scope.createSim();
+		//$scope.createSim();
 	};
 
 	$scope.changeMapMode = function(mode)
