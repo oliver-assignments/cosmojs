@@ -81,12 +81,14 @@
                     </div>
                     <div class="col-md-8">
                         <h4>Map Setting: {{currentMapSetting}}</h4>
-                        <div ng-repeat="mode in modes">
-                            <h4>{{mode.name}}</h4>
-                            <div ng-repeat="map in mode.modes">
-                                <div><span class="clickable" ng-click="changeMapMode(map)">{{map}}</span></div>
-                            </div> 
-                        </div> 
+                        <ul class="modeSections">
+                            <li class="modeSection" ng-repeat="mode in modes">
+                                <h4>{{mode.name}}</h4>
+                                <div ng-repeat="map in mode.modes">
+                                    <div><span class="clickable" ng-click="changeMapMode(map)">{{map}}</span></div>
+                                </div> 
+                            </li> 
+                        </ul>
                     </div>
                 </div>
     		</div>
