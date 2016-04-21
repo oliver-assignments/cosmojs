@@ -9,7 +9,7 @@ function($scope,$http){
 	$scope.canvasCtx = canvas.getContext("2d");
 
 	$scope.months = [
-	"Janruary", "February", "March", "April",
+	"January", "February", "March", "April",
 	"May", "June", "July", "August", 
 	"September", "October","November","December"
 	];
@@ -258,6 +258,7 @@ function($scope,$http){
 		if(mode != $scope.currentMapSetting)
 		{
 			$scope.currentMapSetting = mode;
+			$scope.updateColors($scope.currentSimulation.name,$scope.currentMapSetting);
 		}
 	};
 

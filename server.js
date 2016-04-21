@@ -190,7 +190,9 @@ app.get('/apis/worlds/:name/current/:mode', function(req,res)
 {
 	cosmo.renderSimulation({name:req.params.name,mode:req.params.mode},
 		function(err,colors) {
-			if(err)res.send(err);
+			if(err) {
+				res.send(err);return;
+			}
 			res.json(colors);
 		});
 	
