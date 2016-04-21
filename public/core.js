@@ -15,10 +15,10 @@ function($scope,$http){
 	];
 
 	$scope.modes = [
-		{name:"Geo",     modes : ["Depth","Elevation","Height","Tectonic","Satellite"]},
+		{name:"Geography",     modes : ["Depth","Elevation","Height","Tectonic","Satellite"]},
 		{name:"Weather", modes : ["Sunlight", "Rainfall"]},
 		{name:"Soil",    modes : ["Nutro", "Nucium", "Nutrients"]},
-		{name:"Plant",   modes : ["Nutro Stores", "Nucium Stores", "Water Stores", "Nutrient Stores"]}
+		{name:"Flora",   modes : ["Nutro Stores", "Nucium Stores", "Water Stores", "Nutrient Stores"]}
 	];
 
 	$scope.currentSimulation = 
