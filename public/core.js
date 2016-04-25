@@ -31,7 +31,7 @@ function($scope,$http){
 		rows: 1,
 		colors: {}
 	};
-	$scope.currentMapSetting = $scope.modes[0].modes[0];
+	$scope.currentMapSetting = "Satellite";//$scope.modes[0].modes[0];
 	$scope.playing = false;
 
 	$scope.getSimulationRequests = function()
@@ -47,16 +47,19 @@ function($scope,$http){
 	};
 	$scope.createSimulationRequest = function(name,years)
 	{
-		//console.log('Creating simulation request for ' + name + ' for ' + years + ' year.');
-		$http.post('/apis/requests', {name:name,years:years})
-		.success(function(data){
-			$scope.requestData = {};
-			$scope.simulationRequests = data;
-		})
-		.error(function(data)
+		if(name != "No Simulation")
 		{
-			console.log('Create simulation requests error: ' + data);
-		});
+			//console.log('Creating simulation request for ' + name + ' for ' + years + ' year.');
+			$http.post('/apis/requests', {name:name,years:years})
+			.success(function(data){
+				$scope.requestData = {};
+				$scope.simulationRequests = data;
+			})
+			.error(function(data)
+			{
+				console.log('Create simulation requests error: ' + data);
+			});
+		}
 	};
 	$scope.clearSimulationRequests = function()
 	{
@@ -93,7 +96,9 @@ function($scope,$http){
 
 	$scope.pickFirstSim = function()
 	{
+		console.log($scope.sims[0]);
 		if($scope.sims.length>0){
+
 			$scope.currentSimulation = $scope.pickSim($scope.sims[0]);
 		}
 	};
@@ -109,6 +114,7 @@ function($scope,$http){
 
 	$scope.pickSim = function(sim)
 	{
+		console.log("Pick " +sim);
 		//$scope.currentSimulation = sim;
 		$http.get('/apis/worlds/'+sim.name+'/package')
 		.success(function(data){
@@ -122,6 +128,21 @@ function($scope,$http){
 		.error(function(data){
 			console.log('Simulation package error ' + data);
 		});
+	};
+
+	$scope.clearPickedSim = function()
+	{
+		$scope.currentSimulation = 
+		{
+			name:"No Simulation",
+			month:1,
+			day:1,
+			year:1,
+			columns: 1,
+			rows: 1,
+			colors: {}
+		};
+		$scope.currentMapSetting = "Satellite";
 	};
 
 	$scope.updateColors = function(name,mode)
@@ -173,11 +194,10 @@ function($scope,$http){
 			.success(function(data){
 				
 				//console.log(data);
-				
-				$scope.formData = {};
 				$scope.fillNameBlank();
 				$scope.sims = data;
-				$scope.pickLastSim();
+				$scope.pickSim($scope.formData.name);
+				$scope.formData = {};
 			})
 			.error(function(data)
 			{
@@ -194,7 +214,9 @@ function($scope,$http){
 			.success(function(data)
 			{
 				$scope.sims = data;
-				$scope.pickFirstSim();
+
+				$scope.clearPickedSim();
+				
 			})	
 			.error(function(data)
 			{
@@ -237,7 +259,7 @@ function($scope,$http){
 			.success(function(data)
 			{
 				$scope.sims = data;
-				$scope.pickFirstSim();
+				$scope.clearPickedSim();
 			})	
 			.error(function(data)
 			{

@@ -151,8 +151,10 @@ app.delete('/apis/worlds/:name', function(req,res)
 	cosmo.deleteSimulation(req.params.name,
 		function(err,sims)
 		{
-			if(err)
+			if(err){
 				res.send(err);
+				return;
+			}
 
 			res.json(sims);			
 	});
@@ -164,8 +166,10 @@ app.delete('/apis/worlds/', function(req,res)
 		function(err,sims)
 		{
 			if(err)
+			{
 				res.send(err);
-
+				return;
+			}
 			res.json(sims);			
 	});
 });
@@ -178,8 +182,11 @@ app.get('/apis/worlds/:name/package', function(req,res)
 		req.params.name,
 		function(err,glimpse)
 		{
-			if(err)
+			if(err){
 				res.send(err);
+			return;
+		}
+
 
 			res.json(glimpse);			
 	});
