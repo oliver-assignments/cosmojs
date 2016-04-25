@@ -21,7 +21,7 @@ app.use(methodOverride());
 app.use(express.static(__dirname + '/public/css'));
 
 //  Pages
-app.get('/new-sim', function(req,res)
+app.get('/new', function(req,res)
 {
 	res.sendFile(path.join(__dirname + '/public/new-sim.html'));
 });
