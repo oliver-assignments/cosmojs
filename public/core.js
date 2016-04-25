@@ -49,7 +49,6 @@ function($scope,$http){
 	{
 		if(name != "No Simulation")
 		{
-			//console.log('Creating simulation request for ' + name + ' for ' + years + ' year.');
 			$http.post('/apis/requests', {name:name,years:years})
 			.success(function(data){
 				$scope.requestData = {};
@@ -73,7 +72,6 @@ function($scope,$http){
 	};
 	$scope.deleteSimulationsRequests = function(name)
 	{
-		console.log('Attempting to delete all ' + name + " requests.")
 		$http.delete('/apis/requests/' + name)
 			.success(function(data){
 				$scope.simulationRequests = data;
@@ -94,35 +92,29 @@ function($scope,$http){
 		});	
 	};
 
-	$scope.pickFirstSim = function()
+	$scope.pickSimIndex = function(i)
 	{
-		console.log($scope.sims[0]);
-		if($scope.sims.length>0){
-
-			$scope.currentSimulation = $scope.pickSim($scope.sims[0]);
+		if($scope.sims.length>0)
+		{
+			if(i < $scope.sims.length) 
+			{
+				$scope.pickSim($scope.sims[i].name);
+			}
+		}
+		else
+		{
+			$scope.clearPickedSim();
 		}
 	};
 
-	$scope.pickLastSim = function(){
-		if($scope.sims.length>0){
-			$scope.currentSimulation = $scope.sims[$scope.sims.length-1];
-		}
-		else{
-			$scope.currentSimulation = {};
-		}
-	};
-
-	$scope.pickSim = function(sim)
+	$scope.pickSim = function(name)
 	{
-		console.log("Pick " +sim);
-		//$scope.currentSimulation = sim;
-		$http.get('/apis/worlds/'+sim.name+'/package')
-		.success(function(data){
+		$http.get('/apis/worlds/'+name+'/package')
+		.success(function(data) {
 			$scope.currentSimulation.name = data.name;
 			$scope.currentSimulation.columns = data.columns;
 			$scope.currentSimulation.rows = data.rows;
 
-			//$scope.currentSimulation.colors = new Array(data.columns*data.rows);
 			$scope.updateColors($scope.currentSimulation.name,$scope.currentMapSetting);
 		})
 		.error(function(data){
@@ -143,12 +135,11 @@ function($scope,$http){
 			colors: {}
 		};
 		$scope.currentMapSetting = "Satellite";
+		$scope.clearColors();
 	};
 
 	$scope.updateColors = function(name,mode)
 	{
-		//canvas.width;
-
 		var width = (canvas.width) / $scope.currentSimulation.columns;
 		var height = canvas.height /$scope.currentSimulation.rows;
 
@@ -173,12 +164,26 @@ function($scope,$http){
 
 		
 	};
+	$scope.clearColors = function()
+	{
+		$scope.canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+	};
 
 	$scope.getSims = function()
 	{
 		$http.get('/apis/worlds')
 			.success(function(data){
+				var pick = false;
+				if(!$scope.sims || $scope.sims.length == 0)
+				{
+					pick = true;
+				}
 				$scope.sims = data;
+				if(pick)
+				{
+					$scope.pickSimIndex(
+						Math.floor((Math.random() * ($scope.sims.length))));
+				}
 			})
 			.error(function(data)
 			{
@@ -188,12 +193,9 @@ function($scope,$http){
 
 	$scope.createSim = function()
 	{
-		//console.log("Attempting to create " + $scope.formData.name);
-
 		$http.post('/apis/worlds', $scope.formData)
-			.success(function(data){
-				
-				//console.log(data);
+			.success(function(data) {
+
 				$scope.fillNameBlank();
 				$scope.sims = data;
 				$scope.pickSim($scope.formData.name);
@@ -204,19 +206,21 @@ function($scope,$http){
 				console.log('Create sim error: ' + data);
 			});
 	};
-	$scope.deleteSim = function(id) 
+	$scope.deleteSim = function(name) 
 	{
 		//console.log("Attempting to delete " + id);
 		
 		$scope.deleteSimulationsRequests(id);
 
-		$http.delete('/apis/worlds/' + id)
+		$http.delete('/apis/worlds/' + name)
 			.success(function(data)
 			{
 				$scope.sims = data;
 
-				$scope.clearPickedSim();
-				
+				if(name == $scope.currentSimulation.name)
+				{
+					$scope.pickSimIndex(0);	
+				}
 			})	
 			.error(function(data)
 			{

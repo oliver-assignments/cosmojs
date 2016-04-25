@@ -56,8 +56,10 @@ app.get('/apis/requests',function(req,res)
 {
 	cosmo.getSimulationRequests(function(err,requests)
 		{
-			if(err)
+			if(err){
 				res.send(err);
+				return;
+			}
 			res.json(requests);
 		});
 });
@@ -67,8 +69,10 @@ app.post('/apis/requests',function(req,res)
 	cosmo.queueSimulationRequest(req.body,
 		function(err,requests)
 		{
-			if(err)
+			if(err){
 				res.send(err);
+				return;
+			}
 			res.json(requests);
 		});
 });
@@ -80,8 +84,10 @@ app.delete('/apis/requests',function(req,res)
 	cosmo.clearSimulationRequests(
 		function(err,requests)
 		{
-			if(err)
+			if(err){
 				res.send(err);
+				return;
+			}
 			res.json(requests);
 		});
 });
@@ -91,8 +97,11 @@ app.delete('/apis/requests/:name',function(req,res)
 	cosmo.deleteSimulationRequestsForWorld(req.params,
 		function(err,requests)
 		{
-			if(err)
+			if(err){
 				res.send(err);
+				return;
+			}
+
 			res.json(requests);
 		});
 });
@@ -101,8 +110,10 @@ app.post('/apis/requests/process',function(req,res)
 	cosmo.processSimulationRequests(
 		function(err,requestsAndSimulations)
 		{
-			if(err)
+			if(err){
 				res.send(err);
+				return;
+			}
 			res.json(requestsAndSimulations);
 		});
 });
@@ -123,8 +134,10 @@ app.post('/apis/worlds', function(req,res)
 	cosmo.createSimulation(req.body, 
 		function(err,sims)
 		{
-			if(err)
+			if(err){
 				res.send(err);
+				return;
+			}
 
 			res.json(sims);			
 			
@@ -137,8 +150,10 @@ app.get('/apis/worlds', function(req,res)
 	cosmo.getSimulations(
 		function(err,sims)
 		{
-			if(err)
+			if(err){
 				res.send(err);
+				return;
+			}
 
 			res.json(sims);			
 			
