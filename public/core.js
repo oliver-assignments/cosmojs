@@ -53,6 +53,8 @@ function($scope,$http){
 			.success(function(data){
 				$scope.requestData = {};
 				$scope.simulationRequests = data;
+				$scope.processSimulationRequests();
+				$scope.updateColors($scope.pickedSim.name,$scope.currentMapSetting);
 			})
 			.error(function(data)
 			{
