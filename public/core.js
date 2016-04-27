@@ -144,19 +144,27 @@ function($scope,$http){
 		var height = canvas.height /$scope.currentSimulation.rows;
 
 		$http.get('/apis/worlds/'+name+'/current/'+mode)
-		.success(function(data) {
-			for(var x = 0 ; x < $scope.currentSimulation.columns;x++){
-				for(var y = 0 ; y < $scope.currentSimulation.rows;y++){
+		.success(function(data) 
+		{
+			for(var x = 0 ; x < $scope.currentSimulation.columns;x++)
+			{
+				for(var y = 0 ; y < $scope.currentSimulation.rows;y++)
+				{
 					var z = (y*$scope.currentSimulation.columns)+x;
 					$scope.canvasCtx.save();
 					$scope.canvasCtx.fillStyle =data[z];
 
-					$scope.canvasCtx.fillRect(width*x,height*y,width,height);
+					$scope.canvasCtx.fillRect(
+						width*x,
+						height*y,
+						width+1,
+						height+1);
 
 					$scope.canvasCtx.restore();
 
 				}
 			}	
+			
 		})
 		.error(function(data) {
 			console.log("Error updating colors: " + data);
