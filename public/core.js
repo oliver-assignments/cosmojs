@@ -21,7 +21,7 @@ function($scope,$http){
 		{name:"Flora",   modes : ["Nutro Stores", "Nucium Stores", "Water Stores", "Nutrient Stores"]}
 	];
 
-	$scope.currentSimulation = 
+	$scope.pickedSim = 
 	{
 		name:"No Simulation",
 		month:1,
@@ -86,7 +86,7 @@ function($scope,$http){
 		.success(function(data){
 			$scope.simulationRequests = data.requests;
 			$scope.sims = data.simulations;
-			$scope.updateDates();
+			$scope.updateCurrent();
 		})
 		.error(function(data){
 			console.log('Process simulation requests error: ' + data);
@@ -112,11 +112,8 @@ function($scope,$http){
 	{
 		$http.get('/apis/worlds/'+name+'/package')
 		.success(function(data) {
-			$scope.currentSimulation.name = data.name;
-			$scope.currentSimulation.columns = data.columns;
-			$scope.currentSimulation.rows = data.rows;
-
-			$scope.updateColors($scope.currentSimulation.name,$scope.currentMapSetting);
+			$scope.pickedSim = data;
+			$scope.updateColors($scope.pickedSim.name,$scope.currentMapSetting);
 		})
 		.error(function(data){
 			console.log('Simulation package error ' + data);
@@ -125,7 +122,7 @@ function($scope,$http){
 
 	$scope.clearPickedSim = function()
 	{
-		$scope.currentSimulation = 
+		$scope.pickedSim = 
 		{
 			name:"No Simulation",
 			month:1,
@@ -138,26 +135,19 @@ function($scope,$http){
 		$scope.currentMapSetting = "Satellite";
 		$scope.clearColors();
 	};
-	$scope.updateDates = function()
-	{
-		//console.log($scope.sims[$scope.currentSimulation.name].day);
-		// $scope.currentSimulation.day = $scope.sims[$scope.currentSimulation.name].day;
-		// $scope.currentSimulation.day = $scope.sims[$scope.currentSimulation.name].month;
-		// $scope.currentSimulation.day = $scope.sims[$scope.currentSimulation.name].year;
-	};
 	$scope.updateColors = function(name,mode)
 	{
-		var width = (canvas.width) / $scope.currentSimulation.columns;
-		var height = canvas.height /$scope.currentSimulation.rows;
+		var width = (canvas.width) / $scope.pickedSim.columns;
+		var height = canvas.height /$scope.pickedSim.rows;
 
 		$http.get('/apis/worlds/'+name+'/current/'+mode)
 		.success(function(data) 
 		{
-			for(var x = 0 ; x < $scope.currentSimulation.columns;x++)
+			for(var x = 0 ; x < $scope.pickedSim.columns;x++)
 			{
-				for(var y = 0 ; y < $scope.currentSimulation.rows;y++)
+				for(var y = 0 ; y < $scope.pickedSim.rows;y++)
 				{
-					var z = (y*$scope.currentSimulation.columns)+x;
+					var z = (y*$scope.pickedSim.columns)+x;
 					$scope.canvasCtx.save();
 					$scope.canvasCtx.fillStyle =data[z];
 
@@ -194,18 +184,30 @@ function($scope,$http){
 					pick = true;
 				}
 				$scope.sims = data;
-				9
+
 				if(pick)
 				{
 					$scope.pickSimIndex(
 						Math.floor((Math.random() * ($scope.sims.length))));
 				}
-				$scope.updateDates();
+				$scope.updateCurrent();
 			})
 			.error(function(data)
 			{
 				console.log('Cannot find simulations. ' +data);
 			});
+	};
+	$scope.updateCurrent = function()
+	{
+		for(var s = 0 ; s < $scope.sims.length ; s++)
+		{
+			if($scope.sims[s].name == $scope.pickedSim.name)
+			{
+				$scope.pickedSim = $scope.sims[s];
+				return;
+			}
+		}
+		$scope.pickSimIndex(Math.floor((Math.random() * ($scope.sims.length))));
 	};
 
 	$scope.createSim = function()
@@ -234,7 +236,7 @@ function($scope,$http){
 			{
 				$scope.sims = data;
 
-				if(name == $scope.currentSimulation.name)
+				if(name == $scope.pickedSim.name)
 				{
 					$scope.pickSimIndex(0);	
 				}
@@ -276,7 +278,7 @@ function($scope,$http){
 		if(mode != $scope.currentMapSetting)
 		{
 			$scope.currentMapSetting = mode;
-			$scope.updateColors($scope.currentSimulation.name,$scope.currentMapSetting);
+			$scope.updateColors($scope.pickedSim.name,$scope.currentMapSetting);
 		}
 	};
 
