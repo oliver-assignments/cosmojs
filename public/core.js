@@ -45,11 +45,11 @@ function($scope,$http){
 				console.log('Get simulation requests error: ' + data);
 			});
 	};
-	$scope.createSimulationRequest = function(name,years)
+	$scope.createSimulationRequest = function(name,days)
 	{
 		if(name != "No Simulation")
 		{
-			$http.post('/apis/requests', {name:name,years:years})
+			$http.post('/apis/requests', {name:name,days:days})
 			.success(function(data){
 				$scope.requestData = {};
 				$scope.simulationRequests = data;
@@ -86,6 +86,7 @@ function($scope,$http){
 		.success(function(data){
 			$scope.simulationRequests = data.requests;
 			$scope.sims = data.simulations;
+			$scope.updateDates();
 		})
 		.error(function(data){
 			console.log('Process simulation requests error: ' + data);
@@ -137,7 +138,13 @@ function($scope,$http){
 		$scope.currentMapSetting = "Satellite";
 		$scope.clearColors();
 	};
-
+	$scope.updateDates = function()
+	{
+		//console.log($scope.sims[$scope.currentSimulation.name].day);
+		// $scope.currentSimulation.day = $scope.sims[$scope.currentSimulation.name].day;
+		// $scope.currentSimulation.day = $scope.sims[$scope.currentSimulation.name].month;
+		// $scope.currentSimulation.day = $scope.sims[$scope.currentSimulation.name].year;
+	};
 	$scope.updateColors = function(name,mode)
 	{
 		var width = (canvas.width) / $scope.currentSimulation.columns;
@@ -179,7 +186,7 @@ function($scope,$http){
 
 	$scope.getSims = function()
 	{
-		$http.get('/apis/worlds')
+		$http.get('/apis/worlds/package')
 			.success(function(data){
 				var pick = false;
 				if(!$scope.sims || $scope.sims.length == 0)
@@ -187,11 +194,13 @@ function($scope,$http){
 					pick = true;
 				}
 				$scope.sims = data;
+				9
 				if(pick)
 				{
 					$scope.pickSimIndex(
 						Math.floor((Math.random() * ($scope.sims.length))));
 				}
+				$scope.updateDates();
 			})
 			.error(function(data)
 			{
@@ -218,7 +227,7 @@ function($scope,$http){
 	{
 		//console.log("Attempting to delete " + id);
 		
-		$scope.deleteSimulationsRequests(id);
+		$scope.deleteSimulationsRequests(name);
 
 		$http.delete('/apis/worlds/' + name)
 			.success(function(data)
@@ -235,32 +244,6 @@ function($scope,$http){
 				console.log('Delete sim error: ' + data);
 			
 			});		
-	};
-
-	$scope.getCurrentOfWorld = function(name)
-	{
-		$http.get('/apis/worlds/current-world-data/' + name)
-			.success(function(data)
-			{
-
-			})
-			.error(function(data)
-			{
-				console.log('Get snapshot error: ' + data);
-			});
-	};
-
-	$scope.getSimAtDate= function(name,month,day,year)
-	{
-		$http.get('/apis/worlds/world-data/' + name + '/'+ month + '/'+ day + '/'+ year)
-			.success(function(data)
-			{
-				console.log(data);
-			})
-			.error(function(data)
-			{
-				console.log('Get snapshot error: ' + data);
-			});
 	};
 
 	$scope.clearSims = function()

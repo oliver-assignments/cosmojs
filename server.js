@@ -79,8 +79,6 @@ app.post('/apis/requests',function(req,res)
 //  Clear simulation requests
 app.delete('/apis/requests',function(req,res)
 {
-	console.log("Deleting requests with: " + req.body);
-
 	cosmo.clearSimulationRequests(
 		function(err,requests)
 		{
@@ -145,17 +143,17 @@ app.post('/apis/worlds', function(req,res)
 });
 
 //  Get all the simulations
-app.get('/apis/worlds', function(req,res)
+app.get('/apis/worlds/package', function(req,res)
 {
-	cosmo.getSimulations(
-		function(err,sims)
+	cosmo.getSimulationPackages(
+		function(err,packages)
 		{
 			if(err){
 				res.send(err);
 				return;
 			}
 
-			res.json(sims);			
+			res.json(packages);			
 			
 		});	
 });
@@ -216,6 +214,17 @@ app.get('/apis/worlds/:name/current/:mode', function(req,res)
 				res.send(err);return;
 			}
 			res.json(colors);
+		});
+	
+});
+app.get('/apis/worlds/:name/current', function(req,res)
+{
+	cosmo.getSimulation(req.params.name,
+		function(err,sim) {
+			if(err) {
+				res.send(err);return;
+			}
+			res.json(sim);
 		});
 	
 });
