@@ -3,6 +3,12 @@ html, body {
     width:100%;
     /*background:#6b8ac7;*/
 }
+#logo {
+    margin-top:1em;
+}
+#title {
+    margin-top:0.25em;
+}
 .toolbar {
     max-width: 350px;
     /*background:#385794;*/
