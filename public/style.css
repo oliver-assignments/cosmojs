@@ -14,6 +14,12 @@ html, body {
     /*background:#385794;*/
     /*color:white;*/
 }
+#sim-form {
+    padding-bottom:2em;
+}
+.setting-section {
+    margin-bottom:1em;
+}
 .titleArea {
     text-align: center;
 }
@@ -39,4 +45,8 @@ canvas {
     display:inline;
     float:left;
     margin-right:1.5em;
+}
+
+.rule {
+    margin-bottom:0.75em;
 }

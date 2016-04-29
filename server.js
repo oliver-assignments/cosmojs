@@ -23,7 +23,7 @@ app.use(express.static(__dirname + '/public/css'));
 //  Pages
 app.get('/new', function(req,res)
 {
-	res.sendFile(path.join(__dirname + '/public/new-sim.html'));
+	res.sendFile(path.join(__dirname + '/public/newsim.html'));
 });
 
 app.get('/about', function(req,res)

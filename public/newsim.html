@@ -1,34 +1,39 @@
-<html ng-app="simulation">
+<html ng-app="cosmoApp">
 <head>
     <meta text="viewport" content="width=device-width, initial-scale=1">
 
     <title>Cosmopolitos</title>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
-    <script src="core.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script src="newsim.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
 
 </head>
 
-<body ng-controller="mainController">
-    <div class="container"><div class="row" id="gamespace">
+<body ng-controller="NewSimController">
+<div class="container" id="sim-form">
+    <div class="row">
         <div class="col-sm-0 col-md-2 col-lg-3 "></div>
         <div class="col-sm-12 col-md-8 col-lg-6 new-sim">
 
-            <div class="row">
+            <div class="row setting-section">
                 <h3>Create a New Simulation</h3>
                 <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon3">Planet Name:</span>
+                    <span class="input-group-addon" id="basic-addon3">Planet Name</span>
 
-                    <input id="planet-name" type="text" class="form-control" placeholder="Default: Generate Name">
+                    <input id="planet-name" type="text" class="form-control" ng-model="formData.name">
                     <div class="input-group-btn">
-                        <label class="btn btn-default" aria-label="...">Generate Random Name</label>
+                        <label class="btn btn-default" ng-click="fillNameBlank()">Generate Random Name</label>
                     </div>
                 </div>
             </div>
 
-            <div class="row" style="margin-top:1em;">
-                <h4>Planet Size:</h4>
+            <div class="row setting-section" style="margin-top:1em;">
+                <h4>Planet Size</h4>
                 <p class="parameter-description">
                     Planet size dictates the size and resolution of the simulation. More complex shapes are possible with a larger map and larger plant and animal populations are possible.
                     The `end game` of a simulation can be achieved faster on a smaller map, and smaller maps and populations will generally simulate faster, allowing you to see the results faster.
@@ -52,8 +57,8 @@
                 </div>
             </div>
 
-            <div class="row">
-                <h4>Planet Rotation Direction:</h4>
+            <div class="row setting-section">
+                <h4>Planet Rotation Direction</h4>
                 <p class="parameter-description">
                     Planet rotation dictates which direction the rainfall flows. For instance, Earth's West to East rotation means that its greater wind currents flow East to West.
                     Continental geography in the East cuts off warm currents from reaching the West. The Himilayan Mountains
@@ -69,8 +74,8 @@
                 </div>
             </div>
 
-            <div class="row">
-                <h4>Planet Tilt:</h4>
+            <div class="row setting-section">
+                <h4>Planet Tilt</h4>
                 <p class="parameter-description">
                     Planet tilt dictates which hemisphere recieves the most sun. For instance, on Earth, the 23.5 degree tilt means that the sourthern hemisphere recieves the most
                     sunlight annually. More sunlight allows for denser foliage and greater rainfall, meaning this `Sunlight Equator` will generally have a belt of rainforest.
@@ -88,14 +93,14 @@
                 </div>
             </div>
 
-            <div class="row">
-                <h4>Starting Vegetation:</h4>
+            <!-- <div class="row setting-section">
+                <h4>Starting Vegetation</h4>
                 <p class="parameter-description">
                     After the new planet has been created, it is sprayed with seeds. Algae likes shallow shores while grass and shrubs likes continents. Both types take a great deal of time
                     and chance to adapt into their opposite environments.
                 </p>
                 <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default" onclick="setVegetation('Algae')">
+                    <label class="btn btn-default"  onclick="setVegetation('Algae')">
                         <input type="radio" value="1" /> Algae
                     </label>
                     <label class="btn btn-default down" onclick="setVegetation('Grass')">
@@ -105,10 +110,69 @@
                         <input type="radio" value="3" /> Grass & Shrubs
                     </label>
                 </div>
-            </div>
+            </div> -->
 
+            <div class="row setting-section">
+
+                <h4>Simulation Rules</h4>
+                <p>Rules: { {{getSimulationRules()}} }</p>
+                
+                <div class="btn-group rule">
+                    <label class="btn btn-default" disabled>
+                        <input type="checkbox" disabled checked ng-model="formData.metabolism"> <b>M</b> Metabolism
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="checkbox" ng-model="formData.starvation"> <b>Q</b> Starvation
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="checkbox" ng-model="formData.waterStorage"> <b>W</b> Water Storage
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="checkbox" ng-model="formData.nutrientDiffusion"> <b>N</b> Nutrient Diffusion
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="checkbox" ng-model="formData.maturity"> <b>G</b> Maturity
+                    </label>
+                    
+                    <label class="btn btn-default">
+                        <input type="checkbox" ng-model="formData.disease"> <b>D</b> Disease
+                    </label>
+                </div>
+                <div class="input-group rule">
+                    <span class="input-group-addon"><b>R (n)</b> Root Competition</span>
+                    <input type="text" class="form-control" placeholder="n : # neighbors" ng-model="formData.neighbors"/>
+                    <span class="input-group-btn" style="width:0px;"></span>
+                    <!-- <input type="text" class="form-control" style="margin-left:-1px" placeholder="p : % percent nutrients"/>
+                    <span class="input-group-btn" style="width:0px;"></span> -->
+                </div>
+                
+                <div class="input-group rule">
+                    <span class="input-group-addon"><b>S (m)</b> Seeding</span>
+                    
+                    <input type="text" class="form-control" placeholder="m : chromosome mutation chance" ng-model="formData.mutation"/>
+                    <span class="input-group-btn" style="width:0px;"></span>
+                </div>
+                <div class="input-group rule">
+                    <span class="input-group-addon"><b>B (e)</b> Biomass on Death</span>
+                    <input ng-disabled="biomassDisabled" type="text" class="form-control" placeholder="p : % of nutrient endowment" ng-model="formData.biomassEndowment"/>
+                    <span class="input-group-btn" style="width:0px;"></span>
+                </div>
+                <!-- <p>Extraneous Rules:</p>
+                <div class="btn-group rule" data-toggle="buttons">
+                    <label class="btn btn-default">
+                        <input type="checkbox" autocomplete="off"> <b>Z</b> World Consumption
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="checkbox" autocomplete="off"> <b>X</b> Roaming Beasts
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="checkbox" autocomplete="off"> <b>J</b> Second Coming
+                    </label>
+                </div> -->
+
+            </div>
             <div class="row">
-                <button onclick="checkSimData()" style="display:block;margin-left:auto;" type="button" class="btn btn-primary btn-lg">Simulate!</button>
+                <button onclick="checkSimData()" style="display:block;margin-left:auto;" type="button" class="btn btn-default btn-lg">Simulate!</button>
             </div>
 
             <div class="modal fade" id="new-sim-modal" tabindex="-1" role="dialog">
@@ -121,7 +185,7 @@
                   <div class="modal-body"></div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="requestNewSim()">Request this Simulation</button>
+                    <button type="button" class="btn btn-default" onclick="requestNewSim()">Request this Simulation</button>
                   </div>
                 </div>
               </div>
