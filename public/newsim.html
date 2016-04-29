@@ -5,7 +5,7 @@
     <title>Cosmopolitos</title>
 
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>-->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
@@ -81,14 +81,14 @@
                     sunlight annually. More sunlight allows for denser foliage and greater rainfall, meaning this `Sunlight Equator` will generally have a belt of rainforest.
                 </p>
                 <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default" onclick="setHemisphere('Northern Hemisphere')">
-                        <input type="radio" value="1" /> Northern Hemisphere
+                    <label class="btn btn-default">
+                        <input type="radio" ng-value="formdata.rotation" value="0.25"/> Northern Hemisphere
                     </label>
-                    <label class="btn btn-default" onclick="setHemisphere('Equator')">
-                        <input type="radio" value="2" /> Equator
+                    <label class="btn btn-default">
+                        <input type="radio" ng-value="formdata.rotation" value="0.5"/> Equator
                     </label>
-                    <label class="btn btn-default down" onclick="setHemisphere('Southern Hemisphere')">
-                        <input type="radio" value="3"/> Southern Hemisphere
+                    <label class="btn btn-default down">
+                        <input type="radio" ng-value="formdata.rotation" value="0.75"/> Southern Hemisphere
                     </label>
                 </div>
             </div>
