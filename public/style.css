@@ -50,3 +50,7 @@ canvas {
 .rule {
     margin-bottom:0.75em;
 }
+
+.parameter-description {
+    font-style: italic;
+}

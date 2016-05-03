@@ -17,7 +17,7 @@ function()
 		},
 		{
 			character: "W",
-			title: "Water Consumption and Storage",
+			title: "Water",
 			tooltip: "Plants recieve and store water from rainfall, and need it to survive."
 		},
 		{
@@ -40,7 +40,7 @@ function()
 			character: "B",
 			title: "Biomass Decay",
 			required: "R | D | V",
-			tooltip: "Plants deposit their endowment into the soil upon death. Requires a mode of death."
+			tooltip: "Plants deposit their nutrient endowment into the soil upon death. Requires a way for plants to die."
 			
 		}
 	];
@@ -57,19 +57,12 @@ function()
 					title: "neighbors",
 					left: {value:1, inclusive: true},
 					right: {value:9, inclusive: true}
-				},
-				{
-					character: "n",
-					type:"int",
-					title: "neighbors",
-					left: {value:1, inclusive: true},
-					right: {value:9, inclusive: true}
 				}]
 		},
 		{
 			character: "S",
 			title: "Seeding",
-			tooltip: "Plants reproduce if they have stored their nutrient endowment.",
+			tooltip: "Plants reproduce if they have stored their nutrient endowment. Each of the parent's chromosomes is passed on with m chance of mutating.",
 			inputs:[
 				{
 					character: "m",

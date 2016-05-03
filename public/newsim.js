@@ -1,6 +1,13 @@
-angular.module('newSimulationApp', ['ngAnimate','ui.bootstrap', 'rulesApp'])
-.controller('newSimController', ['$scope',"$http",'rulesService',
-function($scope,$http, rulesService) 
+angular.module('newSimulationApp', 
+	[
+		'rulesApp',
+		'simulationManagerApp',
+		'utilityApp',
+		'ngAnimate',
+		'ui.bootstrap'
+	])
+.controller('newSimController', ['$window', '$scope','$http','rulesService','simulationManagerService','utilityService',
+function($window,$scope,$http, rulesService, simulationManager, utility) 
 {
 	$scope.rules = rulesService;
 
@@ -12,43 +19,40 @@ function($scope,$http, rulesService)
 		dimensions:{columns:80,rows:50},
 		rules:[]
 	};
-
+	
+	$scope.startApp = function()
+	{
+		$scope.randomizeName();
+		
+	};
+	$scope.randomizeName = function()
+	{
+		utility.getRandomName(function(err,name)
+		{
+			if(err)
+			{
+				console.log(err)
+			}
+			else{
+				$scope.formData.name = name;
+			}
+		});
+	};
 	$scope.createSim = function()
 	{
-		$http.post('/apis/worlds', $scope.formData)
-			.success(function(data) {
-				//$window.location.href = '/worlds/' + $scope.formData.name;
-			})
-			.error(function(data)
+		simulationManager.createSim($scope.formData,function(err,data)
+		{
+			if(err)
 			{
-				console.log('Create sim error: ' + data);
-			});
-	};
-	
-	$scope.fillNameBlank = function()
-	{
-		$http.get('/apis/utility/name/generate')
-			.success(function(data)
+				console.log(err);
+			}
+			else
 			{
-				$scope.formData.name = data;
-			})	
-			.error(function(data)
-			{
-				console.log('Generate name error: ' + data);
-			
-			});	
+				$window.location.href ="/";//worlds/"+$scope.formData.name;
+			}
+		});
 	};
-	
-	$scope.startForm = function()
-	{
-		$scope.fillNameBlank();
-	};
-	$scope.getValue = function(name)
-	{
-		return "formData." + name
-	};
-	$scope.startForm();
-
+	$scope.startApp();
 }]);
 
 // for (var i in $scope.formData) {
