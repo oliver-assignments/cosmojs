@@ -1,20 +1,23 @@
-<html ng-app="cosmoApp">
+<html ng-app="newSimulationApp">
 <head>
     <meta text="viewport" content="width=device-width, initial-scale=1">
 
     <title>Cosmopolitos</title>
 
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>-->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.3.2.js"></script>
 
+    <script src="rulesApp.js"></script>
     <script src="newsim.js"></script>
+    
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
 
 </head>
 
-<body ng-controller="NewSimController">
+<body ng-controller="newSimController">
 <div class="container" id="sim-form">
     <div class="row">
         <div class="col-sm-0 col-md-2 col-lg-3 "></div>
@@ -38,22 +41,10 @@
                     Planet size dictates the size and resolution of the simulation. More complex shapes are possible with a larger map and larger plant and animal populations are possible.
                     The `end game` of a simulation can be achieved faster on a smaller map, and smaller maps and populations will generally simulate faster, allowing you to see the results faster.
                 </p>
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default" onclick="setSize('generated',75,50)">
-                        <input type="radio" value="1"/>Small - 75x50
-                    </label>
-                    <label class="btn btn-default down" onclick="setSize('generated',150,100)">
-                        <input type="radio" value="2" />Medium - 150x100
-                    </label>
-                    <label class="btn btn-default" onclick="setSize('generated',300,200)">
-                        <input type="radio" value="3" />Large - 300x200
-                    </label>
-                    <label class="btn btn-default" onclick="setSize('Earth',300,200)">
-                        <input type="radio" value="4" />Earth Pangea - 300x200
-                    </label>
-                    <label class="btn btn-default" onclick="setSize('Earth',300,200)">
-                        <input type="radio" value="5" />Earth Present - 300x200
-                    </label>
+                <div class="btn-group">
+                    <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:80,rows:50}" ng-init="checked=true">Small 80x50</label>
+                    <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:160,rows:100}">Medium 160x100</label>
+                    <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:320,rows:200}">Large 320x200</label>
                 </div>
             </div>
 
@@ -64,13 +55,9 @@
                     Continental geography in the East cuts off warm currents from reaching the West. The Himilayan Mountains
                     cut off warm equatorial currents from reaching Central Asia and the Ethiopian Mountains cut off rainfall to the Sahara.
                 </p>
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default" onclick="setRotation('East to West')">
-                        <input type="radio" value="1" /> East to West
-                    </label>
-                    <label class="btn btn-default down" onclick="setRotation('West to East')">
-                        <input type="radio" value="2" /> West to East
-                    </label>
+                <div class="btn-group">
+                    <label class="btn btn-default" ng-model="formData.rotation" uib-btn-radio="-1" ng-init="checked=true">East to West</label>
+                    <label class="btn btn-default" ng-model="formData.rotation" uib-btn-radio="1">West to East</label>
                 </div>
             </div>
 
@@ -80,120 +67,41 @@
                     Planet tilt dictates which hemisphere recieves the most sun. For instance, on Earth, the 23.5 degree tilt means that the sourthern hemisphere recieves the most
                     sunlight annually. More sunlight allows for denser foliage and greater rainfall, meaning this `Sunlight Equator` will generally have a belt of rainforest.
                 </p>
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input type="radio" ng-value="formdata.rotation" value="0.25"/> Northern Hemisphere
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="radio" ng-value="formdata.rotation" value="0.5"/> Equator
-                    </label>
-                    <label class="btn btn-default down">
-                        <input type="radio" ng-value="formdata.rotation" value="0.75"/> Southern Hemisphere
-                    </label>
-                </div>
-            </div>
 
-            <!-- <div class="row setting-section">
-                <h4>Starting Vegetation</h4>
-                <p class="parameter-description">
-                    After the new planet has been created, it is sprayed with seeds. Algae likes shallow shores while grass and shrubs likes continents. Both types take a great deal of time
-                    and chance to adapt into their opposite environments.
-                </p>
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default"  onclick="setVegetation('Algae')">
-                        <input type="radio" value="1" /> Algae
-                    </label>
-                    <label class="btn btn-default down" onclick="setVegetation('Grass')">
-                        <input type="radio" value="2" /> Grass
-                    </label>
-                    <label class="btn btn-default" onclick="setVegetation('Grass & Shrubs')">
-                        <input type="radio" value="3" /> Grass & Shrubs
-                    </label>
+                <div class="btn-group" ng-init="selected=true">
+                    <label class="btn btn-default" ng-model="formData.tilt" uib-btn-radio="0.25" btn-checkbox-true>Northern Hemisphere</label>
+                    <label class="btn btn-default"  ng-model="formData.tilt" uib-btn-radio="0.5">Equator</label>
+                    <label class="btn btn-default" ng-checked="selected" ng-model="formData.tilt" uib-btn-radio="0.75" ng-init="checked=true">Southern Hemisphere</label>
                 </div>
-            </div> -->
+
+            </div>
 
             <div class="row setting-section">
-
+                {{formData}}
                 <h4>Simulation Rules</h4>
-                <p>Rules: { {{getSimulationRules()}} }</p>
-                
                 <div class="btn-group rule">
-                    <label class="btn btn-default" disabled>
-                        <input type="checkbox" disabled checked ng-model="formData.metabolism"> <b>M</b> Metabolism
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="checkbox" ng-model="formData.starvation"> <b>Q</b> Starvation
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="checkbox" ng-model="formData.waterStorage"> <b>W</b> Water Storage
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="checkbox" ng-model="formData.nutrientDiffusion"> <b>N</b> Nutrient Diffusion
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="checkbox" ng-model="formData.maturity"> <b>G</b> Maturity
-                    </label>
-                    
-                    <label class="btn btn-default">
-                        <input type="checkbox" ng-model="formData.disease"> <b>D</b> Disease
-                    </label>
+                    <button 
+                    ng-repeat="rule in rules.booleanRules" 
+                    type="button" class="btn btn-default" 
+                    btn-checkbox-true="true" btn-checkbox-false="false" 
+                    uib-btn-checkbox
+                    ng-model="formData.rules[rule.title]"  
+                    uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter"><b>{{rule.character}}</b> {{rule.title}}</button>
                 </div>
-                <div class="input-group rule">
-                    <span class="input-group-addon"><b>R (n)</b> Root Competition</span>
-                    <input type="text" class="form-control" placeholder="n : # neighbors" ng-model="formData.neighbors"/>
-                    <span class="input-group-btn" style="width:0px;"></span>
-                    <!-- <input type="text" class="form-control" style="margin-left:-1px" placeholder="p : % percent nutrients"/>
-                    <span class="input-group-btn" style="width:0px;"></span> -->
+                <div ng-repeat="rule in rules.inputRules" class="input-group rule">
+                    <span class="input-group-addon" uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter"><b>{{rule.character}}</b> {{rule.title}}</span>
+                    <div ng-repeat="input in rule.inputs">
+                        <input type="text" class="form-control" placeholder="{{rules.GetInputString(input)}}" ng-model="neihgb"/>
+                        <span class="input-group-btn" style="width:0px;"></span>
+                    </div>
                 </div>
-                
-                <div class="input-group rule">
-                    <span class="input-group-addon"><b>S (m)</b> Seeding</span>
-                    
-                    <input type="text" class="form-control" placeholder="m : chromosome mutation chance" ng-model="formData.mutation"/>
-                    <span class="input-group-btn" style="width:0px;"></span>
-                </div>
-                <div class="input-group rule">
-                    <span class="input-group-addon"><b>B (e)</b> Biomass on Death</span>
-                    <input ng-disabled="biomassDisabled" type="text" class="form-control" placeholder="p : % of nutrient endowment" ng-model="formData.biomassEndowment"/>
-                    <span class="input-group-btn" style="width:0px;"></span>
-                </div>
-                <!-- <p>Extraneous Rules:</p>
-                <div class="btn-group rule" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input type="checkbox" autocomplete="off"> <b>Z</b> World Consumption
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="checkbox" autocomplete="off"> <b>X</b> Roaming Beasts
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="checkbox" autocomplete="off"> <b>J</b> Second Coming
-                    </label>
-                </div> -->
-
             </div>
             <div class="row">
-                <button onclick="checkSimData()" style="display:block;margin-left:auto;" type="button" class="btn btn-default btn-lg">Simulate!</button>
+                <button ng-click="createSim()" style="display:block;margin-left:auto;" type="button" class="btn btn-default btn-lg">Create</button>
             </div>
-
-            <div class="modal fade" id="new-sim-modal" tabindex="-1" role="dialog">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">New Simulation Request - Does this look correct?</h4>
-                  </div>
-                  <div class="modal-body"></div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-default" onclick="requestNewSim()">Request this Simulation</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-
-        <div class="col-sm-0 col-md-2 col-lg-3 ">
         </div>
     </div>
 </div>
 </body>
+<!-- <input type="text" class="form-control" style="margin-left:-1px" placeholder="p : % percent nutrients"/>
+                    <span class="input-group-btn" style="width:0px;"></span> -->

@@ -1,18 +1,70 @@
-var cosmoApp = angular.module('cosmoApp', []);
+var simulationRenderer = angular.module('simulationRendererApp',[]).
+	controller('simulationRendererController',['$http',function($http)
+	{
+		$scope.updateColors = function(name,mode)
+		{
+			var width = (canvas.width) / $scope.pickedSim.columns;
+			var height = canvas.height /$scope.pickedSim.rows;
 
-cosmoApp.controller('WorldController', ['$scope',"$http",
-function($scope,$http){
+			$http.get('/apis/worlds/'+name+'/current/'+mode)
+			.success(function(data) 
+			{
+				for(var x = 0 ; x < $scope.pickedSim.columns;x++)
+				{
+					for(var y = 0 ; y < $scope.pickedSim.rows;y++)
+					{
+						var z = (y*$scope.pickedSim.columns)+x;
+						$scope.canvasCtx.save();
+						$scope.canvasCtx.fillStyle =data[z];
+
+						$scope.canvasCtx.fillRect(
+							width*x,
+							height*y,
+							width+1,
+							height+1);
+
+						$scope.canvasCtx.restore();
+
+					}
+				}	
+				
+			})
+			.error(function(data) {
+				console.log("Error updating colors: " + data);
+			});
+
+			
+		};
+		$scope.clearColors = function()
+		{
+			$scope.canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+		};
+
+	}]);
+
+var simulationManager = angular.module('simulationManagerApp',[])
+	.factory('simulationManager', ['$http',
+	function($http)
+	{
+		var manager = {};
+		manager.simulations = [];
+		manager.months = [
+			"January", "February", "March", "April",
+			"May", "June", "July", "August", 
+			"September", "October","November","December"
+			];
+		return manager;
+	}]);
+
+
+angular.module('cosmoApp', ["simulationRequestsApp", 'ngAnimate', 'ui.bootstrap'])
+.controller('WorldController', ['$scope',"$http", function($scope,$http)
+{
 	$scope.formData = {};
 	$scope.requestData = {};
 
 	$scope.canvas = document.getElementById("canvas");
 	$scope.canvasCtx = canvas.getContext("2d");
-
-	$scope.months = [
-	"January", "February", "March", "April",
-	"May", "June", "July", "August", 
-	"September", "October","November","December"
-	];
 
 	$scope.modes = [
 		{name:"Geography",     modes : ["Depth","Elevation","Height","Tectonic","Satellite"]},
@@ -34,64 +86,7 @@ function($scope,$http){
 	$scope.currentMapSetting = "Satellite";//$scope.modes[0].modes[0];
 	$scope.playing = false;
 
-	$scope.getSimulationRequests = function()
-	{
-		$http.get('/apis/requests')
-			.success(function(data){
-				$scope.simulationRequests = data;
-			})
-			.error(function(data)
-			{
-				console.log('Get simulation requests error: ' + data);
-			});
-	};
-	$scope.createSimulationRequest = function(name,days)
-	{
-		if(name != "No Simulation")
-		{
-			$http.post('/apis/requests', {name:name,days:days})
-			.success(function(data){
-				$scope.requestData = {};
-				$scope.simulationRequests = data;
-			})
-			.error(function(data)
-			{
-				console.log('Create simulation requests error: ' + data);
-			});
-		}
-	};
-	$scope.clearSimulationRequests = function()
-	{
-		$http.delete('/apis/requests')
-			.success(function(data){
-				$scope.simulationRequests = data;
-			})
-			.error(function(data){
-				console.log('Clear simulation requests error: ' + data);
-			});
-	};
-	$scope.deleteSimulationsRequests = function(name)
-	{
-		$http.delete('/apis/requests/' + name)
-			.success(function(data){
-				$scope.simulationRequests = data;
-			})
-			.error(function(data){
-				console.log('Delete ' + name +' simulation request error: ' + data);
-			});
-	};
-	$scope.processSimulationRequests = function()
-	{
-		$http.post('/apis/requests/process')
-		.success(function(data){
-			$scope.simulationRequests = data.requests;
-			$scope.sims = data.simulations;
-			$scope.updateCurrent();
-		})
-		.error(function(data){
-			console.log('Process simulation requests error: ' + data);
-		});	
-	};
+	
 
 	$scope.pickSimIndex = function(i)
 	{
@@ -135,45 +130,7 @@ function($scope,$http){
 		$scope.currentMapSetting = "Satellite";
 		$scope.clearColors();
 	};
-	$scope.updateColors = function(name,mode)
-	{
-		var width = (canvas.width) / $scope.pickedSim.columns;
-		var height = canvas.height /$scope.pickedSim.rows;
-
-		$http.get('/apis/worlds/'+name+'/current/'+mode)
-		.success(function(data) 
-		{
-			for(var x = 0 ; x < $scope.pickedSim.columns;x++)
-			{
-				for(var y = 0 ; y < $scope.pickedSim.rows;y++)
-				{
-					var z = (y*$scope.pickedSim.columns)+x;
-					$scope.canvasCtx.save();
-					$scope.canvasCtx.fillStyle =data[z];
-
-					$scope.canvasCtx.fillRect(
-						width*x,
-						height*y,
-						width+1,
-						height+1);
-
-					$scope.canvasCtx.restore();
-
-				}
-			}	
-			
-		})
-		.error(function(data) {
-			console.log("Error updating colors: " + data);
-		});
-
-		
-	};
-	$scope.clearColors = function()
-	{
-		$scope.canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-	};
-
+	
 	$scope.getSims = function()
 	{
 		$http.get('/apis/worlds/package')

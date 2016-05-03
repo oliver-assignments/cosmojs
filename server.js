@@ -28,23 +28,23 @@ app.get('/new', function(req,res)
 
 app.get('/about', function(req,res)
 {
-	res.sendFile(path.join(__dirname + 'public/about.html'));
+	res.sendFile(path.join(__dirname + '/public/about.html'));
 });
 
 //  Load main page with top world, playing at newest possibel date
 app.get('/', function(req,res)
 {
-	res.sendFile(path.join(__dirname + 'public/index.html'));
+	res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 //  Load main page with inputted world, playing at newest possible date
-app.get('/worlds/:worldname',function(req,res)
+app.get('/worlds/:name',function(req,res)
 {
-	res.sendFile(path.join(__dirname + 'public/index.html'));
+	res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 //  Load main page with inputted world at date, not playing
-app.get('/worlds/:worldname/:year/:month/:day',function(req,res)
+app.get('/worlds/:name/:year/:month/:day',function(req,res)
 {
-	res.sendFile(path.join(__dirname + 'public/index.html'));
+	res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 //  API's 	//
