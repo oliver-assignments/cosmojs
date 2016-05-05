@@ -5,6 +5,8 @@ angular.module('cosmoApp',
 		,'simulationRendererApp'
 		,'creationApp'
 		,'pageApp'
+		,'timelineApp'
+		,'updateApp'
 		,'rulesApp'
 		,'utilityApp'
 		,'ngAnimate'

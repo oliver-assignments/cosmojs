@@ -1,12 +1,15 @@
 angular.module("updateApp",[])
-.factory('updateService',
-function()
+.controller('updateController',['$scope','$interval',
+function($scope,$interval)
 {
-	var update = {};
-	update.updating = false;
-
-	update.play = function()
+	$scope.every = function()
 	{
-		
+		console.log("every!");
 	};
-});
+	$scope.updateInt = $interval($scope.every,5000);
+	
+
+	$scope.$on('$destroy', function() {
+	    $interval.cancel($scope.updateInt);
+	});
+}]);

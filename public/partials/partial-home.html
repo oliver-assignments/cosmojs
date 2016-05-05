@@ -10,7 +10,7 @@
         <canvas id="backCanvas" width="960px" height="600px" style="display:none;"></canvas>
     </div>
     <div class="row-fluid">
-        <div class="col-md-4">
+        <div class="col-md-4" ng-controller="timelineController">
             <h4>Timeline</h4>
             <p>Request
             <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,1)"> day</span>,
@@ -19,10 +19,16 @@
             <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,360)">year</span>,
             <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,3600)">decade</span>,
             <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,36000)">century</span>
-        </p>
-            <!-- <div ng-repeat="date in timeline">
-                <div><span class="clickable" ng-click="changeDate(date)">{{date}}</span></div>
-            </div> -->
+            </p>
+            <div>
+                <h4 class="clickable" ng-click="togglePlay()" ng-show="timeline.playing==false">Play</h4>
+                <h4 class="clickable" ng-click="togglePlay()" ng-show="timeline.playing==true">Stop</h4>
+            </div>
+            <div ng-repeat="date in timeline">
+                <div ng-repeat="time in timeline.dates">
+                    <div><span class="clickable" ng-click="pickDate(map)">{{map}}</span></div>
+                </div> 
+            </div>
         </div>
         <div class="col-md-8">
             <ul class="modeSections">

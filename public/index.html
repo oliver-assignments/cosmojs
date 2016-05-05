@@ -17,6 +17,8 @@
     <script src="scripts/simRequestsApp.js"></script>
     <script src="scripts/simCreationApp.js"></script>
     <script src="scripts/pageApp.js"></script>
+    <script src="scripts/updateApp.js"></script>
+    <script src="scripts/timelineApp.js"></script>
     
     <script src="core.js"></script>
 
@@ -39,7 +41,7 @@
     	    		</ul>
     			</div>
     			<div class="row-fluid" ng-controller="simulationManagerController">
-                    <h3>Worlds</h3>
+                    <h3 ng-controller="updateController">Worlds</h3>
     	            <ul class="list-unstyled">
                         <li class="world-listing" 
                         ng:class="{true:'selected', false:''}[sim.name==picker.pickedSim.name]"
