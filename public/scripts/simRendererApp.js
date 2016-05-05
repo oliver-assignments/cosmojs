@@ -52,6 +52,7 @@ function($http)
 	// 	req.ctx.clearRect(0, 0, canvas.width, canvas.height);
 	// 	res(null)
 	// };
+	
 	return renderer;
 }])
 .controller('simulationRendererController',['$scope','simulationRendererService','pickerService','simulationRequestsService','utilityService',
