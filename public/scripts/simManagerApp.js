@@ -19,16 +19,15 @@ function($http,manager)
 	};
 	picker.pickSim = function(name,res)
 	{
-		$http.get('/apis/worlds/'+name+'/package')
-		.success(function(data) {
-			picker.pickedSim = data;
-			res(null);
-			//renderer.updateColors(manager.pickedSim.name,renderer.mode);
-		})
-		.error(function(data){
-			res('Simulation package error ' + data);
-		});
-	
+		for(var s = 0 ; s < manager.simulations.length;s++)
+		{
+			if(manager.simulations[s].name == name)
+			{
+				console.log(manager.simulations[s].month);
+				picker.pickedSim = manager.simulations[s];
+			}
+		}
+		res(null);
 	};
 	picker.pickSimIndex = function(i)
 	{
@@ -73,19 +72,8 @@ function($http,renderer)
 	{
 		$http.get('/apis/worlds/package')
 			.success(function(data){
-				// var pick = false;
-				// if(!$scope.sims || $scope.sims.length == 0)
-				// {
-				// 	pick = true;
-				// }
 				manager.simulations = data;
 				res(null,data);
-				// if(pick)
-				// {
-				// 	$scope.pickSimIndex(
-				// 		Math.floor((Math.random() * ($scope.sims.length))));
-				// }
-				// $scope.updateCurrent();
 			})
 			.error(function(data)
 			{
@@ -153,8 +141,8 @@ function($http,renderer)
 	
 	return manager;
 }])
-.controller('simulationManagerController',['$scope','simulationManagerService','pickerService','utilityService','simulationRendererService',
-function($scope,simulationManager,picker,utility,renderer)
+.controller('simulationManagerController',['$scope','simulationManagerService','pickerService','utilityService','simulationRendererService','timelineService',
+function($scope,simulationManager,picker,utility,renderer,timeline)
 {
 	$scope.simulationManager = simulationManager;
 	$scope.picker = picker;
@@ -189,7 +177,6 @@ function($scope,simulationManager,picker,utility,renderer)
 
 	$scope.pickSim=function(name)
 	{
-
 		picker.pickSim(name, 
 			function(err)
 			{
@@ -198,10 +185,11 @@ function($scope,simulationManager,picker,utility,renderer)
 				}
 				else
 				{
+					timeline.stop();
 					renderer.updateColors(picker.pickedSim.name,
 						function(err,data)
 						{
-
+							if(err)console.log(err);
 						});
 				}
 			});

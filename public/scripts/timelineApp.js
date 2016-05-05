@@ -21,14 +21,34 @@ function(picker)
 	}
 	return timeline;
 }])
-.controller('timelineController',['$scope','$interval','timelineService','pickerService',
-function($scope,$interval,timeline,picker)
+.controller('timelineController',['$scope','$interval','timelineService','pickerService','simulationRendererService',
+function($scope,$interval,timeline,picker,renderer)
 {
 	$scope.timeline = timeline;
 	
 	$scope.pullNewestMap = function()
 	{
 		console.log("playing!");
+
+		picker.pickSim(name, 
+			function(err)
+			{
+				if(err){
+					timeline.playing = false;
+					picker.pickRandom(function(err)
+						{
+							if(err)console.log(err);
+						});
+				}
+				else
+				{
+					renderer.updateColors(picker.pickedSim.name,
+						function(err,data)
+						{
+							if(err)console.log(err);
+						});
+				}
+			});
 	};
 	$scope.playInterval;
 
