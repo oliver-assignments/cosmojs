@@ -20,17 +20,6 @@ app.use(methodOverride());
 
 app.use(express.static(__dirname + '/public/css'));
 
-//  Pages
-app.get('/new', function(req,res)
-{
-	res.sendFile(path.join(__dirname + '/public/newsim.html'));
-});
-
-app.get('/about', function(req,res)
-{
-	res.sendFile(path.join(__dirname + '/public/about.html'));
-});
-
 //  Load main page with top world, playing at newest possibel date
 app.get('/', function(req,res)
 {

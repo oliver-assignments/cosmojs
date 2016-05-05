@@ -3,10 +3,12 @@ angular.module('simulationRequestsApp',[])
 function($http)
 {
 	var service = {};
+	service.requests = [];
 	service.getSimulationRequests = function(res)
 	{
 		$http.get('/apis/requests')
 			.success(function(data){
+				service.requests=data;
 				res(null,data);
 			})
 			.error(function(data)
@@ -20,6 +22,7 @@ function($http)
 		{
 			$http.post('/apis/requests', {name:req.name,days:req.days})
 			.success(function(data){
+				service.requests=data;
 				res(null,data);
 			})
 			.error(function(data)
@@ -32,6 +35,7 @@ function($http)
 	{
 		$http.delete('/apis/requests')
 			.success(function(data){
+				service.requests=data;
 				res(null,data);
 			})
 			.error(function(data){
@@ -42,16 +46,18 @@ function($http)
 	{
 		$http.delete('/apis/requests/' + req)
 			.success(function(data){
+				service.requests=data;
 				res(null,data);
 			})
 			.error(function(data){
 				res('Delete ' + name +' simulation request error: ' + data);
 			});
 	};
-	service.processSimulationRequests = function(req,res)
+	service.processSimulationRequests = function(res)
 	{
 		$http.post('/apis/requests/process')
 		.success(function(data){
+			service.requests=data;
 			res(null,data.requests);
 		})
 		.error(function(data){
@@ -63,8 +69,19 @@ function($http)
 .controller('simulationRequestsController',['$scope','simulationRequestsService',
 function($scope,simulationRequestsService)
 {
-	$scope.requestData = {};
-	$scope.requests = [];
+	$scope.requests = simulationRequestsService.requests;
+
+	$scope.deleteSimulationsRequests = function(name)
+	{
+		simulationRequestsService.getSimulationRequests(name,
+			function(err,data)
+			{
+				if(err)
+				{
+					console.log(err);
+				}
+			});
+	};
 
 	$scope.startController = function()
 	{
@@ -75,9 +92,17 @@ function($scope,simulationRequestsService)
 				{
 					console.log(err);
 				}
-				else
+			});
+	};
+
+	$scope.processSimulationRequests = function()
+	{
+		simulationRequestsService.processSimulationRequests(
+			function(err,data)
+			{
+				if(err)
 				{
-					requests = data;
+					console.log(err);
 				}
 			});
 	};

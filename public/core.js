@@ -1,13 +1,16 @@
 angular.module('cosmoApp', 
 	[
-		'simulationRequestsApp', 
-		'simulationManagerApp',
-		'simulationRendererApp',
-		'utilityApp',
-		'ngAnimate', 
-		'ui.bootstrap'
+		'simulationRequestsApp' 
+		,'simulationManagerApp'
+		,'simulationRendererApp'
+		,'creationApp'
+		,'pageApp'
+		,'rulesApp'
+		,'utilityApp'
+		,'ngAnimate'
+		,'ui.bootstrap'
 	])
-.controller('cosmoAppController', ['$scope',
+.controller('cosmoAppController', ['$scope', 
 function($scope)
 {
 	$scope.startApp = function() { 
