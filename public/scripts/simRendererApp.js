@@ -54,16 +54,17 @@ function($http)
 	// };
 	return renderer;
 }])
-.controller('simulationRendererController',['$scope','simulationRendererService','pickerService',
-function($scope,simulationRendererService, picker)
+.controller('simulationRendererController',['$scope','simulationRendererService','pickerService','simulationRequestsService','utilityService',
+function($scope,simulationRendererService, picker, requester, utility)
 {
 	//renderer.canvas = document.getElementById("canvas");
 	//renderer.ctx = renderer.canvas.getContext("2d");
 
-	$scope.mode = simulationRendererService.mode;
-	$scope.modeSections = simulationRendererService.modeSections;
+	$scope.renderer = simulationRendererService;
+	$scope.picker = picker;
 
-	$scope.pickedSim = picker.pickedSim;
+	$scope.months = utility.months;
+	$scope.days = utility.days;
 
 	$scope.changeMapMode = function(mode)
 	{
@@ -73,9 +74,12 @@ function($scope,simulationRendererService, picker)
 			simulationRendererService.updateColors($scope.pickedSim.name,$scope.mapMode);
 		}
 	};
-	$scope.createSimulationRequest = function(name)
+	$scope.createSimulationRequest = function(namo,dayo)
 	{
-		
+		//  Check for no simulation
+		if(namo!= "No Simulation"){
+			requester.createSimulationRequest({name:namo,days:dayo},function(err,data){});
+		}
 	};
 }]);
 

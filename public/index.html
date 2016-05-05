@@ -10,13 +10,14 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.js"></script>
     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.3.2.js"></script>
 
-    <script src="scripts/rulesApp.js"></script>
-    <script src="scripts/simulationManagerApp.js"></script>
-    <script src="scripts/simulationRendererApp.js"></script>
-    <script src="scripts/simulationRequestsApp.js"></script>
-    <script src="scripts/creationApp.js"></script>
-    <script src="scripts/pageApp.js"></script>
     <script src="scripts/utilityApp.js"></script>
+    <script src="scripts/rulesApp.js"></script>
+    <script src="scripts/simManagerApp.js"></script>
+    <script src="scripts/simRendererApp.js"></script>
+    <script src="scripts/simRequestsApp.js"></script>
+    <script src="scripts/simCreationApp.js"></script>
+    <script src="scripts/pageApp.js"></script>
+    
     <script src="core.js"></script>
 
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
@@ -27,21 +28,21 @@
 <body ng-app="cosmoApp">
 	<div class="container-fluid" ng-controller="cosmoAppController">
 		<div class="row-fluid" ng-controller="pageController">
-    	    <div class="col-sm-4 toolbar">
+    	    <div class="col-sm-4 columns toolbar">
     	    	<div class="row-fluid titleArea">
                     <img id="logo" src="images/cosmo-logo.png">
     	    		<h1 id="title">Cosmopolitos</h1>
     	    		<ul class="list-inline">
-                        <li ng-repeat="page in pages" class="clickable" ng-click="changePage(page.name)">{{page.name}}</li> 
+                        <li ng-repeat="page in pager.pages" class="clickable" ng-click="changePage(page.name)">{{page.name}}</li> 
                         <li><a href="https://oliverbarnum.wordpress.com/category/cosmopolitos/">Blog</a></li>
     	    		</ul>
     			</div>
     			<div class="row-fluid" ng-controller="simulationManagerController">
                     <h3>Worlds</h3>
     	            <ul class="list-unstyled">
-                        <li ng-repeat="sim in simulations">
-                        	<span class="clickable" ng-click="pickSim(sim.name)">{{sim.name}}</span> 
-                        	{{months[sim.month-1]}} {{sim.day}}, Year {{sim.year}}
+                        <li ng-repeat="sim in simulationManager.simulations">
+                        	<span class="clickable" ng-click="pickSim(sim.name)">{{sim.name}}</span> &#8728;
+                        	{{utility.months[sim.month-1]}} {{sim.day}}, Year {{sim.year}}
                         	<span class="clickable" ng-click="deleteSim(sim.name)">x</span>
         	           </li>
                     </ul>
@@ -49,15 +50,15 @@
                 <div class="row-fluid" ng-controller="simulationRequestsController">
                     <h3>Simulation Requests</h3>
                     <ul class="list-unstyled">
-                        <li ng-repeat="request in requests">{{request.name}} for {{request.days}} days
+                        <li ng-repeat="request in requestManager.requests">{{request.name}} for {{request.days}} days
                             <span class="clickable" ng-click="deleteSimulationsRequests(request.name)">X</span></li>
                     </ul>
                     <button style="float:right;" class="btn btn-default" ng-click="processSimulationRequests()">Process</button>
                 </div>
     	    </div>
-    	    <div class="col-sm-8" >
+    	    <div class="col-sm-8 columns" >
                 <div class="slide-animate-container">
-                    <div class="slide-animate" ng-include="url"></div>
+                    <div class="slide-animate" ng-include="pager.page.url"></div>
               </div>
     		</div>
         </div>

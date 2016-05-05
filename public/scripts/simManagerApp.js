@@ -1,19 +1,29 @@
 angular.module('simulationManagerApp',[])
-.factory('pickerService',['simulationManagerService',
-function(manager)
+.factory('pickerService',['$http','simulationManagerService',
+function($http,manager)
 {
 	var picker = {};
-	picker.pickedSim = {};
+	picker.pickedSim = pickedSim = 
+		{
+			name:"No Simulation",
+			month:1,
+			day:1,
+			year:1,
+			columns: 1,
+			rows: 1,
+			colors: {}
+		};
 
-	picker.pickSim = function(name)
+	picker.pickSim = function(name,res)
 	{
 		$http.get('/apis/worlds/'+name+'/package')
 		.success(function(data) {
 			picker.pickedSim = data;
+			res(null);
 			//renderer.updateColors(manager.pickedSim.name,renderer.mode);
 		})
 		.error(function(data){
-			console.log('Simulation package error ' + data);
+			res('Simulation package error ' + data);
 		});
 	
 	}
@@ -46,7 +56,7 @@ function(manager)
 		//renderer.mapMode = "Satellite";
 		//renderer.clearColors();
 	};
-	picker.resetPickedSim();
+
 
 	return picker;
 }])
@@ -56,7 +66,7 @@ function($http,renderer)
 	var manager = {};
 	manager.simulations = [];
 
-	manager.getSims = function()
+	manager.getSims = function(res)
 	{
 		$http.get('/apis/worlds/package')
 			.success(function(data){
@@ -66,7 +76,7 @@ function($http,renderer)
 				// 	pick = true;
 				// }
 				manager.simulations = data;
-
+				res(null,data);
 				// if(pick)
 				// {
 				// 	$scope.pickSimIndex(
@@ -81,13 +91,14 @@ function($http,renderer)
 	};
 	
 
-	manager.createSim = function(form)
+	manager.createSim = function(form,res)
 	{
 		$http.post('/apis/worlds', form)
 			.success(function(data) {
 
 				//$scope.fillNameBlank();
 				manager.simulations = data;
+				res(null,data);
 				//$scope.pickSim($scope.formData.name);
 				//$scope.formData = {};
 			})
@@ -96,7 +107,7 @@ function($http,renderer)
 				res('Create sim error: ' + data);
 			});
 	};
-	manager.deleteSim = function(name) 
+	manager.deleteSim = function(name,res) 
 	{
 		//console.log("Attempting to delete " + id);
 		
@@ -106,7 +117,7 @@ function($http,renderer)
 			.success(function(data)
 			{
 				 manager.simulations = data;
-
+				res(null,data);
 				// if(name == $scope.pickedSim.name)
 				// {
 				// 	$scope.pickSimIndex(0);	
@@ -119,7 +130,7 @@ function($http,renderer)
 			});		
 	};
 
-	manager.clearSims = function()
+	manager.clearSims = function(res)
 	{
 		//console.log('Attempting to delete all sims.');
 
@@ -127,6 +138,7 @@ function($http,renderer)
 			.success(function(data)
 			{
 				manager.simulations = data;
+				res(null,data);
 				//$scope.clearPickedSim();
 			})	
 			.error(function(data)
@@ -138,15 +150,35 @@ function($http,renderer)
 	
 	return manager;
 }])
-.controller('simulationManagerController',['$scope','simulationManagerService','simulationManagerService',
-function($scope,simulationManager,simulationManagerService)
+.controller('simulationManagerController',['$scope','simulationManagerService','pickerService','utilityService',
+function($scope,simulationManager,picker,utility)
 {
-	$scope.simulations = simulationManager.simulations;
+	$scope.simulationManager = simulationManager;
+	$scope.picker = picker;
 
-	$scope.pickedSim = simulationManager.pickedSim;
+	$scope.utility = utility;
+
+	$scope.startController = function()
+	{
+		simulationManager.getSims(
+			function(err,data)
+			{
+				if(err)
+				{
+					console.log(err);
+				}
+			});
+	};
 
 	$scope.pickSim=function(name)
 	{
-		simulationManager.pickSim(name);
+
+		picker.pickSim(name, 
+			function(err)
+			{
+				if(err)
+					console.log(err);
+			});
 	};
+	$scope.startController();
 }]);

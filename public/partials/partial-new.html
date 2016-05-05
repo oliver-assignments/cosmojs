@@ -58,14 +58,15 @@
             ng-repeat="rule in rules.booleanRules" 
             type="button" class="btn btn-default" 
             btn-checkbox-true="true" btn-checkbox-false="false" 
-            uib-btn-checkbox
-            ng-model="formData.rules[rule.title]"  
-            uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter"><b>{{rule.character}}</b> {{rule.title}}</button>
+            uib-btn-checkbox 
+            ng-model="formData[rule.title]"
+            uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter">
+            <b>{{rule.character}}</b> {{rule.title}}</button>
         </div>
         <div ng-repeat="rule in rules.inputRules" class="input-group rule">
             <span class="input-group-addon" uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter"><b>{{rule.character}}</b> {{rule.title}}</span>
             <div ng-repeat="input in rule.inputs">
-                <input type="text" class="form-control" placeholder="{{rules.GetInputString(input)}}" ng-model="neihgb"/>
+                <input type="text" ng-model="formData[input.title]" class="form-control" placeholder="{{rules.GetInputString(input)}}" ng-model="neihgb"/>
                 <span class="input-group-btn" style="width:0px;"></span>
             </div>
         </div>

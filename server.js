@@ -125,9 +125,7 @@ app.post('/apis/worlds', function(req,res)
 				res.send(err);
 				return;
 			}
-
 			res.json(sims);			
-			
 		});	
 });
 

@@ -10,20 +10,15 @@ function()
 		,{name:"New", url:"partials/partial-new.html"}
 		,{name:"About", url:"partials/partial-about.html"}
 	];
-	service.url = service.pages[0].url;
+	service.page = service.pages[0];
 
-	service.changePageURL = function(url)
-	{
-		return (service.url = url);
-	};
 	service.changePage = function(name)
 	{
 		for(var p = 0 ; p < service.pages.length; p++)
 		{
 			if(service.pages[p].name == name)
 			{
-				service.changePageURL(service.pages[p].url);
-				return service.url;
+				service.page = service.pages[p];
 			}
 		}
 	};
@@ -35,12 +30,11 @@ function()
 .controller('pageController',['$scope', 'pageService',
 function($scope,pageService)
 {
-	$scope.pages = pageService.pages;
-	$scope.url = pageService.url;
+	$scope.pager = pageService;
 
 	$scope.changePage = function(name)
 	{
-		$scope.url = pageService.changePage(name);
+		pageService.changePage(name);
 	}
 
 }]);

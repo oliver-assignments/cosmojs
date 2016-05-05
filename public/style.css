@@ -9,10 +9,18 @@ html, body {
 #title {
     margin-top:0.25em;
 }
+.container-fluid 
+{
+  padding-left:0;
+}
 .toolbar {
     max-width: 350px;
-    /*background:#385794;*/
-    /*color:white;*/
+    background:#FAFAFA;
+    padding-left:2em;
+
+    border-right-style:solid;
+    border-right-width:3px;
+    border-right-color:#F2F2F2;
 }
 #sim-form {
     padding-bottom:2em;
@@ -56,7 +64,9 @@ canvas {
 }
 
 
-
+.columns {
+  height:100%;
+}
 
 
 

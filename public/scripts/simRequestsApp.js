@@ -1,6 +1,6 @@
 angular.module('simulationRequestsApp',[])
-.factory('simulationRequestsService',['$http',
-function($http)
+.factory('simulationRequestsService',['$http','simulationManagerService','pickerService',
+function($http,simManager,picker)
 {
 	var service = {};
 	service.requests = [];
@@ -20,7 +20,7 @@ function($http)
 	{
 		if(name != "No Simulation")
 		{
-			$http.post('/apis/requests', {name:req.name,days:req.days})
+			$http.post('/apis/requests', req)
 			.success(function(data){
 				service.requests=data;
 				res(null,data);
@@ -57,8 +57,22 @@ function($http)
 	{
 		$http.post('/apis/requests/process')
 		.success(function(data){
-			service.requests=data;
-			res(null,data.requests);
+			//console.log(data);
+			service.requests=data.requests;
+			simManager.simulations = data.simulations;
+			picker.pickSim(picker.pickedSim.name,function(err)
+				{
+					if(err)
+					{
+						res(err);
+					}
+					else
+					{
+						res(null,data.requests);
+					}
+				});
+
+			
 		})
 		.error(function(data){
 			res('Process simulation requests error: ' + data);
@@ -69,7 +83,7 @@ function($http)
 .controller('simulationRequestsController',['$scope','simulationRequestsService',
 function($scope,simulationRequestsService)
 {
-	$scope.requests = simulationRequestsService.requests;
+	$scope.requestManager = simulationRequestsService;
 
 	$scope.deleteSimulationsRequests = function(name)
 	{
