@@ -13,7 +13,10 @@ function($http,manager)
 			rows: 1,
 			colors: {}
 		};
-
+	picker.pickRandom = function(res)
+	{
+		picker.pickSim(manager.simulations[Math.floor(Math.random() * manager.simulations.length)].name,res); 
+	};
 	picker.pickSim = function(name,res)
 	{
 		$http.get('/apis/worlds/'+name+'/package')
@@ -26,7 +29,7 @@ function($http,manager)
 			res('Simulation package error ' + data);
 		});
 	
-	}
+	};
 	picker.pickSimIndex = function(i)
 	{
 		if(manager.simulations.length>0)
@@ -150,8 +153,8 @@ function($http,renderer)
 	
 	return manager;
 }])
-.controller('simulationManagerController',['$scope','simulationManagerService','pickerService','utilityService',
-function($scope,simulationManager,picker,utility)
+.controller('simulationManagerController',['$scope','simulationManagerService','pickerService','utilityService','simulationRendererService',
+function($scope,simulationManager,picker,utility,renderer)
 {
 	$scope.simulationManager = simulationManager;
 	$scope.picker = picker;
@@ -167,6 +170,20 @@ function($scope,simulationManager,picker,utility)
 				{
 					console.log(err);
 				}
+				else
+				{
+					picker.pickRandom(function(err)
+						{
+							if(err)
+							{
+								console.log(err);
+							}
+							else
+							{
+								//We picked one!
+							}
+						});
+				}
 			});
 	};
 
@@ -176,8 +193,17 @@ function($scope,simulationManager,picker,utility)
 		picker.pickSim(name, 
 			function(err)
 			{
-				if(err)
+				if(err){
 					console.log(err);
+				}
+				else
+				{
+					renderer.updateColors(picker.pickedSim.name,
+						function(err,data)
+						{
+
+						});
+				}
 			});
 	};
 	$scope.startController();

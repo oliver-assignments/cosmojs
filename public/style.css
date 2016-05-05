@@ -81,6 +81,18 @@ canvas {
   padding:10px;
 }
 
+.world-listing {
+  padding-left:0.25em;
+}
+.selected {
+  background:#EFEFEF;
+  /*font-weight: bold;*/
+  border-style:solid;
+  border-width:1px;
+  border-color:#DADADA;
+
+}
+
 .slide-animate.ng-enter, .slide-animate.ng-leave {
   transition:all cubic-bezier(0.25,0.46,0.48,0.77) 1s;
 
