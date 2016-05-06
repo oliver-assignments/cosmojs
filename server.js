@@ -20,31 +20,20 @@ app.use(methodOverride());
 
 app.use(express.static(__dirname + '/public/css'));
 
-//  Pages
-app.get('/new', function(req,res)
-{
-	res.sendFile(path.join(__dirname + '/public/new-sim.html'));
-});
-
-app.get('/about', function(req,res)
-{
-	res.sendFile(path.join(__dirname + 'public/about.html'));
-});
-
 //  Load main page with top world, playing at newest possibel date
 app.get('/', function(req,res)
 {
-	res.sendFile(path.join(__dirname + 'public/index.html'));
+	res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 //  Load main page with inputted world, playing at newest possible date
-app.get('/worlds/:worldname',function(req,res)
+app.get('/worlds/:name',function(req,res)
 {
-	res.sendFile(path.join(__dirname + 'public/index.html'));
+	res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 //  Load main page with inputted world at date, not playing
-app.get('/worlds/:worldname/:year/:month/:day',function(req,res)
+app.get('/worlds/:name/:year/:month/:day',function(req,res)
 {
-	res.sendFile(path.join(__dirname + 'public/index.html'));
+	res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 //  API's 	//
@@ -136,9 +125,7 @@ app.post('/apis/worlds', function(req,res)
 				res.send(err);
 				return;
 			}
-
 			res.json(sims);			
-			
 		});	
 });
 
@@ -199,9 +186,7 @@ app.get('/apis/worlds/:name/package', function(req,res)
 				res.send(err);
 			return;
 		}
-
-
-			res.json(glimpse);			
+		res.json(glimpse);			
 	});
 });
 
@@ -227,6 +212,22 @@ app.get('/apis/worlds/:name/current', function(req,res)
 			res.json(sim);
 		});
 	
+});
+
+//  Get all the saved date names
+app.get('/apis/worlds/:name/timeline', function(req,res)
+{
+	cosmo.getSimulationTimeline(req.params.name,
+		function(err,timeline) {
+			if(err)
+			{
+				res.send(err);
+			}
+			else
+			{
+				res.json(timeline);
+			}
+		});
 });
 
 //  Get teh world data at a specifc date

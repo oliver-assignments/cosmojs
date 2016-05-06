@@ -3,10 +3,30 @@ html, body {
     width:100%;
     /*background:#6b8ac7;*/
 }
+#logo {
+    margin-top:1em;
+}
+#title {
+    margin-top:0.25em;
+}
+.container-fluid 
+{
+  padding-left:0;
+}
 .toolbar {
     max-width: 350px;
-    /*background:#385794;*/
-    /*color:white;*/
+    background:#FAFAFA;
+    padding-left:2em;
+
+    border-right-style:solid;
+    border-right-width:3px;
+    border-right-color:#F2F2F2;
+}
+#sim-form {
+    padding-bottom:2em;
+}
+.setting-section {
+    margin-bottom:1em;
 }
 .titleArea {
     text-align: center;
@@ -33,4 +53,79 @@ canvas {
     display:inline;
     float:left;
     margin-right:1.5em;
+}
+
+#player {
+    border-right-style:solid;
+    border-right-width:2px;
+    border-right-color:#F2F2F2;
+    padding-right:1em;
+}
+
+.rule {
+    margin-bottom:0.75em;
+}
+
+.parameter-description {
+    font-style: italic;
+}
+
+
+.columns {
+  height:100%;
+}
+#creationPage {
+  padding-left:2em;
+}
+
+
+
+.slide-animate-container {
+  position:relative;
+}
+
+.slide-animate {
+  padding:10px;
+}
+
+.world-listing {
+  padding-left:0.25em;
+}
+.selected {
+  background:#EFEFEF;
+  border-style:solid;
+  border-width:1px;
+  border-color:#DADADA;
+
+}
+
+.timeline {
+  overflow: scroll;
+  height:9em;
+}
+
+.slide-animate.ng-enter, .slide-animate.ng-leave {
+  transition:all cubic-bezier(0.25,0.46,0.48,0.77) 1s;
+
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  display:block;
+  padding:10px;
+}
+
+.slide-animate.ng-enter {
+  top:-1000px;
+}
+.slide-animate.ng-enter.ng-enter-active {
+  top:0;
+}
+
+.slide-animate.ng-leave {
+  top:0;
+}
+.slide-animate.ng-leave.ng-leave-active {
+  top:1000px;
 }
