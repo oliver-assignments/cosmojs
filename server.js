@@ -24,17 +24,17 @@ app.use(express.static(__dirname + '/public/css'));
 app.get('/', function(req,res)
 {
 	res.sendFile(path.join(__dirname + '/public/index.html'));
-});
-//  Load main page with inputted world, playing at newest possible date
-app.get('/worlds/:name',function(req,res)
-{
-	res.sendFile(path.join(__dirname + '/public/index.html'));
-});
-//  Load main page with inputted world at date, not playing
-app.get('/worlds/:name/:year/:month/:day',function(req,res)
-{
-	res.sendFile(path.join(__dirname + '/public/index.html'));
-});
+// });
+// //  Load main page with inputted world, playing at newest possible date
+// app.get('/worlds/:name',function(req,res)
+// {
+// 	res.sendFile(path.join(__dirname + '/public/index.html'));
+// });
+// //  Load main page with inputted world at date, not playing
+// app.get('/worlds/:name/:year/:month/:day',function(req,res)
+// {
+// 	res.sendFile(path.join(__dirname + '/public/index.html'));
+// });
 
 //  API's 	//
 
