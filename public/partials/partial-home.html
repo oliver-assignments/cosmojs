@@ -12,21 +12,21 @@
     <div class="row-fluid">
         <div class="col-md-4" ng-controller="timelineController">
             <div id="player">
-                <h4>Continuous Watch - <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==false">Play</span>
+                <h4>Continuous - <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==false">Play</span>
                 <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==true">Stop</span></h4>
                 
                 <p>Request
                 <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,1)"> day</span>,
                 <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,10)"> week</span>,
                 <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,30)"> month</span>,
-                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,360)">year</span>,
-                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,3600)">decade</span>,
-                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,36000)">century</span>
+                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,360)"> year</span>,
+                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,3600)"> decade</span>,
+                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,36000)"> century</span>
                 </p>
                 <h4 ng-click="getTime()">Timeline</h4>
                 <div class="timeline">
                     <div ng-repeat="time in timelineService.dates">
-                        <span class="clickable" ng-click="pickDate(map)">{{parseTime(time)}}</span>
+                        <span class="clickable" ng-click="pickDate(time)">{{parseTime(time)}}</span>
                     </div> 
                 </div>
                 

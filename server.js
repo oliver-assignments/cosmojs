@@ -193,15 +193,36 @@ app.get('/apis/worlds/:name/package', function(req,res)
 //  Gets the current data of a world
 app.get('/apis/worlds/:name/current/:mode', function(req,res)
 {
-	cosmo.renderSimulation({name:req.params.name,mode:req.params.mode},
+	cosmo.renderSimulation(
+		{
+			name:req.params.name,
+			mode:req.params.mode
+		},
 		function(err,colors) {
 			if(err) {
 				res.send(err);return;
 			}
 			res.json(colors);
 		});
-	
 });
+
+//  Get teh world map data at a specifc date
+app.get('/apis/worlds/:name/:date/:mode', function(req,res)
+{
+	cosmo.renderSimulation(
+		{
+			name:req.params.name,
+			date:req.params.date,
+			mode:req.params.mode
+		},
+		function(err,colors) {
+			if(err) {
+				res.send(err);return;
+			}
+			res.json(colors);
+		});
+});
+
 app.get('/apis/worlds/:name/current', function(req,res)
 {
 	cosmo.getSimulation(req.params.name,
@@ -228,12 +249,6 @@ app.get('/apis/worlds/:name/timeline', function(req,res)
 				res.json(timeline);
 			}
 		});
-});
-
-//  Get teh world data at a specifc date
-app.get('/apis/worlds/:name/:year/:month/:day/:mode', function(req,res)
-{
-
 });
 
 //  Utility

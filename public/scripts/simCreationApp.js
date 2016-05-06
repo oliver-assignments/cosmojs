@@ -54,7 +54,6 @@ function($scope,rulesService,creationService,utility)
 
 	$scope.formData={
 		 name: ""
-		,metabolism: true
 		,rotation: 1
 		,tilt: 0.75
 		,dimensions:{columns:80,rows:50}
@@ -76,7 +75,7 @@ function($scope,rulesService,creationService,utility)
 		        delete $scope.formData[i];
 		    }
 		}
-		
+
 		creationService.createSim($scope.formData,
 			function(err)
 			{

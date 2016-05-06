@@ -58,7 +58,7 @@
             ng-repeat="rule in rules.booleanRules" 
             type="button" class="btn btn-default" 
             btn-checkbox-true="true" btn-checkbox-false="false" 
-            uib-btn-checkbox 
+            uib-btn-checkbox
             ng-model="formData.rules[camelize(rule.title)]"
             uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter">
             <b>{{rule.character}}</b> {{rule.title}}</button>

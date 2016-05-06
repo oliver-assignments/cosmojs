@@ -110,16 +110,7 @@ function($scope,$interval,timelineService,picker,renderer,utility)
 		// lload the picked world
 		if(picker.pickedSim.name != "No Simulation")
 		{
-			timelineService.getDates(picker.pickedSim.name,function(err,data)
-			{
-				if(err)
-				{
-					console.log(err);
-				}
-				else
-				{
-				}
-			});
+			
 		}
 	};
 	$scope.getTime = function()
