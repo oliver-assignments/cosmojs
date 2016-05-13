@@ -1,12 +1,10 @@
+'use strict';
 //  Simulation Information apis	//
-
-
 module.exports = function(app,cosmo) {
-
 	//  Add a new simulation
 	app.post('/apis/worlds', function(req,res)
 	{	
-		cosmo.simManager.createSimulation(req.body, 
+		cosmo.manager.createSimulation(req.body, 
 			function(err,sims)
 			{
 				if(err){
@@ -20,7 +18,7 @@ module.exports = function(app,cosmo) {
 	//  Get all the simulations
 	app.get('/apis/worlds/package', function(req,res)
 	{
-		cosmo.simManager.getSimulationPackages(
+		cosmo.manager.getSimulationPackages(
 			function(err,packages)
 			{
 				if(err){
@@ -36,7 +34,7 @@ module.exports = function(app,cosmo) {
 	//  Deletse a simulation
 	app.delete('/apis/worlds/:name', function(req,res)
 	{
-		cosmo.simManager.deleteSimulation(req.params.name,
+		cosmo.manager.deleteSimulation(req.params.name,
 			function(err,sims)
 			{
 				if(err){
@@ -50,7 +48,7 @@ module.exports = function(app,cosmo) {
 
 	app.delete('/apis/worlds/', function(req,res)
 	{
-		cosmo.simManager.clearSimulations(
+		cosmo.manager.clearSimulations(
 			function(err,sims)
 			{
 				if(err)
@@ -66,7 +64,7 @@ module.exports = function(app,cosmo) {
 	app.get('/apis/worlds/:name/package', function(req,res)
 	{
 		//  Return name, dimensions 
-		cosmo.simManager.getSimulationPackage(
+		cosmo.manager.getSimulationPackage(
 			req.params.name,
 			function(err,glimpse)
 			{
@@ -80,7 +78,7 @@ module.exports = function(app,cosmo) {
 
 	app.get('/apis/worlds/:name/current', function(req,res)
 	{
-		cosmo.simManager.getSimulation(req.params.name,
+		cosmo.manager.getSimulation(req.params.name,
 			function(err,sim) {
 				if(err) {
 					res.send(err);return;
@@ -93,7 +91,7 @@ module.exports = function(app,cosmo) {
 	//  Get all the saved date names
 	app.get('/apis/worlds/:name/timeline', function(req,res)
 	{
-		cosmo.simManager.getSimulationTimeline(req.params.name,
+		cosmo.manager.getSimulationTimeline(req.params.name,
 			function(err,timeline) {
 				if(err)
 				{

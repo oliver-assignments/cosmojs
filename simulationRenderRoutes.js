@@ -1,3 +1,4 @@
+'use strict';
 // 		 Render apis		//
 module.exports = function(app,cosmo) 
 {
@@ -9,7 +10,7 @@ module.exports = function(app,cosmo)
 	//  Gets the current data of a world
 	app.get('/apis/worlds/:name/current/:mode', function(req,res)
 	{
-		cosmo.renderer.renderSimulation(
+		exports.renderer.renderSimulation(
 			{
 				name:req.params.name,
 				mode:req.params.mode
@@ -18,14 +19,16 @@ module.exports = function(app,cosmo)
 				if(err) {
 					res.send(err);return;
 				}
+				else {
 				res.json(colors);
+			}
 			});
 	});
 
 	//  Get teh world map data at a specifc date
 	app.get('/apis/worlds/:name/:date/:mode', function(req,res)
 	{
-		cosmo.renderer.renderSimulation(
+		exports.renderer.renderSimulation(
 			{
 				name:req.params.name,
 				date:req.params.date,
