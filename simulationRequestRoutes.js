@@ -3,7 +3,6 @@ module.exports = function(app,cosmo) {
     //  Get all simulation requests
 	app.get('/apis/requests',function(req,res)
 	{
-		console.log(cosmo);
 		cosmo.requests.getSimulationRequests(function(err,requests)
 			{
 				if(err){

@@ -94,7 +94,6 @@ function($http,renderer)
 	{
 		$http.post('/apis/worlds', form)
 			.success(function(data) {
-
 				manager.simulations = data;
 				res(null,data);
 			})

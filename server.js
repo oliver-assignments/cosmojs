@@ -1,5 +1,10 @@
 var express = require('express');
 var app = express();
+
+var bodyParser = require('body-parser')
+app.use( bodyParser.json() );
+app.use(bodyParser.urlencoded({extended: true})); 
+
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req,res)
@@ -11,10 +16,10 @@ var cosmo = require('cosmo');
 
 //  Routes
 require('./simulationRequestRoutes')(app,cosmo);
-require('./simulationManagementRoutes')(app);
-require('./simulationRenderRoutes')(app);
-require('./utilityRoutes')(app);
+require('./simulationManagementRoutes')(app,cosmo);
+require('./simulationRenderRoutes')(app,cosmo);
+require('./utilityRoutes')(app,cosmo);
 
-app.listen(3000);
-
-
+var localHost = 3000;
+console.log("Listening on localhost:" + localHost);
+app.listen(localHost);

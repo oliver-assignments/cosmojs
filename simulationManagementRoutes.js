@@ -3,15 +3,16 @@
 module.exports = function(app,cosmo) {
 	//  Add a new simulation
 	app.post('/apis/worlds', function(req,res)
-	{	
+	{
 		cosmo.manager.createSimulation(req.body, 
 			function(err,sims)
 			{
-				if(err){
+				if(err) {
 					res.send(err);
-					return;
 				}
-				res.json(sims);			
+				else {
+					res.json(sims);			
+				}
 			});	
 	});
 
