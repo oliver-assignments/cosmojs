@@ -61,11 +61,12 @@ function($scope, renderer, picker, requester, utility)
 		},true);
 	$scope.$watch('picker.pickedSim',function()
 		{
-			renderer.updateColors(picker.pickedSim.name,function(err,data)
+			renderer.updateColors(picker.pickedSim.name,
+				function(err,data)
 				{
 					$scope.drawColors();
 				});
-		});
+		},true);
 
 	$scope.changeMapMode = function(mode)
 	{
@@ -89,25 +90,37 @@ function($scope, renderer, picker, requester, utility)
 
 	$scope.drawColors = function()
 	{
-		var width = $scope.canvas.width / picker.pickedSim.columns;
-		var height = $scope.canvas.height / picker.pickedSim.rows;
-		for(var x = 0 ; x < picker.pickedSim.columns; x++)
+		picker.getSim(function(err,picked)
+		{
+			if(err)
 			{
-				for(var y = 0 ; y < picker.pickedSim.rows; y++)
+				console.log(err);
+			}
+			else 
+			{	
+				console.log(picked);
+				var width = $scope.canvas.width / picked.columns;
+				var height = $scope.canvas.height / picked.rows;
+
+				for(var x = 0 ; x < picked.columns; x++)
 				{
-					var z = (y * picker.pickedSim.columns)+x;
-					$scope.ctx.save();
-					$scope.ctx.fillStyle = renderer.colors[z];
+					for(var y = 0 ; y < picked.rows; y++)
+					{
+						var z = (y * picked.columns)+x;
+						$scope.ctx.save();
+						$scope.ctx.fillStyle = renderer.colors[z];
 
-					$scope.ctx.fillRect(
-						width*x,
-						height*y,
-						width+1,
-						height+1);
+						$scope.ctx.fillRect(
+							width*x,
+							height*y,
+							width+1,
+							height+1);
 
-					$scope.ctx.restore();
-				}
+						$scope.ctx.restore();
+					}
+				}	
 			}	
+		});
 	};
 	$scope.createSimulationRequest = function(namo,dayo)
 	{

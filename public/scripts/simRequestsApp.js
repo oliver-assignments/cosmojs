@@ -18,18 +18,29 @@ function($http,simManager,picker)
 	};
 	service.createSimulationRequest = function(req,res)
 	{
-		if(name != "No Simulation")
+		picker.getSim(
+			function(err,picked)
 		{
-			$http.post('/apis/requests', req)
-			.success(function(data){
-				service.requests=data;
-				res(null,data);
-			})
-			.error(function(data)
+			if(err)
 			{
-				res('Create simulation requests error: ' + data);
-			});
-		}
+				console.log(err);
+			}
+			else
+			{
+				$http.post('/apis/requests', req)
+					.success(function(data){
+						service.requests=data;
+						res(null,data);
+					})
+					.error(function(data)
+					{
+						res('Create simulation requests error: ' + data);
+					});
+					
+			}
+		});
+	
+			
 	};
 	service.clearSimulationRequests = function(res)
 	{

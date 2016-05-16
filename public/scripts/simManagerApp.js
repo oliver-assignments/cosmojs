@@ -10,9 +10,21 @@ function($http,manager,pager)
 			day:1,
 			year:1,
 			columns: 1,
-			rows: 1,
-			colors: {}
+			rows: 1
 		};
+
+	picker.getSim = function(res)
+	{
+		if(picker.pickedSim.name == "No Simulation")
+		{
+			res("Simulation hasn't been picked yet.");
+		}
+		else
+		{
+			res(null,picker.pickedSim);
+		}
+	};
+
 	picker.pickRandom = function(res)
 	{
 		if(manager.simulations.length>0) {

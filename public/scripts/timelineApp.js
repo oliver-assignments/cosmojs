@@ -9,14 +9,23 @@ function($http,picker)
 
 	timeline.getDates = function(name,res)
 	{
-		$http.get('/apis/worlds/' + picker.pickedSim.name + '/timeline')
-			.success(function(data){
-				timeline.dates = data;
-				res(null,data);
-			})
-			.error(function(data)
+		picker.getSim(function(err,picked)
 			{
-				res('Get simulation requests error: ' + data);
+				if(err)
+				{
+					console.log(err);
+				}
+				else{
+					$http.get('/apis/worlds/' + picked.name + '/timeline')
+						.success(function(data){
+							timeline.dates = data;
+							res(null,data);
+						})
+						.error(function(data)
+						{
+							res('Get simulation requests error: ' + data);
+						});
+				}
 			});
 	};
 
@@ -84,20 +93,27 @@ function($scope,$interval,timelineService,picker,renderer,utility)
 		function()
 		{
 			timelineService.playing = false;
-			if(picker.pickedSim.name != "No Simulation")
+			picker.getSim(function(err,picked)
 			{
-				timelineService.getDates(picker.pickedSim.name,function(err,data)
+				if(err)
 				{
-					if(err)
+					console.log(err);
+				}
+				else 
+				{
+					timelineService.getDates(picked.name,function(err,data)
 					{
-						console.log(err);
-					}
-					else
-					{
-						console.log(data);
-					}
-				});
-			}
+						if(err)
+						{
+							console.log(err);
+						}
+						else
+						{
+							console.log(data);
+						}
+					});
+				}
+			});
 		});
 
 	$scope.togglePlay = function()
@@ -108,10 +124,17 @@ function($scope,$interval,timelineService,picker,renderer,utility)
 	{
 		//$timeline.playing = false;
 		// lload the picked world
-		if(picker.pickedSim.name != "No Simulation")
+		picker.getSim(function(err,picked)
 		{
-			
-		}
+			if(err)
+			{
+				console.log(err);
+			}
+			else 
+			{
+				
+			}
+		});
 	};
 	$scope.getTime = function()
 	{
