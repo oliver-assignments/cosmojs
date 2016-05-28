@@ -90,7 +90,7 @@ function($http,renderer)
 
 	manager.getSims = function(res)
 	{
-		$http.get('/apis/worlds/package')
+		$http.get('/apis/worlds/description')
 			.success(function(data){
 				manager.simulations = data;
 				res(null,data);
@@ -172,16 +172,16 @@ function($scope,simulationManager,picker,utility,renderer,timeline)
 				else
 				{
 					picker.pickRandom(function(err)
+					{
+						if(err)
 						{
-							if(err)
-							{
-								console.log(err);
-							}
-							else
-							{
-								//We picked one!
-							}
-						});
+							console.log(err);
+						}
+						else
+						{
+							//We picked one!
+						}
+					});
 				}
 			});
 	};

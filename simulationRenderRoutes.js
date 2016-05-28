@@ -2,11 +2,6 @@
 // 		 Render apis		//
 module.exports = function(app,cosmo) 
 {
-	// //  Return color delta file comparing what is passed to what is requested
-	app.get('/apis/renderer/:worldname/:year/:month/:day',function(req,res)
-	{
-
-	});
 	//  Gets the current data of a world
 	app.get('/apis/worlds/:name/current/:mode', 
 		function(req,res)
@@ -24,13 +19,15 @@ module.exports = function(app,cosmo)
 		}
 	);
 	//  Get teh world map data at a specifc date
-	app.get('/apis/worlds/:name/:date/:mode', function(req,res)
+	app.get('/apis/worlds/:name/:year/:month/:day/:mode', function(req,res)
 	{
 		cosmo.renderer.renderSimulation(
 			{
 				name:req.params.name,
-				date:req.params.date,
-				mode:req.params.mode
+				mode:req.params.mode,
+				year:req.params.year,
+				month:req.params.month,
+				day:req.params.day
 			},
 			function(err,colors) {
 				if(err) {

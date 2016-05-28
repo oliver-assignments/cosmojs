@@ -2,6 +2,8 @@
 //  Simulation Information apis	//
 module.exports = function(app,cosmo) {
 	//  Add a new simulation
+	var descripto = require('cosmo').manager.getSimulationDescriptions;
+
 	app.post('/apis/worlds', function(req,res)
 	{
 		cosmo.manager.createSimulation(req.body, 
@@ -16,10 +18,10 @@ module.exports = function(app,cosmo) {
 			});	
 	});
 
-	//  Get all the simulations
-	app.get('/apis/worlds/package', function(req,res)
+	//  Get all the simulation descriptions
+	app.get('/apis/worlds/description', function(req,res)
 	{
-		cosmo.manager.getSimulationPackages(
+		cosmo.manager.getSimulationDescriptions(
 			function(err,packages)
 			{
 				if(err){
@@ -27,8 +29,7 @@ module.exports = function(app,cosmo) {
 					return;
 				}
 
-				res.json(packages);			
-				
+				res.json(packages);						
 			});	
 	});
 
@@ -44,7 +45,7 @@ module.exports = function(app,cosmo) {
 				}
 
 				res.json(sims);			
-		});
+			});
 	});
 
 	app.delete('/apis/worlds/', function(req,res)
@@ -62,7 +63,7 @@ module.exports = function(app,cosmo) {
 	});
 
 	//  Get the basic pacakge of world
-	app.get('/apis/worlds/:name/package', function(req,res)
+	app.get('/apis/worlds/:name/decription', function(req,res)
 	{
 		//  Return name, dimensions 
 		cosmo.manager.getSimulationPackage(
@@ -86,7 +87,16 @@ module.exports = function(app,cosmo) {
 				}
 				res.json(sim);
 			});
-		
+	});
+	app.get('/apis/worlds/:name/:year/:month/:day', function(req,res)
+	{
+		cosmo.manager.getSimulation(req.params.name,
+			function(err,sim) {
+				if(err) {
+					res.send(err);return;
+				}
+				res.json(sim);
+			});
 	});
 
 	//  Get all the saved date names

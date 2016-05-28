@@ -142,9 +142,10 @@ function($scope,$interval,timelineService,picker,renderer,utility)
 	};
 	$scope.parseTime=function(time)
 	{
-		var data = time.split(",");
-		var dayOfTheWeek = utility.days[(data[2]-1)%10] ;
-		return utility.months[data[1]-1] + " " + data[2] + ", Year " + data[0];
+
+		//var data = time.split(",");
+		//var dayOfTheWeek = utility.days[(data[2]-1)%10] ;
+		return utility.months[time.month-1] + " " + time.day + ", Year " + time.year;
 	};
 
 	$scope.$on('$destroy', function() {

@@ -14,6 +14,11 @@ angular.module('utilityApp',[])
 		"Arlsday", "Farsday", "Shorsday"
 	];
 	
+	utility.getSimulationDateString=function(timeline)
+	{
+
+	};
+
 	utility.getRandomName = function(res)
 	{
 		$http.get('/apis/utility/name/generate')

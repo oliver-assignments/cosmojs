@@ -23,7 +23,13 @@ function($http)
 
 	renderer.getColors = function(req,res)
 	{
-		$http.get('/apis/worlds/'+req.name+'/current/'+req.mode)
+		var date = "/current/";
+		if(req.year !=null)
+		{
+			date = "/" + req.year + "/" + req.month + "/" + req.day + "/";
+		}
+
+		$http.get('/apis/worlds/'+req.name+date+req.mode)
 		.success(function(data) 
 		{
 			renderer.mode = req.mode;
