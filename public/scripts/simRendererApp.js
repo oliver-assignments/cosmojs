@@ -14,7 +14,7 @@ function($http)
 		{name:"Flora",   	modes : ["Nutrient Stores", "Nutro Stores", "Nucium Stores", "Water Stores"]}
 	];
 
-	renderer.colors = [];
+	renderer.renderInstructions = {};
 
 	renderer.updateColors = function(req,res)
 	{
@@ -33,7 +33,7 @@ function($http)
 		.success(function(data) 
 		{
 			renderer.mode = req.mode;
-			renderer.colors = data;
+			renderer.renderInstructions = data;
 			res(null,data)
 		})
 		.error(function(data) {
@@ -104,17 +104,18 @@ function($scope, renderer, picker, requester, utility)
 			}
 			else 
 			{	
-				console.log(picked);
-				var width = $scope.canvas.width / picked.columns;
-				var height = $scope.canvas.height / picked.rows;
+				console.log(renderer.renderInstructions);
+				// console.log(picked);
+				var width = $scope.canvas.width / renderer.renderInstructions.columns;
+				var height = $scope.canvas.height / renderer.renderInstructions.rows;
 
-				for(var x = 0 ; x < picked.columns; x++)
+				for(var x = 0 ; x < renderer.renderInstructions.columns; x++)
 				{
-					for(var y = 0 ; y < picked.rows; y++)
+					for(var y = 0 ; y < renderer.renderInstructions.rows; y++)
 					{
-						var z = (y * picked.columns)+x;
+						var z = (y * renderer.renderInstructions.columns)+x;
 						$scope.ctx.save();
-						$scope.ctx.fillStyle = renderer.colors[z];
+						$scope.ctx.fillStyle = renderer.renderInstructions.colors[z];
 
 						$scope.ctx.fillRect(
 							width*x,

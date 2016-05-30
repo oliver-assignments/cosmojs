@@ -11,12 +11,12 @@ module.exports = function(app,cosmo)
 					name:req.params.name
 					,mode:req.params.mode
 				},
-			 	function(err,colors) {
+			 	function(err,renderInstructions) {
 					if(err) {
 						res.send(err);
 					}
 					else {
-						res.json(colors);
+						res.json(renderInstructions);
 					}
 				});
 		});
@@ -33,12 +33,12 @@ module.exports = function(app,cosmo)
 					,month:req.params.month
 					,day:req.params.day
 				},
-				function(err,colors) {
+				function(err,renderInstructions) {
 					if(err) {
 						res.send(err);
 					}
 					else {
-						res.json(colors);
+						res.json(renderInstructions);
 					}
 				});
 		});
