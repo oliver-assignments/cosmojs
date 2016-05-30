@@ -78,9 +78,12 @@ module.exports = function(app,cosmo) {
 		});
 	});
 
-	app.get('/apis/worlds/:name/current', function(req,res)
+	app.get('/apis/worlds/:name/latest', function(req,res)
 	{
-		cosmo.manager.getSimulation(req.params.name,
+		cosmo.manager.getSimulationContext(
+			{
+				name:req.params.name
+			},
 			function(err,sim) {
 				if(err) {
 					res.send(err);return;
@@ -90,12 +93,19 @@ module.exports = function(app,cosmo) {
 	});
 	app.get('/apis/worlds/:name/:year/:month/:day', function(req,res)
 	{
-		cosmo.manager.getSimulation(req.params.name,
+		cosmo.manager.getSimulationContext(
+			{
+				name: req.params.name
+				,year: Number(req.params.year)
+				,month: Number(req.params.month)
+				,day: Number(req.params.day)
+			},
 			function(err,sim) {
 				if(err) {
-					res.send(err);return;
+					res.send(err);
+					return;
 				}
-				res.json(sim);
+				res.json(ctx);
 			});
 	});
 

@@ -43,6 +43,7 @@ function($http,manager,pager)
 		{
 			if(manager.simulations[s].name == name)
 			{
+				console.log("Picked " + name);
 				picker.pickedSim = manager.simulations[s];
 				pager.changePage('Home');
 			}

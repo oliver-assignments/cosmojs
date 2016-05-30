@@ -23,7 +23,7 @@ function($http)
 
 	renderer.getColors = function(req,res)
 	{
-		var date = "/current/";
+		var date = "/latest/";
 		if(req.year !=null)
 		{
 			date = "/" + req.year + "/" + req.month + "/" + req.day + "/";
