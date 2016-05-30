@@ -89,7 +89,7 @@ function($http,renderer)
 	var manager = {};
 	manager.simulations = [];
 
-	manager.getSims = function(res)
+	manager.getSimulationDescriptions = function(res)
 	{
 		$http.get('/apis/worlds/description')
 			.success(function(data){
@@ -163,7 +163,7 @@ function($scope,simulationManager,picker,utility,renderer,timeline)
 
 	$scope.startController = function()
 	{
-		simulationManager.getSims(
+		simulationManager.getSimulationDescriptions(
 			function(err,data)
 			{
 				if(err)

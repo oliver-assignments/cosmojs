@@ -1,6 +1,6 @@
 angular.module('simulationRequestsApp',[])
-.factory('simulationRequestsService',['$http','simulationManagerService','pickerService',
-function($http,simManager,picker)
+.factory('simulationRequestsService',['$http','simulationManagerService','timelineService','pickerService',
+function($http,simManager,timeline,picker)
 {
 	var service = {};
 	service.requests = [];
@@ -67,11 +67,10 @@ function($http,simManager,picker)
 	service.processSimulationRequests = function(res)
 	{
 		$http.post('/apis/requests/process')
-		.success(function(data){
-			//console.log(data);
-			service.requests=data.requests;
+		.success(function(requests) {
+			service.requests=requests;
 
-			simManager.getSims(function(err,data)
+			simManager.getSimulationDescriptions(function(err,data)
 			{
 				if(err) 
 				{
@@ -88,6 +87,14 @@ function($http,simManager,picker)
 						else
 						{
 							res(null,data.requests);
+							timeline.getDates(picker.pickedSim.name,function(req,res)
+							{
+								if(err)
+								{
+									console.log(err);
+								}
+							});
+
 						}
 					});
 				}

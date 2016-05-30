@@ -55,13 +55,13 @@ module.exports = function(app,cosmo) {
 	app.post('/apis/requests/process',function(req,res)
 	{
 		cosmo.requests.processSimulationRequests(
-			function(err,requestsAndSimulations)
+			function(err,requests)
 			{
 				if(err){
 					res.send(err);
 					return;
 				}
-				res.json(requestsAndSimulations);
+				res.json(requests);
 			});
 	});
 };
