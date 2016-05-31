@@ -1,4 +1,9 @@
 angular.module("timelineApp",[])
+.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+})
 .factory('timelineService',['$http','pickerService',
 function($http,picker)
 {
@@ -65,7 +70,13 @@ function($scope,$interval,timelineService,picker,renderer,utility)
 				}
 				else
 				{
-					renderer.updateColors(picker.pickedSim.name,
+					renderer.updateColors(
+						{	
+							name:picker.pickedSim.name
+							,year:picker.pickedSim.year
+							,month:picker.pickedSim.month
+							,day:picker.pickedSim.day
+						},
 						function(err,data)
 						{
 							if(err)console.log(err);
@@ -109,7 +120,7 @@ function($scope,$interval,timelineService,picker,renderer,utility)
 						}
 						else
 						{
-							console.log(data);
+							//console.log(data);
 						}
 					});
 				}
@@ -120,21 +131,22 @@ function($scope,$interval,timelineService,picker,renderer,utility)
 	{
 		timelineService.togglePlay();
 	};
-	$scope.pickDate = function()
+	$scope.pickDate = function(time)
 	{
-		//$timeline.playing = false;
-		// lload the picked world
-		picker.getSim(function(err,picked)
-		{
-			if(err)
+	// 	console.log("Picked date: ");
+	// 	console.log(time);
+		
+		renderer.updateColors(
 			{
-				console.log(err);
-			}
-			else 
-			{
+				name:$scope.picker.pickedSim.name
+				,year:$scope.picker.pickedSim.year
+				,month:$scope.picker.pickedSim.month
+				,day:$scope.picker.pickedSim.day
 				
-			}
-		});
+			},function(err,data)
+			{
+				$scope.picker.pickDate(time);
+			});
 	};
 	$scope.getTime = function()
 	{
@@ -142,9 +154,6 @@ function($scope,$interval,timelineService,picker,renderer,utility)
 	};
 	$scope.parseTime=function(time)
 	{
-
-		//var data = time.split(",");
-		//var dayOfTheWeek = utility.days[(data[2]-1)%10] ;
 		return utility.months[time.month-1] + " " + time.day + ", Year " + time.year;
 	};
 

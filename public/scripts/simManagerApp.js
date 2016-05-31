@@ -5,12 +5,10 @@ function($http,manager,pager)
 	var picker = {};
 	picker.pickedSim = pickedSim = 
 		{
-			name:"No Simulation",
-			month:1,
-			day:1,
-			year:1,
-			columns: 1,
-			rows: 1
+			name:"No Simulation"
+			,month:1
+			,day:1
+			,year:1
 		};
 
 	picker.getSim = function(res)
@@ -64,6 +62,12 @@ function($http,manager,pager)
 			picker.resetPickedSim();
 		}
 	};
+	picker.pickDate = function(date)
+	{
+		picker.pickedSim.year = date.year;
+		picker.pickedSim.month = date.month;
+		picker.pickedSim.day = date.day;
+	}
 	picker.resetPickedSim = function()
 	{	
 		picker.pickedSim = 
@@ -198,7 +202,13 @@ function($scope,simulationManager,picker,utility,renderer,timeline)
 				else
 				{
 					timeline.stop();
-					renderer.updateColors(picker.pickedSim.name,
+					renderer.updateColors(
+						{	
+							name:picker.pickedSim.name
+							,year:picker.pickedSim.year
+							,month:picker.pickedSim.month
+							,day:picker.pickedSim.day
+						},
 						function(err,data)
 						{
 							if(err)

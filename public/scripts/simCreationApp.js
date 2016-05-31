@@ -28,7 +28,13 @@ function(rulesService,simulationManagerService,renderer,page,picker)
 				}
 				else
 				{
-					renderer.updateColors(picker.pickedSim.name,
+					renderer.updateColors(
+						{	
+							name:picker.pickedSim.name
+							,year:picker.pickedSim.year
+							,month:picker.pickedSim.month
+							,day:picker.pickedSim.day
+						},
 						function(err,data)
 						{
 							if(err)

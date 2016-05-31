@@ -27,9 +27,9 @@
 </head>
 
 <body ng-app="cosmoApp">
-	<div class="container-fluid" ng-controller="cosmoAppController">
-		<div class="row-fluid" ng-controller="pageController">
-    	    <div class="col-sm-4 columns toolbar">
+	<div class="container-fluid page-container" ng-controller="cosmoAppController">
+		<div class="row-fluid page-container" ng-controller="pageController">
+    	    <div class="col-sm-3 columns toolbar">
     	    	<div class="row-fluid titleArea">
                     <img id="logo" src="images/cosmo-logo.png">
     	    		<h1 id="title">Cosmopolitos</h1>
@@ -60,7 +60,7 @@
                     <button style="float:right;" class="btn btn-default" ng-click="processSimulationRequests()">Process</button>
                 </div>
     	    </div>
-    	    <div class="col-sm-8 columns" >
+    	    <div class="col-sm-9 columns" >
                 <div class="slide-animate-container">
                     <div class="slide-animate" ng-include="pager.page.url"></div>
               </div>

@@ -1,7 +1,9 @@
 html, body {
     height:100%;
     width:100%;
-    /*background:#6b8ac7;*/
+}
+.page-container {
+  width:100%;
 }
 #logo {
     margin-top:1em;
@@ -15,6 +17,7 @@ html, body {
 }
 .toolbar {
     max-width: 350px;
+    min-width:280px;
     background:#FAFAFA;
     padding-left:2em;
 
@@ -33,6 +36,12 @@ html, body {
 }
 
 .clickable {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;  
     color:#347ab7;
     cursor: pointer;
 }
@@ -41,6 +50,7 @@ canvas {
     display:block;
     text-align: center;
     margin-left:auto;
+    width:100%;
 }
 
 .modeSections {

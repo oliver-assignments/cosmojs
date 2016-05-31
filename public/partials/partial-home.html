@@ -1,46 +1,50 @@
 <div id="homePage" ng-controller="simulationRendererController">
-    <div class="row-fluid">
-        <h3 id="sim-name">{{picker.pickedSim.name}} &#8728;  
-            {{days[((picker.pickedSim.day-1) % 10)]}}, 
-            {{months[picker.pickedSim.month-1]}} {{picker.pickedSim.day}}, Year {{picker.pickedSim.year}}
-        </h3>
-    </div>
-    <div class="row-fluid">
-        <canvas id="canvas" width="960px" height="600px"></canvas>
-        <canvas id="backCanvas" width="960px" height="600px" style="display:none;"></canvas>
-    </div>
-    <div class="row-fluid">
-        <div class="col-md-4" ng-controller="timelineController">
-            <div id="player">
-                <h4>Continuous - <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==false">Play</span>
-                <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==true">Stop</span></h4>
-                
-                <p>Request
-                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,1)"> day</span>,
-                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,10)"> week</span>,
-                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,30)"> month</span>,
-                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,360)"> year</span>,
-                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,3600)"> decade</span>,
-                <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,36000)"> century</span>
-                </p>
-                <h4 ng-click="getTime()">Timeline</h4>
-                <div class="timeline">
-                    <div ng-repeat="time in timelineService.dates">
-                        <span class="clickable" ng-click="pickDate(time)">{{parseTime(time)}}</span>
-                    </div> 
-                </div>
-                
+    <div class="col-md-10">
+        <div class="row-fluid">
+            <h3 id="sim-name">{{picker.pickedSim.name}} &#8728;  
+                {{days[((picker.pickedSim.day-1) % 10)]}}, 
+                {{months[picker.pickedSim.month-1]}} {{picker.pickedSim.day}}, Year {{picker.pickedSim.year}}
+            </h3>
+        </div>
+        <div class="row-fluid">
+            <canvas id="canvas" width="960px" height="600px"></canvas>
+            <canvas id="backCanvas" width="960px" height="600px" style="display:none;"></canvas>
+        </div>
+        <div class="row-fluid">
+            <div class="col-md-8">
+                <ul class="modeSections">
+                    <li class="modeSection" ng-repeat="section in renderer.modeSections">
+                        <h4>{{section.name}}</h4>
+                        <div ng-repeat="map in section.modes">
+                            <div><span ng:class="{true:'selected', false:''}[map==renderer.mode]" class="clickable" ng-click="changeMapMode(map)">{{map}}</span></div>
+                        </div> 
+                    </li> 
+                </ul>
             </div>
         </div>
-        <div class="col-md-8">
-            <ul class="modeSections">
-                <li class="modeSection" ng-repeat="section in renderer.modeSections">
-                    <h4>{{section.name}}</h4>
-                    <div ng-repeat="map in section.modes">
-                        <div><span ng:class="{true:'selected', false:''}[map==renderer.mode]" class="clickable" ng-click="changeMapMode(map)">{{map}}</span></div>
-                    </div> 
-                </li> 
-            </ul>
+    </div>
+    <div class="col-sm-2 column">
+        <div class="row-fluid column" ng-controller="timelineController">
+            <h4>Continuous - <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==false">Play</span>
+            <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==true">Stop</span></h4>
+            
+            <p>Request
+            <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,1)"> day</span>,
+            <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,10)"> week</span>,
+            <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,30)"> month</span>,
+            <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,360)"> year</span>,
+            <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,3600)"> decade</span>,
+            <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,36000)"> century</span>
+            </p>
+            <h4 ng-click="getTime()">Timeline</h4>
+            <div class="timeline">
+                <div ng-repeat="time in timelineService.dates | reverse">
+                    <span 
+                    ng:class="{true:'selected', false:''}[time.year == picker.pickedSim.year && time.day == picker.pickedSim.day && time.month == picker.pickedSim.month]"
+                    class="clickable" ng-click="pickDate(time)">{{parseTime(time)}}</span>
+                </div> 
+            </div>
+                 
         </div>
     </div>
 </div>

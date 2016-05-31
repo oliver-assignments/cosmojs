@@ -18,7 +18,14 @@ function($http)
 
 	renderer.updateColors = function(req,res)
 	{
-		renderer.getColors({name:req,mode:renderer.mode},res);
+		renderer.getColors(
+			{	
+				name:req.name
+				,mode:renderer.mode
+				,year:req.year
+				,month:req.month
+				,day:req.day
+			},res);
 	};
 
 	renderer.getColors = function(req,res)
@@ -61,7 +68,7 @@ function($scope, renderer, picker, requester, utility)
 	$scope.months = utility.months;
 	$scope.days = utility.days;
 
-	$scope.$watch('renderer.colors',function()
+	$scope.$watch('renderer.renderInstructions',function()
 		{
 			$scope.drawColors();
 		},true);
@@ -104,7 +111,7 @@ function($scope, renderer, picker, requester, utility)
 			}
 			else 
 			{	
-				console.log(renderer.renderInstructions);
+				//console.log(renderer.renderInstructions);
 				// console.log(picked);
 				var width = $scope.canvas.width / renderer.renderInstructions.columns;
 				var height = $scope.canvas.height / renderer.renderInstructions.rows;
