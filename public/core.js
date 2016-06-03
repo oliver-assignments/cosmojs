@@ -1,6 +1,7 @@
 angular.module('cosmoApp', 
 	[
-		'simulationRequestsApp' 
+		'contextApp'
+		,'simulationRequestsApp' 
 		,'simulationManagerApp'
 		,'simulationRendererApp'
 		,'creationApp'

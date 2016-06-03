@@ -1,6 +1,6 @@
 angular.module('simulationRequestsApp',[])
-.factory('simulationRequestsService',['$http','simulationManagerService','timelineService','pickerService',
-function($http,simManager,timeline,picker)
+.factory('simulationRequestsService',['$http','simulationManagerService','timelineService','contextService',
+function($http,simManager,timeline,context)
 {
 	var service = {};
 	service.requests = [];
@@ -18,7 +18,7 @@ function($http,simManager,timeline,picker)
 	};
 	service.createSimulationRequest = function(req,res)
 	{
-		picker.getSim(
+		context.getSim(
 			function(err,picked)
 		{
 			if(err)
@@ -78,25 +78,7 @@ function($http,simManager,timeline,picker)
 				}
 				else
 				{
-					picker.pickSim(picker.name,function(err)
-					{
-						if(err)
-						{
-							res(err);
-						}
-						else
-						{
-							res(null,data.requests);
-							timeline.getDates(picker.name,function(req,res)
-							{
-								if(err)
-								{
-									console.log(err);
-								}
-							});
-
-						}
-					});
+					timeline.getDates(function(err,data){if(err){console.log(err);}});
 				}
 			});
 		})

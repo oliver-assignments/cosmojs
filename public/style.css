@@ -111,7 +111,7 @@ canvas {
 
 .timeline {
   overflow: scroll;
-  height:9em;
+  height:30em;
 }
 
 .slide-animate.ng-enter, .slide-animate.ng-leave {

@@ -1,30 +1,15 @@
 angular.module('simulationManagerApp',[])
-.factory('pickerService',['$http','simulationManagerService','pageService','simulationRendererService','timelineService',
-function($http,manager,pager,renderer,timeline)
+.factory('simulationManagerService', ['$http', 'simulationRendererService', 'timelineService','pageService','contextService',
+function($http,renderer,timeline,pager,context)
 {
-	var picker = {};
-	picker.name = "No Simulation";
-	picker.day = 1;
-	picker.month = 1;
-	picker.year = 1;
+	var manager = {};
+	manager.simulations = [];
 
-	picker.getSim = function(res)
-	{
-		if(picker.name == "No Simulation")
-		{
-			res("Simulation hasn't been picked yet.");
-		}
-		else
-		{
-			res(null,picker);
-		}
-	};
-
-	picker.pickRandom = function(res)
+	manager.pickRandom = function(res)
 	{
 		if(manager.simulations.length>0) {
 			var index = Math.floor(Math.random() * manager.simulations.length);
-			picker.pickSim(manager.simulations[index].name,res); 
+			manager.pickSim(manager.simulations[index].name,res); 
 			res(null);
 		}
 		else
@@ -32,17 +17,17 @@ function($http,manager,pager,renderer,timeline)
 			res("Cannot pick random if there are no simulations.")
 		}
 	};
-	picker.pickSim = function(name,res)
+	manager.pickSim = function(name,res)
 	{
 		for(var s = 0 ; s < manager.simulations.length;s++)
 		{
 			if(manager.simulations[s].name == name)
 			{
-				picker.name = name;
+				context.name = name;
 				pager.changePage('Home');
 
 				//update dates
-				timelineService.getDates(name,function(err,data)
+				timeline.getDates(function(err,data)
 					{
 						if(err)
 						{
@@ -51,12 +36,12 @@ function($http,manager,pager,renderer,timeline)
 						else
 						{
 							//  pick latest date
-							timelineService.pickLatestDate(function(err,data)
+							timeline.pickLatestDate(function(err,data)
 							{
-								console.log(err);
+								if(err){
+									console.log(err);
+								}
 							});
-
-							//  This renders today as well
 						}
 					});
 
@@ -65,50 +50,16 @@ function($http,manager,pager,renderer,timeline)
 		}
 		res(null);
 	};
-	picker.pickSimIndex = function(i)
+	manager.pickSimIndex = function(i)
 	{
 		if(manager.simulations.length>0)
 		{
 			if(i < manager.simulations.length) 
 			{
-				picker.pickSim(manager.simulations[i].name);
+				manager.pickSim(manager.simulations[i].name);
 			}
 		}
-		else
-		{
-			picker.resetPickedSim();
-		}
 	};
-	picker.pickDate = function(date)
-	{
-		picker.year = date.year;
-		picker.month = date.month;
-		picker.day = date.day;
-	}
-	picker.resetPickedSim = function()
-	{	
-		picker = 
-		{
-			name:"No Simulation",
-			month:1,
-			day:1,
-			year:1,
-			columns: 1,
-			rows: 1,
-			colors: {}
-		};
-		//renderer.mapMode = "Satellite";
-		//renderer.clearColors();
-	};
-
-
-	return picker;
-}])
-.factory('simulationManagerService', ['$http', 'simulationRendererService',
-function($http,renderer)
-{
-	var manager = {};
-	manager.simulations = [];
 
 	manager.getSimulationDescriptions = function(res)
 	{
@@ -174,11 +125,12 @@ function($http,renderer)
 	
 	return manager;
 }])
-.controller('simulationManagerController',['$scope','simulationManagerService','pickerService',
-function($scope,simulationManager,picker)
+.controller('simulationManagerController',['$scope','simulationManagerService','contextService','utilityService',
+function($scope,simulationManager,context,utility)
 {
 	$scope.simulationManager = simulationManager;
-	$scope.picker = picker;
+	$scope.context = context;
+	$scope.utility = utility;
 
 	$scope.startController = function()
 	{
@@ -191,7 +143,7 @@ function($scope,simulationManager,picker)
 				}
 				else
 				{
-					picker.pickRandom(function(err)
+					simulationManager.pickRandom(function(err)
 					{
 						if(err)
 						{
@@ -204,7 +156,7 @@ function($scope,simulationManager,picker)
 
 	$scope.pickSim = function(name)
 	{
-		picker.pickSim(name, 
+		simulationManager.pickSim(name, 
 			function(err)
 			{
 				if(err){

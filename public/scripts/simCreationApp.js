@@ -1,6 +1,6 @@
 angular.module('creationApp',[])
-.factory('creationService',['rulesService','simulationManagerService','simulationRendererService','pageService','pickerService',
-function(rulesService,simulationManagerService,renderer,page,picker)
+.factory('creationService',['rulesService','simulationManagerService','simulationRendererService','pageService','contextService',
+function(rulesService,simulationManagerService,renderer,page,context)
 {
 	var creationService = {};
 
@@ -20,7 +20,7 @@ function(rulesService,simulationManagerService,renderer,page,picker)
 	};
 	creationService.navigateToSim = function (name)
 	{
-		picker.pickSim(name,function(err)
+		simulationManagerService.pickSim(name,function(err)
 			{
 				if(err)
 				{
@@ -30,10 +30,10 @@ function(rulesService,simulationManagerService,renderer,page,picker)
 				{
 					renderer.renderWorldAtDateWithMode(
 						{	
-							name:picker.name
-							,year:picker.year
-							,month:picker.month
-							,day:picker.day
+							name:context.name
+							,year:context.year
+							,month:context.month
+							,day:context.day
 						},
 						function(err,data)
 						{
@@ -44,8 +44,17 @@ function(rulesService,simulationManagerService,renderer,page,picker)
 							else
 							{
 								page.changePage('Home');
+
 							}
 						});
+
+					simulationManagerService.getSimulationDescriptions(function(err,data)
+					{
+						if(err)
+						{
+							console.log(err);
+						}
+					})
 					
 				}
 			});

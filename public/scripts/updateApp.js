@@ -1,36 +1,15 @@
 angular.module("updateApp",[])
-.controller('updateController',['$scope','$interval','timelineService','simulationManagerService','pickerService',
-function($scope,$interval,timeline,simManager,picker)
+.controller('updateController',['$scope','$interval','timelineService','simulationManagerService','simulationRequestsService',
+function($scope,$interval,timeline,manager,requests)
 {
 	$scope.every = function()
 	{
-		console.log("every!");
-		simManager.getSimulationDescriptions(
-			function(err,data)
-			{
-				if(err)
-				{
-					console.log(err);
-				}
-		});
+		//console.log("Update.");
+		manager.getSimulationDescriptions(function(err,data){if(err){console.log(err);}});
 
-		// picker.getSim(function(err,picked)
-		// 	{
-		// 		if(err)
-		// 		{
-		// 			console.log(err);
-		// 		}
-		// 		else
-		// 		{
-		// 			timeline.getDates(picker.name,function(req,res)
-		// 			{
-		// 				if(err)
-		// 				{
-		// 					console.log(err);
-		// 				}
-		// 			});
-		// 		}
-		//	});
+		timeline.getDates(function(err,data){if(err){console.log(err);}});
+
+		requests.getSimulationRequests(function(err,data){if(err){console.log(err);}});
 	};
 	$scope.updateInt = $interval($scope.every,5000);
 	

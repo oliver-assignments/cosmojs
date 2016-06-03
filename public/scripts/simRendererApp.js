@@ -1,10 +1,8 @@
 angular.module('simulationRendererApp', [])
-.factory('simulationRendererService',['$http',
-function($http)
+.factory('simulationRendererService',['$http','contextService',
+function($http,context)
 {
 	var renderer = {};
-
-	renderer.mode = "Satellite";
 
 	renderer.modeSections = [
 		{name:"Geography",	modes : ["Satellite", "Depth", "Elevation", "Height"]},
@@ -14,17 +12,40 @@ function($http)
 		{name:"Flora",   	modes : ["Nutrient Stores", "Nutro Stores", "Nucium Stores", "Water Stores"]}
 	];
 
+	renderer.changeMapMode = function(req,res)
+	{
+		if(req != context.mapMode)
+		{
+			renderer.renderWorldAtDateWithMode(
+				{	
+					name:context.name
+					,mode:req
+					,year:context.year
+					,month:context.month
+					,day:context.day
+				},
+				function(err,data)
+				{
+					if(err)
+					{
+						res(err);
+					}
+					else
+					{
+						context.mode = req;
+						res(null);
+					}
+				});
+		}
+	};
+
 	renderer.renderWorldAtDateWithMode = function(req,res)
 	{
-		if(req.mode == undefined) {req.mode = renderer.mode;}
-
 		var date = "latest";
 		if(req.year !=null)
 		{
 			date = req.year + "/" + req.month + "/" + req.day;
 		}
-
-		console.log("Renderering " + req.name);
 
 		$http.get('/apis/worlds/' + req.name + "/" + date + "/" + req.mode)
 		.success(function(renderInstructions) 
@@ -64,33 +85,16 @@ function($http)
 	
 	return renderer;
 }])
-.controller('simulationRendererController',['$scope','simulationRendererService','pickerService','simulationRequestsService',
-function($scope, renderer, picker, requester)
+.controller('simulationRendererController',['$scope','utilityService','simulationRendererService','contextService','simulationRequestsService',
+function($scope, utility, renderer, context, requester)
 {
 	$scope.renderer = renderer;
-
-	$scope.picker = picker;
+	$scope.utility = utility;
+	$scope.context = context;
 
 	$scope.changeMapMode = function(mode)
 	{
-		if(mode != renderer.mapMode)
-		{
-			renderer.renderWorldAtDateWithMode(
-				{	
-					name:picker.name
-					,mode:mode
-					,year:picker.year
-					,month:picker.month
-					,day:picker.day
-				},
-				function(err,data)
-				{
-					if(err)
-					{
-						console.log(err);
-					}
-				});
-		}
+		renderer.changeMapMode(mode,function(err,data){if(err)console.log(err);});
 	};
 
 
