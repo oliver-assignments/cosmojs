@@ -78,7 +78,7 @@ function($http,simManager,timeline,picker)
 				}
 				else
 				{
-					picker.pickSim(picker.pickedSim.name,function(err)
+					picker.pickSim(picker.name,function(err)
 					{
 						if(err)
 						{
@@ -87,7 +87,7 @@ function($http,simManager,timeline,picker)
 						else
 						{
 							res(null,data.requests);
-							timeline.getDates(picker.pickedSim.name,function(req,res)
+							timeline.getDates(picker.name,function(req,res)
 							{
 								if(err)
 								{

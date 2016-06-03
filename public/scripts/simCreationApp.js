@@ -28,12 +28,12 @@ function(rulesService,simulationManagerService,renderer,page,picker)
 				}
 				else
 				{
-					renderer.updateColors(
+					renderer.renderWorldAtDateWithMode(
 						{	
-							name:picker.pickedSim.name
-							,year:picker.pickedSim.year
-							,month:picker.pickedSim.month
-							,day:picker.pickedSim.day
+							name:picker.name
+							,year:picker.year
+							,month:picker.month
+							,day:picker.day
 						},
 						function(err,data)
 						{

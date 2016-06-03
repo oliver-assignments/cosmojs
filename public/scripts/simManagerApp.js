@@ -1,25 +1,22 @@
 angular.module('simulationManagerApp',[])
-.factory('pickerService',['$http','simulationManagerService','pageService',
-function($http,manager,pager)
+.factory('pickerService',['$http','simulationManagerService','pageService','simulationRendererService','timelineService',
+function($http,manager,pager,renderer,timeline)
 {
 	var picker = {};
-	picker.pickedSim = pickedSim = 
-		{
-			name:"No Simulation"
-			,month:1
-			,day:1
-			,year:1
-		};
+	picker.name = "No Simulation";
+	picker.day = 1;
+	picker.month = 1;
+	picker.year = 1;
 
 	picker.getSim = function(res)
 	{
-		if(picker.pickedSim.name == "No Simulation")
+		if(picker.name == "No Simulation")
 		{
 			res("Simulation hasn't been picked yet.");
 		}
 		else
 		{
-			res(null,picker.pickedSim);
+			res(null,picker);
 		}
 	};
 
@@ -41,9 +38,29 @@ function($http,manager,pager)
 		{
 			if(manager.simulations[s].name == name)
 			{
-				console.log("Picked " + name);
-				picker.pickedSim = manager.simulations[s];
+				picker.name = name;
 				pager.changePage('Home');
+
+				//update dates
+				timelineService.getDates(name,function(err,data)
+					{
+						if(err)
+						{
+							res(err);
+						}
+						else
+						{
+							//  pick latest date
+							timelineService.pickLatestDate(function(err,data)
+							{
+								console.log(err);
+							});
+
+							//  This renders today as well
+						}
+					});
+
+				
 			}
 		}
 		res(null);
@@ -64,13 +81,13 @@ function($http,manager,pager)
 	};
 	picker.pickDate = function(date)
 	{
-		picker.pickedSim.year = date.year;
-		picker.pickedSim.month = date.month;
-		picker.pickedSim.day = date.day;
+		picker.year = date.year;
+		picker.month = date.month;
+		picker.day = date.day;
 	}
 	picker.resetPickedSim = function()
 	{	
-		picker.pickedSim = 
+		picker = 
 		{
 			name:"No Simulation",
 			month:1,
@@ -157,13 +174,11 @@ function($http,renderer)
 	
 	return manager;
 }])
-.controller('simulationManagerController',['$scope','simulationManagerService','pickerService','utilityService','simulationRendererService','timelineService',
-function($scope,simulationManager,picker,utility,renderer,timeline)
+.controller('simulationManagerController',['$scope','simulationManagerService','pickerService',
+function($scope,simulationManager,picker)
 {
 	$scope.simulationManager = simulationManager;
 	$scope.picker = picker;
-
-	$scope.utility = utility;
 
 	$scope.startController = function()
 	{
@@ -182,10 +197,6 @@ function($scope,simulationManager,picker,utility,renderer,timeline)
 						{
 							console.log(err);
 						}
-						else
-						{
-							//We picked one!
-						}
 					});
 				}
 			});
@@ -198,22 +209,6 @@ function($scope,simulationManager,picker,utility,renderer,timeline)
 			{
 				if(err){
 					console.log(err);
-				}
-				else
-				{
-					timeline.stop();
-					renderer.updateColors(
-						{	
-							name:picker.pickedSim.name
-							,year:picker.pickedSim.year
-							,month:picker.pickedSim.month
-							,day:picker.pickedSim.day
-						},
-						function(err,data)
-						{
-							if(err)
-								console.log(err);
-						});
 				}
 			});
 	};

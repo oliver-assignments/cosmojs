@@ -8,10 +8,9 @@
         </div>
         <div class="row-fluid">
             <canvas id="canvas" width="960px" height="600px"></canvas>
-            <canvas id="backCanvas" width="960px" height="600px" style="display:none;"></canvas>
         </div>
         <div class="row-fluid">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <ul class="modeSections">
                     <li class="modeSection" ng-repeat="section in renderer.modeSections">
                         <h4>{{section.name}}</h4>
@@ -25,8 +24,8 @@
     </div>
     <div class="col-sm-2 column">
         <div class="row-fluid column" ng-controller="timelineController">
-            <h4>Continuous - <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==false">Play</span>
-            <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==true">Stop</span></h4>
+            <!-- <h4>Continuous - <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==false">Play</span>
+            <span class="clickable" ng-click="togglePlay()" ng-show="timelineService.playing==true">Stop</span></h4> -->
             
             <p>Request
             <span class="clickable" ng-click="createSimulationRequest(picker.pickedSim.name,1)"> day</span>,

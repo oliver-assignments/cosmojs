@@ -12,25 +12,25 @@ function($scope,$interval,timeline,simManager,picker)
 				{
 					console.log(err);
 				}
-			});
+		});
 
-		picker.getSim(function(err,picked)
-			{
-				if(err)
-				{
-					console.log(err);
-				}
-				else
-				{
-					timeline.getDates(picked.name,function(req,res)
-					{
-						if(err)
-						{
-							console.log(err);
-						}
-					});
-				}
-			});
+		// picker.getSim(function(err,picked)
+		// 	{
+		// 		if(err)
+		// 		{
+		// 			console.log(err);
+		// 		}
+		// 		else
+		// 		{
+		// 			timeline.getDates(picker.name,function(req,res)
+		// 			{
+		// 				if(err)
+		// 				{
+		// 					console.log(err);
+		// 				}
+		// 			});
+		// 		}
+		//	});
 	};
 	$scope.updateInt = $interval($scope.every,5000);
 	

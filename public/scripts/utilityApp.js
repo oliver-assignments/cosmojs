@@ -14,7 +14,7 @@ angular.module('utilityApp',[])
 		"Arlsday", "Farsday", "Shorsday"
 	];
 	
-	utility.getSimulationDateString=function(timeline)
+	utility.getSimulationDateString=function(time)
 	{
 
 	};
