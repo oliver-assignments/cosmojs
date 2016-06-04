@@ -2,13 +2,11 @@ html, body {
     height:100%;
     width:100%;
 }
-.page-container {
-  width:100%;
-}
 #logo {
     margin-top:1em;
 }
 #title {
+
     margin-top:0.25em;
 }
 .container-fluid 
@@ -16,14 +14,20 @@ html, body {
   padding-left:0;
 }
 .toolbar {
-    max-width: 350px;
-    min-width:280px;
     background:#FAFAFA;
-    padding-left:2em;
+    padding-left:3em;
+
+    min-width: 280px;
+
+    height:100%;
 
     border-right-style:solid;
     border-right-width:3px;
     border-right-color:#F2F2F2;
+
+    border-bottom-style:solid;
+    border-bottom-width:3px;
+    border-bottom-color:#F2F2F2;
 }
 #sim-form {
     padding-bottom:2em;
@@ -49,8 +53,11 @@ canvas {
     background:black;
     display:block;
     text-align: center;
-    margin-left:auto;
+    margin-left: auto;
+    margin-right:auto;
     width:100%;
+    /*max-width: 800px;
+    max-height: 600px;*/
 }
 
 .modeSections {
@@ -110,8 +117,8 @@ canvas {
 }
 
 .timeline {
-  overflow: scroll;
-  height:30em;
+  height:600px;
+  overflow-y: scroll;
 }
 
 .slide-animate.ng-enter, .slide-animate.ng-leave {
