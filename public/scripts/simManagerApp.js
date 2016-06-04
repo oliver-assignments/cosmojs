@@ -89,14 +89,13 @@ function($http,renderer,timeline,pager,context)
 	};
 	manager.deleteSim = function(name,res) 
 	{
-		//console.log("Attempting to delete " + id);
-		
-		$scope.deleteSimulationsRequests(name);
+		console.log("Attempting to delete " + name);
 
 		$http.delete('/apis/worlds/' + name)
 			.success(function(data)
 			{
 				manager.simulations = data;
+				console.log(data);
 				res(null,data);
 			})	
 			.error(function(data)
@@ -131,6 +130,14 @@ function($scope,simulationManager,context,utility)
 	$scope.simulationManager = simulationManager;
 	$scope.context = context;
 	$scope.utility = utility;
+
+	$scope.deleteSim = function(name)
+	{
+		simulationManager.deleteSim(name,function(err,data)
+		{
+			if(err)console.log(err);
+		});
+	}
 
 	$scope.startController = function()
 	{
