@@ -1,78 +1,89 @@
 <div id="creationPage" ng-controller="creationController">
     <div class="row setting-section">
-        <h3>Create a New Simulation</h3>
-        <div class="input-group">
-            <span class="input-group-addon" id="basic-addon3">Name</span>
+        <div class="col-md-9">
+            <h3>Create a New Simulation</h3>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon3">Name</span>
 
-            <input type="text" class="form-control" ng-model="formData.name">
-            <div class="input-group-btn">
-                <label class="btn btn-default" ng-click="randomizeName()">Generate Random Name</label>
+                <input type="text" class="form-control" ng-model="formData.name">
+                <div class="input-group-btn">
+                    <label class="btn btn-default" ng-click="randomizeName()">Generate Random Name</label>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="row setting-section" style="margin-top:1em;">
-        <h4>Size</h4>
-        <p class="parameter-description">
-            Planet size dictates the size and resolution of the simulation. Larger plant and animal populations and more complex continental shapes are possible with a bigger map.
-        </p>
-        <div class="btn-group">
-            <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:80,rows:50}" ng-init="checked=true">Small 80x50</label>
-            <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:160,rows:100}">Medium 160x100</label>
-            <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:320,rows:200}">Large 320x200</label>
+        <div class="col-md-9">
+            <h4>Size</h4>
+            <p class="parameter-description">
+                Planet size dictates the size and resolution of the simulation. Larger plant and animal populations and more complex continental shapes are possible with a bigger map.
+            </p>
+            <div class="btn-group">
+                <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:80,rows:50}" ng-init="checked=true">Small 80x50</label>
+                <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:160,rows:100}">Medium 160x100</label>
+                <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:320,rows:200}">Large 320x200</label>
+            </div>
         </div>
     </div>
 
     <div class="row setting-section">
-        <h4>Tilt</h4>
-        <p class="parameter-description">
-            Planet tilt dictates which hemisphere recieves the most sun. For instance the Earth's 23.5 degree tilt means that the sourthern hemisphere recieves the most sunlight annually. Sunlight allows for dense foliage and heavy rainfall.
-        </p>
-        <div class="btn-group" ng-init="selected=true">
-            <label class="btn btn-default" ng-model="formData.tilt" uib-btn-radio="0.25" btn-checkbox-true>Northern Hemisphere</label>
-            <label class="btn btn-default"  ng-model="formData.tilt" uib-btn-radio="0.5">Equator</label>
-            <label class="btn btn-default" ng-checked="selected" ng-model="formData.tilt" uib-btn-radio="0.75" ng-init="checked=true">Southern Hemisphere</label>
+        <div class="col-md-9">
+            <h4>Tilt</h4>
+            <p class="parameter-description">
+                Planet tilt dictates which hemisphere recieves the most sun. For instance the Earth's 23.5 degree tilt means that the sourthern hemisphere recieves the most sunlight annually. Sunlight allows for dense foliage and heavy rainfall.
+            </p>
+            <div class="btn-group" ng-init="selected=true">
+                <label class="btn btn-default" ng-model="formData.tilt" uib-btn-radio="0.25" btn-checkbox-true>Northern Hemisphere</label>
+                <label class="btn btn-default"  ng-model="formData.tilt" uib-btn-radio="0.5">Equator</label>
+                <label class="btn btn-default" ng-checked="selected" ng-model="formData.tilt" uib-btn-radio="0.75" ng-init="checked=true">Southern Hemisphere</label>
+            </div>
         </div>
     </div>
 
     <div class="row setting-section">
-        <h4>Rotation Direction</h4>
-        <p class="parameter-description">
-            Planet rotation dictates which direction the rainfall flows. For instance, Earth's West to East rotation means that its greater wind currents flow East to West.
-            Continental geography in the East cuts off warm currents from reaching the West.
-        </p>
-        <div class="btn-group">
-            <label class="btn btn-default" ng-model="formData.rotation" uib-btn-radio="-1" ng-init="checked=true">East to West</label>
-            <label class="btn btn-default" ng-model="formData.rotation" uib-btn-radio="1">West to East</label>
+        <div class="col-md-9">
+            <h4>Rotation Direction</h4>
+            <p class="parameter-description">
+                Planet rotation dictates which direction the rainfall flows. For instance, Earth's West to East rotation means that its greater wind currents flow East to West.
+                Continental geography in the East cuts off warm currents from reaching the West.
+            </p>
+            <div class="btn-group">
+                <label class="btn btn-default" ng-model="formData.rotation" uib-btn-radio="-1" ng-init="checked=true">East to West</label>
+                <label class="btn btn-default" ng-model="formData.rotation" uib-btn-radio="1">West to East</label>
+            </div>
         </div>
     </div>
 
     <div class="row setting-section">
-        
-        <h4>Simulation Rules</h4>
-        <p class="parameter-description">
-            Simulations rules allow you to customize the forces that affect the plant and animal agents within the simulation. Simple rules can produce very complex behaviour.
-        </p>
-        <div class="btn-group rule">
-            <button 
-            ng-repeat="rule in rules.booleanRules" 
-            type="button" class="btn btn-default" 
-            btn-checkbox-true="true" btn-checkbox-false="false" 
-            uib-btn-checkbox
-            ng-model="formData.rules[camelize(rule.title)]"
-            uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter">
-            <b>{{rule.character}}</b> {{rule.title}}</button>
-        </div>
-        {{formData}}
-        <div ng-repeat="rule in rules.inputRules" class="input-group rule">
-            <span class="input-group-addon" uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter"><b>{{rule.character}}</b> {{rule.title}}</span>
-            <div ng-repeat="input in rule.inputs">
-                <input type="text" ng-model="formData[input.title]" class="form-control" placeholder="{{rules.GetInputString(input)}}" ng-model="neihgb"/>
-                <span class="input-group-btn" style="width:0px;"></span>
+        <div class="col-md-9">
+            <h4>Simulation Rules</h4>
+            <p class="parameter-description">
+                Simulations rules allow you to customize the forces that affect the plant and animal agents within the simulation. Simple rules can produce very complex behaviour.
+            </p>
+            <div class="btn-group rule">
+                <button 
+                ng-repeat="rule in rules.booleanRules" 
+                type="button" class="btn btn-default" 
+                btn-checkbox-true="true" btn-checkbox-false="false" 
+                uib-btn-checkbox
+                ng-model="formData.rules[camelize(rule.title)]"
+                uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter">
+                <b>{{rule.character}}</b> {{rule.title}}</button>
+            </div>
+            {{formData}}
+            <div ng-repeat="rule in rules.inputRules" class="input-group rule">
+                <span class="input-group-addon" uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter"><b>{{rule.character}}</b> {{rule.title}}</span>
+                <div ng-repeat="input in rule.inputs">
+                    <input type="text" ng-model="formData[input.title]" class="form-control" placeholder="{{rules.GetInputString(input)}}" ng-model="neihgb"/>
+                    <span class="input-group-btn" style="width:0px;"></span>
+                </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <button ng-click="createSim()" style="display:block;margin-left:auto;" type="button" class="btn btn-default btn-lg">Create</button>
+        <div class="col-md-9">
+            <button ng-click="createSim()" style="display:block;margin-left:auto;" type="button" class="btn btn-default btn-lg">Create</button>
+        </div>
     </div>
 </div>

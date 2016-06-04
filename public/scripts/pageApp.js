@@ -19,6 +19,8 @@ function()
 			if(service.pages[p].name == name)
 			{
 				service.page = service.pages[p];
+
+				//RENDER AGAIN
 			}
 		}
 	};
