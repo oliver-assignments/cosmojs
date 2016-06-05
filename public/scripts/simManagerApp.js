@@ -24,7 +24,7 @@ function($http,renderer,timeline,pager,context)
 			if(manager.simulations[s].name == name)
 			{
 				context.name = name;
-				pager.changePage('Home');
+				pager.changePage('Home',function(err){});
 
 				//update dates
 				timeline.getDates(function(err,data)

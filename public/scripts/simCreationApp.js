@@ -72,6 +72,7 @@ function($scope,rulesService,creationService,utility)
 		,rotation: 1
 		,tilt: 0.75
 		,dimensions:{columns:80,rows:50}
+		,style: "pangea"
 	};
 	$scope.isValidNumber = function(n)
 	{
