@@ -1,7 +1,7 @@
 angular.module('pageApp', ['ngAnimate'])
 
-.factory('pageService',[
-function()
+.factory('pageService',['contextService','simulationRendererService',
+function(context,renderer)
 {
 	var service = {};
 	service.pages = 
@@ -12,17 +12,35 @@ function()
 	];
 	service.page = service.pages[0];
 
-	service.changePage = function(name)
+	service.changePage = function(name,res)
 	{
 		for(var p = 0 ; p < service.pages.length; p++)
 		{
 			if(service.pages[p].name == name)
 			{
 				service.page = service.pages[p];
-
-				//RENDER AGAIN
+				if(name == "Home")
+				{
+					renderer.renderWorldAtDateWithMode(
+						{
+							name:context.name
+							,mode:context.mode
+							,year:context.year
+							,month:context.month
+							,day:context.day
+						},
+						function(err,data)
+						{
+							if(err)
+							{
+								res(err);
+							}
+							else{res(null);}
+						});
+				}
 			}
 		}
+		res("Cannot find page named " + name + ".");
 	};
 
 
