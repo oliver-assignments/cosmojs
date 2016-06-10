@@ -43,7 +43,7 @@ function(rulesService,simulationManagerService,renderer,page,context)
 							}
 							else
 							{
-								page.changePage('Home');
+								page.changePage('Home',function(err){if(err)console.log(err);});
 
 							}
 						});

@@ -51,10 +51,11 @@ function(context,renderer)
 function($scope,pageService)
 {
 	$scope.pager = pageService;
+	$scope.empty = function(err){};
 
-	$scope.changePage = function(name)
+	$scope.changePage = function(name,res)
 	{
-		pageService.changePage(name);
+		pageService.changePage(name,$scope.empty);
 	}
 
 }]);

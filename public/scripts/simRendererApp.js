@@ -9,7 +9,7 @@ function($http,context)
 		{name:"Mantle", 	modes : ["Tectonic", "Asthenosphere"]},
 		{name:"Weather", 	modes : ["Sunlight", "Rainfall"]},
 		{name:"Soil",    	modes : ["Nutrients", "Nutro", "Nucium"]},
-		{name:"Flora",   	modes : ["Density","Nutrient Stores", "Nutro Stores", "Nucium Stores", "Water Stores"]}
+		{name:"Flora",   	modes : ["Density","DNA","Nutrient Stores", "Nutro Stores", "Nucium Stores", "Water Stores"]}
 	];
 
 	renderer.changeMapMode = function(req,res)

@@ -36,7 +36,7 @@
     	    		<h1 id="title">Cosmopolitos</h1>
     	    		<ul class="list-inline">
                         <li ng:class="{true:'selected', false:''}[page.name==pager.page.name]"
-                        ng-repeat="page in pager.pages" class="clickable" ng-click="changePage(page.name)"><h4>{{page.name}}</h4></li> 
+                        ng-repeat="page in pager.pages" class="clickable" ng-click="changePage(page.name,empty)"><h4>{{page.name}}</h4></li> 
                         <li><h4><a href="https://oliverbarnum.wordpress.com/category/cosmopolitos/">Blog</a></h4></li>
     	    		</ul>
     			</div>
