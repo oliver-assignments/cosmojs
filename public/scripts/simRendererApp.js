@@ -20,9 +20,7 @@ function($http,context)
 				{	
 					name:context.name
 					,mode:req
-					,year:context.year
-					,month:context.month
-					,day:context.day
+					,days:context.days
 				},
 				function(err,data)
 				{
@@ -42,9 +40,9 @@ function($http,context)
 	renderer.renderWorldAtDateWithMode = function(req,res)
 	{
 		var date = "latest";
-		if(req.year !=null)
+		if(req.days !=null)
 		{
-			date = req.year + "/" + req.month + "/" + req.day;
+			date = req.days;
 		}
 
 		$http.get('/apis/worlds/' + req.name + "/" + date + "/" + req.mode)

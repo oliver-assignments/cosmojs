@@ -91,14 +91,12 @@ module.exports = function(app,cosmo) {
 				res.json(sim);
 			});
 	});
-	app.get('/apis/worlds/:name/:year/:month/:day', function(req,res)
+	app.get('/apis/worlds/:name/:days', function(req,res)
 	{
 		cosmo.manager.getSimulationContext(
 			{
 				name: req.params.name
-				,year: Number(req.params.year)
-				,month: Number(req.params.month)
-				,day: Number(req.params.day)
+				,days: req.params.days
 			},
 			function(err,sim) {
 				if(err) {

@@ -1,66 +1,76 @@
 <!-- <!DOCTYPE html> -->
 <html>
 <head>
-	<meta text="viewport" content="width=device-width, initial-scale=1">
+   <meta text="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Cosmopolitos</title>
+   <title>Cosmopolitos</title>
 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.js"></script>
-    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.3.2.js"></script>
+   <script src="angular.js"></script><!--  1.5.3  -->
+   <script src="angular-animate.js"></script><!--  1.5.3  -->
+   <script src="ui-bootstrap-tpls-1.3.2.js"></script><!--  1.3.2  -->
 
-    <script src="scripts/contextApp.js"></script>
-    <script src="scripts/utilityApp.js"></script>
-    <script src="scripts/rulesApp.js"></script>
-    <script src="scripts/simManagerApp.js"></script>
-    <script src="scripts/simRendererApp.js"></script>
-    <script src="scripts/simRequestsApp.js"></script>
-    <script src="scripts/simCreationApp.js"></script>
-    <script src="scripts/pageApp.js"></script>
-    <script src="scripts/updateApp.js"></script>
-    <script src="scripts/timelineApp.js"></script>
-    
-    <script src="core.js"></script>
+   <script src="scripts/contextApp.js"></script>
+   <script src="scripts/utilityApp.js"></script>
+   <script src="scripts/rulesApp.js"></script>
+   <script src="scripts/simManagerApp.js"></script>
+   <script src="scripts/simRendererApp.js"></script>
+   <script src="scripts/simRequestsApp.js"></script>
+   <script src="scripts/simCreationApp.js"></script>
+   <script src="scripts/pageApp.js"></script>
+   <script src="scripts/updateApp.js"></script>
+   <script src="scripts/timelineApp.js"></script>
+   
+   <script src="core.js"></script>
 
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="style.css">
+   <link href="bootstrap.min.css" type="text/css" rel="stylesheet"><!--  3.3.6  -->
+   <link rel="stylesheet" type="text/css" href="style.css">
 
 </head>
 
 <body ng-app="cosmoApp">
-	<div class="container-fluid" ng-controller="cosmoAppController">
-		<div class="row" ng-controller="pageController">
-    	    <div class="col-md-2 toolbar">
-    	    	<div class="row titleArea" >
-                    <img id="logo" src="images/cosmo-logo.png">
-    	    		<h1 id="title">Cosmopolitos</h1>
-    	    		<ul class="list-inline">
-                        <li ng:class="{true:'selected', false:''}[page.name==pager.page.name]"
-                        ng-repeat="page in pager.pages" class="clickable" ng-click="changePage(page.name,empty)"><h4>{{page.name}}</h4></li> 
-                        <li><h4><a href="https://oliverbarnum.wordpress.com/category/cosmopolitos/">Blog</a></h4></li>
-    	    		</ul>
-    			</div>
-    			<div class="row" ng-controller="simulationManagerController">
-                    <h3 ng-controller="updateController">Worlds</h3>
-    	            <ul class="list-unstyled">
-                        <li class="world-listing" 
-                        ng-repeat="sim in simulationManager.simulations">
-                        <span ng:class="{true:'selected', false:''}[sim.name==context.name]">
-                        	<span class="clickable" 
-                            ng-click="pickSim(sim.name)">{{sim.name}}</span> &#8728;
-                        	{{utility.months[sim.month-1]}} {{sim.day}}, Year {{sim.year}}
-                        	<span class="clickable" ng-click="deleteSim(sim.name)">x</span>
-                        </span>
-        	           </li>
-                    </ul>
-    			</div>
-    	    </div>
-    	    <div class="col-md-10">
-                <div class="slide-animate-container">
-                    <div class="slide-animate" ng-include="pager.page.url"></div>
-                </div>
-    		</div>
+  <div class="container-fluid" ng-controller="cosmoAppController">
+      <div class="row" ng-controller="pageController">
+        <div class="col-md-2 toolbar">
+           <div class="row titleArea" >
+
+              <img id="logo" src="images/cosmo-logo.png">
+              <h1 id="title">Cosmopolitos</h1>
+              
+              <ul class="list-inline">
+                <li ng-class="page.name==pager.page.name ? 'selected' : ''" ng-repeat="page in pager.pages" class="clickable" ng-click="changePage(page.name,empty)">
+                  <h4>{{page.name}}</h4>
+                </li> 
+                <li>
+                  <h4><a href="https://oliverbarnum.wordpress.com/category/cosmopolitos/">Blog</a></h4>
+                </li>
+              </ul>
+
+           </div>
+           <div class="row" ng-controller="simulationManagerController">
+              
+              <h3 ng-controller="updateController">Worlds</h3>
+              
+              <ul class="list-unstyled">
+                <li class="world-listing" ng-repeat="sim in simulationManager.simulations">
+                  <span ng-class="sim.name==context.name ? 'selected' : ''">
+                     <span class="clickable" ng-click="pickSim(sim.name)">{{sim.name}}</span> 
+                     &#8728; 
+                     {{ sim.days | daysToDate }}
+                     <span class="clickable" ng-click="deleteSim(sim.name)">x</span>
+                  </span>
+                </li>
+              </ul>
+
+           </div>
         </div>
-	</div>
+        <div class="col-md-10">
+           
+           <div class="slide-animate-container">
+              <div class="slide-animate" ng-include="pager.page.url"></div>
+           </div>
+        
+        </div>
+      </div>
+   </div>
 </body>
 </html>

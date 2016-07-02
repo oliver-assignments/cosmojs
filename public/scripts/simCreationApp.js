@@ -31,9 +31,7 @@ function(rulesService,simulationManagerService,renderer,page,context)
 					renderer.renderWorldAtDateWithMode(
 						{	
 							name:context.name
-							,year:context.year
-							,month:context.month
-							,day:context.day
+							,days:context.days
 						},
 						function(err,data)
 						{

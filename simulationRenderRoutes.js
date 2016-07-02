@@ -22,16 +22,14 @@ module.exports = function(app,cosmo)
 		});
 
 	//  Get teh world map data at a specifc date
-	app.get('/apis/worlds/:name/:year/:month/:day/:mode', 
+	app.get('/apis/worlds/:name/:days/:mode', 
 		function(req,res)
 		{
 			cosmo.renderer.renderSimulationContextWithMode(
 				{
 					name:req.params.name
 					,mode:req.params.mode
-					,year:req.params.year
-					,month:req.params.month
-					,day:req.params.day
+					,days:req.params.days
 				},
 				function(err,renderInstructions) {
 					if(err) {

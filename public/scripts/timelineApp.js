@@ -1,7 +1,7 @@
 angular.module("timelineApp",[])
 .filter('reverse', function() {
   return function(items) {
-    return items.slice().reverse();
+    return items;//.slice().reverse();
   };
 })
 .factory('timelineService',['$http','contextService','simulationRendererService',
@@ -22,6 +22,7 @@ function($http,context,renderer)
 				else{
 					$http.get('/apis/worlds/' + context.name + '/timeline')
 						.success(function(data){
+							console.log(data)
 							timeline.dates = data;
 							res(null,data);
 						})
@@ -36,9 +37,7 @@ function($http,context,renderer)
 	{
 		timeline.pickDate(
 		{
-			year: timeline.dates[0].year
-			,month: timeline.dates[0].month
-			,day: timeline.dates[0].day
+			days: timeline.dates[0].days
 		},res);
 	}
 	timeline.pickDate = function(time,res)
@@ -46,9 +45,7 @@ function($http,context,renderer)
 		renderer.renderWorldAtDateWithMode(
 			{
 				name:context.name
-				,year:time.year
-				,month:time.month
-				,day:time.day
+				,days:time.days
 				,mode:context.mode
 				
 			},function(err,data)
@@ -59,9 +56,7 @@ function($http,context,renderer)
 				}
 				else
 				{
-					context.year = time.year;
-					context.month = time.month;
-					context.day = time.day;
+					context.days = time.days;
 				
 					res(null,data);
 				}
@@ -83,10 +78,6 @@ function($scope,$interval,timelineService,context,utility)
 	$scope.getTime = function()
 	{
 		timelineService.getDates()
-	};
-	$scope.parseTime=function(time)
-	{
-		return utility.months[time.month-1] + " " + time.day + ", Year " + time.year;
 	};
 
 	$scope.$on('$destroy', function() {

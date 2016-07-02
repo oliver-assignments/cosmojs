@@ -9,7 +9,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req,res)
 {
-	res.sendFile(path.join(__dirname + '/public/index.html'));
+    res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 var cosmo = require('cosmo');
@@ -20,6 +20,7 @@ require('./simulationManagementRoutes')(app,cosmo);
 require('./simulationRenderRoutes')(app,cosmo);
 require('./utilityRoutes')(app,cosmo);
 
-var localHost = 3000;
-console.log("Listening on localhost:" + localHost);
-app.listen(localHost);
+var host = "localhost";
+var port = 3000;
+console.log("Listening on "+host+":" + port);
+app.listen(port);
