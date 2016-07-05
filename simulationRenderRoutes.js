@@ -13,7 +13,11 @@ module.exports = function(app,cosmo)
 				},
 			 	function(err,renderInstructions) {
 					if(err) {
-						res.send(err);
+						res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
 					}
 					else {
 						res.json(renderInstructions);
@@ -33,7 +37,11 @@ module.exports = function(app,cosmo)
 				},
 				function(err,renderInstructions) {
 					if(err) {
-						res.send(err);
+						res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
 					}
 					else {
 						res.json(renderInstructions);

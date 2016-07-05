@@ -10,7 +10,12 @@ module.exports = function(app,cosmo) {
 			function(err,sims)
 			{
 				if(err) {
-					res.send(err);
+					// res.send(err);
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
 				}
 				else {
 					res.json(sims);			
@@ -25,27 +30,17 @@ module.exports = function(app,cosmo) {
 			function(err,packages)
 			{
 				if(err){
-					res.send(err);
-					return;
+					// res.send(err);
+					// return;
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
 				}
-
-				res.json(packages);						
+				else 
+					res.json(packages);						
 			});	
-	});
-
-	//  Deletse a simulation
-	app.delete('/apis/worlds/:name', function(req,res)
-	{
-		cosmo.manager.deleteSimulation(req.params.name,
-			function(err,sims)
-			{
-				if(err){
-					res.send(err);
-					return;
-				}
-
-				res.json(sims);			
-			});
 	});
 
 	app.delete('/apis/worlds/', function(req,res)
@@ -55,12 +50,36 @@ module.exports = function(app,cosmo) {
 			{
 				if(err)
 				{
-					res.send(err);
-					return;
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
 				}
-				res.json(sims);			
+				else
+					res.json(sims);			
 		});
 	});
+
+	//  Deletse a simulation
+	app.delete('/apis/worlds/:name', function(req,res)
+	{
+		cosmo.manager.deleteSimulation(req.params.name,
+			function(err,sims)
+			{
+				if(err){
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
+				}
+				else
+					res.json(sims);			
+			});
+	});
+
+	
 
 	//  Get the basic pacakge of world
 	app.get('/apis/worlds/:name/decription', function(req,res)
@@ -71,10 +90,14 @@ module.exports = function(app,cosmo) {
 			function(err,glimpse)
 			{
 				if(err){
-					res.send(err);
-				return;
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
 			}
-			res.json(glimpse);			
+			else
+				wres.json(glimpse);			
 		});
 	});
 
@@ -86,24 +109,14 @@ module.exports = function(app,cosmo) {
 			},
 			function(err,sim) {
 				if(err) {
-					res.send(err);return;
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
 				}
-				res.json(sim);
-			});
-	});
-	app.get('/apis/worlds/:name/:days', function(req,res)
-	{
-		cosmo.manager.getSimulationContext(
-			{
-				name: req.params.name
-				,days: req.params.days
-			},
-			function(err,sim) {
-				if(err) {
-					res.send(err);
-					return;
-				}
-				res.json(ctx);
+				else
+					res.json(sim);
 			});
 	});
 
@@ -114,7 +127,11 @@ module.exports = function(app,cosmo) {
 			function(err,timeline) {
 				if(err)
 				{
-					res.send(err);
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
 				}
 				else
 				{
@@ -122,4 +139,28 @@ module.exports = function(app,cosmo) {
 				}
 			});
 	});
+
+	app.get('/apis/worlds/:name/:days', function(req,res)
+	{
+		cosmo.manager.getSimulationContext(
+			{
+				name: req.params.name
+				,days: req.params.days
+			},
+			function(err,sim) {
+				if(err) {
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
+				}
+				else
+				{
+					res.json(ctx);
+				}
+			});
+	});
+
+	
 };

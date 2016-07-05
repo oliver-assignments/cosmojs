@@ -17,7 +17,7 @@ angular.module('utilityApp',[])
 		var month = months[Math.floor((days % 360) / 30)];
 		var year = Math.floor(days / 360) + 1;
 		
-		return weekday + ", " + month + " " + day + ", " + " Annon " + year;
+		return weekday + ", " + month + " " + day + ", " + " Year " + year;
 	};
 })
 .filter('duration', function() {

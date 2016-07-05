@@ -6,8 +6,13 @@ module.exports = function(app,cosmo) {
 		cosmo.requests.getSimulationRequests(function(err,requests)
 			{
 				if(err){
-					res.send(err);
-					return;
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
+					//res.send(err);
+					//return;
 				}
 				res.json(requests);
 			});
@@ -19,8 +24,13 @@ module.exports = function(app,cosmo) {
 			function(err,requests)
 			{
 				if(err){
-					res.send(err);
-					return;
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
+					// res.send(err);
+					// return;
 				}
 				res.json(requests);
 			});
@@ -32,8 +42,13 @@ module.exports = function(app,cosmo) {
 			function(err,requests)
 			{
 				if(err){
-					res.send(err);
-					return;
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
+					// res.send(err);
+					// return;
 				}
 				res.json(requests);
 			});
@@ -45,8 +60,13 @@ module.exports = function(app,cosmo) {
 			function(err,requests)
 			{
 				if(err){
-					res.send(err);
-					return;
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
+					// res.send(err);
+					// return;
 				}
 
 				res.json(requests);
@@ -58,8 +78,13 @@ module.exports = function(app,cosmo) {
 			function(err,requests)
 			{
 				if(err){
-					res.send(err);
-					return;
+					res.status = (err.status || 500);
+						res.render('error', {
+					        message: err,
+					        error: err
+					    });
+					// res.send(err);
+					// return;
 				}
 				res.json(requests);
 			});

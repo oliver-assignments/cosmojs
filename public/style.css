@@ -6,8 +6,11 @@ html, body {
     margin-top:1em;
 }
 #title {
-
+    font-size: 2vw;
     margin-top:0.25em;
+}
+.subtitle {
+    font-size: 1vw;  
 }
 .container-fluid 
 {

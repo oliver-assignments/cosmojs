@@ -37,11 +37,11 @@
               <h1 id="title">Cosmopolitos</h1>
               
               <ul class="list-inline">
-                <li ng-class="page.name==pager.page.name ? 'selected' : ''" ng-repeat="page in pager.pages" class="clickable" ng-click="changePage(page.name,empty)">
-                  <h4>{{page.name}}</h4>
+                <li ng-class="page.name==pager.page.name ? 'selected' : ''" ng-repeat="page in pager.pages" ng-click="changePage(page.name,empty)">
+                  <h4 class="clickable subtitle">{{page.name}}</h4>
                 </li> 
                 <li>
-                  <h4><a href="https://oliverbarnum.wordpress.com/category/cosmopolitos/">Blog</a></h4>
+                  <h4 class="subtitle"><a href="https://oliverbarnum.wordpress.com/category/cosmopolitos/">Blog</a></h4>
                 </li>
               </ul>
 
