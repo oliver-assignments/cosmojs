@@ -22,7 +22,7 @@ function($http,context,renderer)
 				else{
 					$http.get('/apis/worlds/' + context.name + '/timeline')
 						.success(function(data){
-							console.log(data)
+							// console.log(data)
 							timeline.dates = data;
 							res(null,data);
 						})
