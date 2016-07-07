@@ -35,10 +35,12 @@ function($http,context,renderer)
 	};
 	timeline.pickLatestDate = function(res)
 	{
+
 		timeline.pickDate( timeline.dates[timeline.dates.length-1], res );
 	}
 	timeline.pickDate = function(time,res)
 	{
+
 		renderer.renderWorldAtDateWithMode(
 			{
 				name:context.name
@@ -53,7 +55,8 @@ function($http,context,renderer)
 				}
 				else
 				{
-					context.days = time.days;
+
+					context.days = time;
 				
 					res(null,data);
 				}

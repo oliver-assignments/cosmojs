@@ -95,7 +95,6 @@ function($http,renderer,timeline,pager,context)
 			.success(function(data)
 			{
 				manager.simulations = data;
-				console.log(data);
 				res(null,data);
 			})	
 			.error(function(data)

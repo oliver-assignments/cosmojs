@@ -5,7 +5,7 @@
                 <h3 id="sim-name">
                     {{ context.name }} 
                     &#8728;  
-                    {{ context.days | daysToDate }}
+                    {{ context.days | daysToDate: false }}
                     &#8728; 
                     {{ context.mode }} Mode
                 </h3>
@@ -56,7 +56,7 @@
                         <div ng-repeat="time in timelineService.dates track by $index">
                             <span 
                             ng-class="time.days == context.days ? 'selected' : '' "
-                            class="clickable" ng-click="pickDate(time)"> {{ time | daysToDate }}</span>
+                            class="clickable" ng-click="pickDate(time)"> {{ time | daysToDate:true }}</span>
                         </div> 
                     </div>
                 </div>

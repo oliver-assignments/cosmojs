@@ -8,7 +8,6 @@ app.use( bodyParser.urlencoded({extended: true}));
 
 app.use(express.static(__dirname + '/public'));
 app.use(favicon(__dirname + '/public/images/none.ico'));
-console.log(__dirname + '/public/images/none.ico')
 
 app.get('/', function(req,res)
 {
@@ -25,5 +24,5 @@ require('./utilityRoutes')(app,cosmo);
 
 var host = "localhost";
 var port = 3000;
-console.log("Listening on "+host+":" + port);
 app.listen(port);
+console.log("Listening on "+host+":" + port);

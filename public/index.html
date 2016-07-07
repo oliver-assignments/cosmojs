@@ -55,7 +55,7 @@
                   <span ng-class="sim.name==context.name ? 'selected' : ''">
                      <span class="clickable" ng-click="pickSim(sim.name)">{{sim.name}}</span> 
                      &#8728; 
-                     {{ sim.days | daysToDate }}
+                     {{ sim.days | daysToDate:true }}
                      <span class="clickable" ng-click="deleteSim(sim.name)">x</span>
                   </span>
                 </li>
@@ -66,7 +66,7 @@
         <div class="col-md-10">
            
            <div class="slide-animate-container">
-              <div class="slide-animate" ng-include="pager.page.url"></div>
+              <div ng-include="pager.page.url"></div>
            </div>
         
         </div>
