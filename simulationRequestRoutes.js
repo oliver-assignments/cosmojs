@@ -7,14 +7,10 @@ module.exports = function(app,cosmo) {
 			{
 				if(err){
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
-					//res.send(err);
-					//return;
+					res.json(err);
 				}
-				res.json(requests);
+				else
+					res.json(requests);
 			});
 	});
 	//  Post new simulation request
@@ -25,14 +21,10 @@ module.exports = function(app,cosmo) {
 			{
 				if(err){
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
-					// res.send(err);
-					// return;
+					res.json(err);
 				}
-				res.json(requests);
+				else
+					res.json(requests);
 			});
 	});
 	//  Clear simulation requests
@@ -43,14 +35,10 @@ module.exports = function(app,cosmo) {
 			{
 				if(err){
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
-					// res.send(err);
-					// return;
+					res.json(err);
 				}
-				res.json(requests);
+				else
+					res.json(requests);
 			});
 	});
 	//  Delete all simulation requests of worldname
@@ -61,15 +49,10 @@ module.exports = function(app,cosmo) {
 			{
 				if(err){
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
-					// res.send(err);
-					// return;
+					res.json(err);
 				}
-
-				res.json(requests);
+				else
+					res.json(requests);
 			});
 	});
 	app.post('/apis/requests/process',function(req,res)
@@ -79,14 +62,10 @@ module.exports = function(app,cosmo) {
 			{
 				if(err){
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
-					// res.send(err);
-					// return;
+					res.json(err);
 				}
-				res.json(requests);
+				else
+					res.json(requests);
 			});
 	});
 };

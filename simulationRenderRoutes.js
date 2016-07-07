@@ -14,10 +14,7 @@ module.exports = function(app,cosmo)
 			 	function(err,renderInstructions) {
 					if(err) {
 						res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
+						res.json(err);
 					}
 					else {
 						res.json(renderInstructions);
@@ -38,10 +35,7 @@ module.exports = function(app,cosmo)
 				function(err,renderInstructions) {
 					if(err) {
 						res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
+						res.json(err);
 					}
 					else {
 						res.json(renderInstructions);

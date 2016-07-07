@@ -38,9 +38,7 @@ function($http,simManager,timeline,context)
 					});
 					
 			}
-		});
-	
-			
+		});	
 	};
 	service.clearSimulationRequests = function(res)
 	{
@@ -115,6 +113,15 @@ function($scope,simulationRequestsService)
 					console.log(err);
 				}
 			});
+	};
+
+	$scope.createRequest = function(name,days)
+	{
+		simulationRequestsService.createSimulationRequest({name: name, days: days},
+			function(err,data)
+			{
+				if(err)console.log(err);
+			})
 	};
 
 	$scope.processSimulationRequests = function()

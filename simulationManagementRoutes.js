@@ -12,10 +12,7 @@ module.exports = function(app,cosmo) {
 				if(err) {
 					// res.send(err);
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
+					res.json(err);
 				}
 				else {
 					res.json(sims);			
@@ -33,10 +30,7 @@ module.exports = function(app,cosmo) {
 					// res.send(err);
 					// return;
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
+					res.json(err);
 				}
 				else 
 					res.json(packages);						
@@ -51,10 +45,7 @@ module.exports = function(app,cosmo) {
 				if(err)
 				{
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
+					res.json(err);
 				}
 				else
 					res.json(sims);			
@@ -69,10 +60,7 @@ module.exports = function(app,cosmo) {
 			{
 				if(err){
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
+					res.json(err);
 				}
 				else
 					res.json(sims);			
@@ -91,10 +79,7 @@ module.exports = function(app,cosmo) {
 			{
 				if(err){
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
+					res.json(err);
 			}
 			else
 				wres.json(glimpse);			
@@ -110,10 +95,7 @@ module.exports = function(app,cosmo) {
 			function(err,sim) {
 				if(err) {
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
+					res.json(err);
 				}
 				else
 					res.json(sim);
@@ -128,10 +110,7 @@ module.exports = function(app,cosmo) {
 				if(err)
 				{
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
+					res.json(err);
 				}
 				else
 				{
@@ -150,10 +129,7 @@ module.exports = function(app,cosmo) {
 			function(err,sim) {
 				if(err) {
 					res.status = (err.status || 500);
-						res.render('error', {
-					        message: err,
-					        error: err
-					    });
+					res.json(err);
 				}
 				else
 				{

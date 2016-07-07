@@ -33,7 +33,11 @@ angular.module('utilityApp',[])
 			return "0 days";
 		}
 
-		return (years!=0 ? years + " years " : "") + (month!=0 ? months + " months " : "") + (years!=0 || months!=0 ? " and " : "") + (days!=0 ? days + "days" : "");	
+		return (years!=0 ? years + (years==1 ? " year" : " years") : "")  
+			+ (years!=0 && months!=0 && days!=0 ? ", " : (years!=0 && months!=0 ? " and ": "")) // List commo and and
+			+ (months!=0 ? months + (months==1 ? " month" : " months") : "") 
+			+ (years!=0 && months!=0 && days!=0 ? ", and " : (days!=0 && (years!=0 || months!=0) ? " and ": "")) // List commo and and
+			+ (days!=0 ? days + (days==1 ? " day" : " days") : "");	
 	};
 })
 .factory('utilityService',['$http',function($http)

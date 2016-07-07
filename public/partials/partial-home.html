@@ -36,12 +36,10 @@
                     <div ng-controller="simulationRequestsController">
                         <h4>Requests</h4>
                         <p>Request
-                        <span class="clickable" ng-click="createSimulationRequest(context.name,1)"> day</span>,
-                        <span class="clickable" ng-click="createSimulationRequest(context.name,10)"> week</span>,
-                        <span class="clickable" ng-click="createSimulationRequest(context.name,30)"> month</span>,
-                        <span class="clickable" ng-click="createSimulationRequest(context.name,360)"> year</span>,
-                        <span class="clickable" ng-click="createSimulationRequest(context.name,3600)"> decade</span>,
-                        <span class="clickable" ng-click="createSimulationRequest(context.name,36000)"> century</span>
+                        <span class="clickable" ng-click="createRequest(context.name,10)"> day</span>,
+                        <span class="clickable" ng-click="createRequest(context.name,10)"> week</span>,
+                        <span class="clickable" ng-click="createRequest(context.name,30)"> month</span>,
+                        <span class="clickable" ng-click="createRequest(context.name,360)"> year</span>
                         </p>
                         <ul class="list-unstyled">
                             <li ng-repeat="request in requestManager.requests">
