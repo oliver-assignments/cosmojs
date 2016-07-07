@@ -19,34 +19,28 @@ function(context,renderer)
 			if(service.pages[p].name == name)
 			{
 				service.page = service.pages[p];
+
 				if(name == "Home")
 				{
 					renderer.renderWorldAtDateWithMode(
 						{
 							name:context.name
 							,mode:context.mode
-							,year:context.year
-							,month:context.month
-							,day:context.day
+							,days:context.days
 						},
 						function(err,data)
 						{
-							if(err)
-							{
-								res(err);
-							}
-							else{res(null);}
+							(err ? res(err) : res(null));
+							
 						});
+					return;
 				}
 			}
 		}
 		res("Cannot find page named " + name + ".");
 	};
-
-
 	return service;
 }])
-
 .controller('pageController',['$scope', 'pageService',
 function($scope,pageService)
 {
