@@ -3,7 +3,7 @@ var app = express();
 
 var bodyParser = require('body-parser')
 app.use( bodyParser.json() );
-app.use(bodyParser.urlencoded({extended: true})); 
+app.use( bodyParser.urlencoded({extended: true})); 
 
 app.use(express.static(__dirname + '/public'));
 
@@ -24,3 +24,11 @@ var host = "localhost";
 var port = 3000;
 console.log("Listening on "+host+":" + port);
 app.listen(port);
+
+/*
+httpdispatcher
+method override
+monggoose
+morgan
+colorvert
+*/
