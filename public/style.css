@@ -147,3 +147,7 @@ canvas {
 .slide-animate.ng-leave.ng-leave-active {
   top:1000px;
 }
+
+.input-group-addon {
+  background: none;
+}

@@ -10,7 +10,7 @@ function(context,renderer)
 		,{name:"New", url:"partials/partial-new.html"}
 		,{name:"About", url:"partials/partial-about.html"}
 	];
-	service.page = service.pages[0];
+	service.page = service.pages[1];
 
 	service.changePage = function(name,res)
 	{
