@@ -133,7 +133,7 @@ module.exports = function(app,cosmo) {
 				}
 				else
 				{
-					res.json(ctx);
+					res.json(sim);
 				}
 			});
 	});
