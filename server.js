@@ -23,6 +23,6 @@ require('./simulationRenderRoutes')(app,cosmo);
 require('./utilityRoutes')(app,cosmo);
 
 var host = "localhost";
-var port = 3000;
+var port = Nubmer(process.env.PORT || 3000);
 app.listen(port);
 console.log("Listening on "+host+":" + port);

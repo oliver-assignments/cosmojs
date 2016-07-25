@@ -35,7 +35,6 @@ function($http,context,renderer)
 	};
 	timeline.pickLatestDate = function(res)
 	{
-
 		timeline.pickDate( timeline.dates[timeline.dates.length-1], res );
 	}
 	timeline.pickDate = function(time,res)
@@ -79,8 +78,16 @@ function($scope,$interval,timelineService,context,utility)
 	{
 		timelineService.getDates()
 	};
-
-	$scope.$on('$destroy', function() {
-	    $interval.cancel($scope.playInterval);
-	});
-}]);
+}])
+.directive('keyNavigation', function ($timeout) {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if (event.which === 38) {
+                
+            }
+            if (event.which === 40) {
+                
+            }
+        });
+    };
+});

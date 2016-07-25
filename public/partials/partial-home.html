@@ -53,9 +53,9 @@
                 <div class='row'>
                     <h4>Timeline</h4>
                     <div class="timeline">
-                        <div ng-repeat="time in timelineService.dates track by $index">
+                        <div ng-repeat="time in timelineService.dates track by $index" key-navigation>
                             <span 
-                            ng-class="time.days == context.days ? 'selected' : '' "
+                            ng-class="time == context.days ? 'selected' : '' "
                             class="clickable" ng-click="pickDate(time)"> {{ time | daysToDate:true }}</span>
                         </div> 
                     </div>
