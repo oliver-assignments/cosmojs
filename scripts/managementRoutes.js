@@ -2,8 +2,6 @@
 //  Simulation Information apis	//
 module.exports = function(app,cosmo) {
 	//  Add a new simulation
-	var descripto = require('cosmo').manager.getSimulationDescriptions;
-
 	app.post('/apis/worlds', function(req,res)
 	{
 		cosmo.manager.createSimulation(req.body, 

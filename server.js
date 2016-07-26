@@ -14,15 +14,16 @@ app.get('/', function(req,res)
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
-var cosmo = require('cosmo');
+var cosmo = require('./scripts/cosmo/index.js');
+//var cosmo = require('cosmo');
 
 //  Routes
-require('./simulationRequestRoutes')(app,cosmo);
-require('./simulationManagementRoutes')(app,cosmo);
-require('./simulationRenderRoutes')(app,cosmo);
-require('./utilityRoutes')(app,cosmo);
+ require('./scripts/requestRoutes')(app,cosmo);
+require('./scripts/managementRoutes')(app,cosmo);
+require('./scripts/renderRoutes')(app,cosmo);
+require('./scripts/utilityRoutes')(app,cosmo);
 
-var host = "localhost";
-var port = Nubmer(process.env.PORT || 3000);
+var port = Number(process.env.PORT || 3000);
 app.listen(port);
-console.log("Listening on "+host+":" + port);
+
+console.log("Listening on port " + port);
