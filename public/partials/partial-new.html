@@ -12,7 +12,6 @@
             </div>
         </div>
     </div>
-
     <div class="row setting-section" style="margin-top:1em;">
         <div class="col-md-9">
             <h4>Size</h4>
@@ -20,25 +19,12 @@
                 Planet size dictates the size and resolution of the simulation. Larger plant and animal populations and more complex continental shapes are possible with a bigger map.
             </p>
             <div class="btn-group">
-                <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:80,rows:50}" ng-init="checked=true">Small 80x50</label>
-                <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:160,rows:100}">Medium 160x100</label>
-                <label class="btn btn-default" ng-model="formData.dimensions" uib-btn-radio="{columns:320,rows:200}">Large 320x200</label>
+                <label class="btn btn-default" ng-model="formData.size" uib-btn-radio="'small'">Small</label>
+                <label class="btn btn-default" ng-model="formData.size" uib-btn-radio="'medium'">Medium</label>
+                <label class="btn btn-default" ng-model="formData.size" uib-btn-radio="'large'">Large</label>
             </div>
         </div>
     </div>
-
-    <!-- <div class="row setting-section" style="margin-top:1em;">
-        <div class="col-md-9">
-            <h4>Landmass</h4>
-            <p class="parameter-description">
-                Supercontinental landmasses create opprotunities for genetic communication between plants populations, encouraging a uniform genetic pool. Continents encourage localized genetic pools. 
-            </p>
-            <div class="btn-group">
-                <label class="btn btn-default" ng-model="formData.style" ng-checked="selected" ng-init="checked=true"  uib-btn-radio="'pangea'">Pangea</label>
-                <label class="btn btn-default" ng-model="formData.style" uib-btn-radio="'continents'">Continents</label>
-            </div>
-        </div>
-    </div> -->
 
     <div class="row setting-section">
         <div class="col-md-9">
@@ -48,8 +34,8 @@
             </p>
             <div class="btn-group" ng-init="selected=true">
                 <label class="btn btn-default" ng-model="formData.tilt" uib-btn-radio="0.25" btn-checkbox-true>Northern Hemisphere</label>
-                <label class="btn btn-default"  ng-model="formData.tilt" uib-btn-radio="0.5">Equator</label>
-                <label class="btn btn-default" ng-checked="selected" ng-model="formData.tilt" uib-btn-radio="0.75" ng-init="checked=true">Southern Hemisphere</label>
+                <label class="btn btn-default" ng-model="formData.tilt" uib-btn-radio="0.5">Equator</label>
+                <label class="btn btn-default" ng-model="formData.tilt" uib-btn-radio="0.75" ng-init="checked=true">Southern Hemisphere</label>
             </div>
         </div>
     </div>
@@ -62,15 +48,27 @@
                 Continental geography in the East cuts off warm currents from reaching the West.
             </p>
             <div class="btn-group">
-                <label class="btn btn-default" ng-model="formData.rotation" uib-btn-radio="-1" ng-init="checked=true">East to West</label>
+                <label class="btn btn-default" ng-model="formData.rotation" uib-btn-radio="-1">East to West</label>
                 <label class="btn btn-default" ng-model="formData.rotation" uib-btn-radio="1">West to East</label>
             </div>
         </div>
     </div>
-
     <div class="row setting-section">
         <div class="col-md-9">
-            <h4>Simulation Rules</h4>
+            <h4>Plots per Province</h4>
+            <p class="parameter-description">
+                The more plants share a plot the more they have to compete for shared soil nutrients.
+            </p>
+            <div class="btn-group">
+                <label class="btn btn-default" ng-model="formData.plotsPer" uib-btn-radio="9">9</label>
+                <label class="btn btn-default" ng-model="formData.plotsPer" uib-btn-radio="16">16</label>
+                <label class="btn btn-default" ng-model="formData.plotsPer" uib-btn-radio="25">25</label>
+            </div>
+        </div>
+    </div>
+    <div class="row setting-section">
+        <div class="col-md-9">
+            <h4>Rules</h4>
             <p class="parameter-description">
                 Simulations rules allow you to customize the forces that affect the plant and animal agents within the simulation. Simple rules can produce very complex behaviour.
             </p>

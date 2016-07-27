@@ -8,18 +8,29 @@ var simulations = new Array();
 
 exports.createSimulation = function(req, res) 
 {   
+    var dimensions = {columns:100,rows:80};
+    if(req.size=="medium")
+    {
+        dimensions = {columns:200,rows:160};
+    }
+    else if(req.size=="large")
+    {
+        dimensions = {columns:300,rows:240};
+    }
+
     var simulation = {
-        name:req.name
-        ,columns:req.dimensions.columns
-        ,rows:req.dimensions.rows
-        ,dates:[]
+        name:      req.name
+        , columns: dimensions.columns
+        , rows:    dimensions.rows
+        , dates:   []
     };
 
     simulate.prepareSimulation(
         context(
-            req.dimensions.columns, req.dimensions.rows,
-            req.tilt, req.rotation,
-            req.rules),
+            dimensions.columns, dimensions.rows
+            , req.plotsPer
+            , req.tilt, req.rotation
+            , req.rules),
         function(err,ctx)
         {
             if(err) { 

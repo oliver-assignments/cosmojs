@@ -1,4 +1,4 @@
-angular.module('creationApp',[])
+angular.module('creationApp',['ngCookies'])
 .factory('creationService',['rulesService','simulationManagerService','simulationRendererService','pageService','contextService',
 function(rulesService,simulationManagerService,renderer,page,context)
 {
@@ -65,17 +65,17 @@ function(rulesService,simulationManagerService,renderer,page,context)
 	return creationService;
 
 }])
-.controller('creationController', ['$scope','rulesService','creationService','utilityService',
-function($scope,rulesService,creationService,utility) 
+.controller('creationController', ['$scope','$cookies','rulesService','creationService','utilityService',
+function($scope,$cookies, rulesService,creationService,utility) 
 {
 	$scope.rules = rulesService;
 
 	$scope.formData={
-		 name: ""
-		,rotation: 1
-		,tilt: 0.75
-		,dimensions:{columns:80,rows:50}
-		,style: "pangea"
+		 name: 		""
+		, rotation: 1
+		, tilt: 	0.75
+		, size: 	"small"
+		, plotsPer: 9
 	};
 	$scope.isValidNumber = function(n)
 	{
@@ -94,6 +94,11 @@ function($scope,rulesService,creationService,utility)
 		        delete $scope.formData[i];
 		    }
 		}
+
+		$cookies.put('cosmo-tilt', "" + $scope.formData.tilt);
+		$cookies.put('cosmo-rotation', "" + $scope.formData.rotation);
+		$cookies.put('cosmo-plots-per', "" + $scope.formData.plotsPer);
+		$cookies.put('cosmo-size', $scope.formData.size);
 
 		creationService.createSim($scope.formData,
 			function(err)
@@ -126,7 +131,25 @@ function($scope,rulesService,creationService,utility)
 	};
 	$scope.startApp = function()
 	{
-		$scope.randomizeName();
+		$scope.randomizeName();//80x100
+
+		var size = $cookies.get('cosmo-size');
+		if(size){
+			$scope.formData.size = size;
+		}
+		var rotation = $cookies.get('cosmo-rotation');
+		if(rotation){
+			$scope.formData.rotation = Number(rotation);
+		}
+		var tilt = $cookies.get('cosmo-tilt');
+		if(tilt){
+			$scope.formData.tilt = Number(tilt);
+		}
+		var plotsPer = $cookies.get('cosmo-plots-per');
+		if(plotsPer){
+			$scope.formData.plotsPer = Number(plotsPer);
+		}
+
 	};
 	$scope.camelize = function(str) {
 	  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {

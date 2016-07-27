@@ -43,7 +43,6 @@ html, body {
 .clickable {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
-    -khtml-user-select: none;    /* Konqueror */
     -moz-user-select: none;      /* Firefox */
     -ms-user-select: none;       /* Internet Explorer/Edge */
     user-select: none;  
@@ -79,7 +78,9 @@ canvas {
     border-right-color:#F2F2F2;
     padding-right:1em;
 }
+.setting-group {
 
+}
 .rule {
     margin-bottom:0.75em;
 }
@@ -94,9 +95,10 @@ canvas {
 }
 .info-page {
   padding-left:2em;
+  height:100%;
+  overflow-y: scroll;
+  padding-bottom:6em;
 }
-
-
 
 .slide-animate-container {
   position:relative;
@@ -109,14 +111,19 @@ canvas {
 .world-listing {
   padding-left:0.25em;
 }
-.selected {
+.highlight-selected {
   background:#EFEFEF;
   border-style:solid;
   border-width:1px;
   border-color:#DADADA;
-
 }
-
+.bold-selected {
+  font-weight: bold;
+}
+.right-toolbar {
+  height:100%;
+  overflow-y: hidden;
+}
 .timeline {
   height:600px;
   overflow-y: scroll;
@@ -150,4 +157,7 @@ canvas {
 
 .input-group-addon {
   background: none;
+}
+.odd {
+  background:#FAFAFA;
 }

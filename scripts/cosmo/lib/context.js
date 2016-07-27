@@ -1,6 +1,6 @@
 var utility = require('./utility.js');
 
-module.exports = function(columns, rows, tilt, rotation,rules) 
+module.exports = function(columns, rows, plotsPer, tilt, rotation,rules) 
 {
     var ctx = {};
     
@@ -27,9 +27,9 @@ module.exports = function(columns, rows, tilt, rotation,rules)
     ctx.richestNuciumStore = 1;
     ctx.richestWaterStore = 1;
 
-    ctx.plantColumnsPer = 10;
+    ctx.plantColumnsPer = Math.sqrt(plotsPer);
     ctx.plantColumns = ctx.columns * ctx.plantColumnsPer;
-    ctx.plantRowsPer = 10;
+    ctx.plantRowsPer = Math.sqrt(plotsPer);
     ctx.plantsPer = ctx.plantRowsPer * ctx.plantColumnsPer;
     ctx.plantRows = ctx.rows * ctx.plantRowsPer;
     ctx.plantArea = ctx.plantColumns * ctx.plantRows;

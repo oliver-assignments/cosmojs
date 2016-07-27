@@ -1,66 +1,66 @@
 <div class="row" ng-controller="simulationRendererController">
-    <div class="col-md-10">
-        <div class="row">
-            <div class="col-md-12">
-                <h3 id="sim-name">
-                    {{ context.name }} 
-                    &#8728;  
-                    {{ context.days | daysToDate: false }}
-                    &#8728; 
-                    {{ context.mode }} Mode
-                </h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <canvas id="canvas" width="960px" height="600px"></canvas>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <ul class="modeSections">
-                    <li class="modeSection" ng-repeat="section in renderer.modeSections">
-                        <h4>{{ section.name }}</h4>
-                        <div ng-repeat="map in section.modes">
-                            <div ng-class="map==renderer.mode ? 'selected' : '' " class="clickable" ng-click="changeMapMode(map)">{{ map }}</div>
-                        </div> 
-                    </li> 
-                </ul>
-            </div>
-        </div>
+  <div class="col-md-10">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 id="sim-name">
+          {{ context.name }} 
+          &#8728;  
+          {{ context.days | daysToDate: false }}
+          &#8728; 
+          {{ context.mode }} Mode
+        </h3>
+      </div>
     </div>
-    <div class="col-md-2">
-        <div class="row" ng-controller="timelineController">
-            <div class="col-md-12">
-                <div class="row">
-                    <div ng-controller="simulationRequestsController">
-                        <h4>Requests</h4>
-                        <p>Request
-                        <span class="clickable" ng-click="createRequest(context.name,1)"> day</span>,
-                        <span class="clickable" ng-click="createRequest(context.name,10)"> week</span>,
-                        <span class="clickable" ng-click="createRequest(context.name,30)"> month</span>,
-                        <span class="clickable" ng-click="createRequest(context.name,360)"> year</span>
-                        </p>
-                        <ul class="list-unstyled">
-                            <li ng-repeat="request in requestManager.requests">
-                                {{ request.name }} for {{ request.days | duration }}
-                                <span class="clickable" ng-click="deleteSimulationsRequests(request.name)">X</span></li>
-                        </ul>
-                        <button style="float:right;" class="btn btn-default" ng-click="processSimulationRequests()">Process</button>
-                    </div>
-                </div>
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <canvas id="canvas" width="960px" height="600px"></canvas>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="modeSections">
+          <li class="modeSection" ng-repeat="section in renderer.modeSections">
+            <h4>{{ section.name }}</h4>
+            <div ng-repeat="map in section.modes">
+              <div ng-class="map==renderer.mode ? 'bold-selected' : '' " class="clickable" ng-click="changeMapMode(map)">{{ map }}</div>
+            </div> 
+          </li> 
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 right-toolbar">
+    <div class="row" ng-controller="timelineController">
+      <div class="col-md-12">
+        <div class="row">
+          <div ng-controller="simulationRequestsController">
+            <h4>Requests</h4>
+            <p>Request
+            <span class="clickable" ng-click="createRequest(context.name,1)"> day</span>,
+            <span class="clickable" ng-click="createRequest(context.name,10)"> week</span>,
+            <span class="clickable" ng-click="createRequest(context.name,30)"> month</span>,
+            <span class="clickable" ng-click="createRequest(context.name,360)"> year</span>
+            </p>
+            <ul class="list-unstyled">
+              <li ng-repeat="request in requestManager.requests" ng-class-even="'odd'">
+                {{ request.name }} for {{ request.days | duration }}
+                <span class="clickable" ng-click="deleteSimulationsRequests(request.name)">X</span></li>
+            </ul>
+            <button style="float:right;" class="btn btn-default" ng-click="processSimulationRequests()">Process</button>
+          </div>
+        </div>
 
-                <div class='row'>
-                    <h4>Timeline</h4>
-                    <div class="timeline">
-                        <div ng-repeat="time in timelineService.dates track by $index" key-navigation>
-                            <span 
-                            ng-class="time == context.days ? 'selected' : '' "
-                            class="clickable" ng-click="pickDate(time)"> {{ time | daysToDate:true }}</span>
-                        </div> 
-                    </div>
-                </div>
-            </div>
+        <div class='row'>
+          <h4>Timeline</h4>
+          <div class="timeline">
+            <div ng-repeat="time in timelineService.dates track by $index" key-navigation ng-class-even="'odd'">
+              <span 
+              ng-class="time == context.days ? 'bold-selected' : '' "
+              class="clickable" ng-click="pickDate(time)"> {{ time | daysToDate:true }}</span>
+            </div> 
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>

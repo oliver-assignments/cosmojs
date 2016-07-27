@@ -418,8 +418,6 @@ function CreatePillarOfWaterAtZ(ctx, z, unitsOfWater)
   ctx.unresolvedWater[z] = true;
 }
 
-
-
 function ResolveWater(ctx)
 {
     var accuracy = 0.05;//0.005;

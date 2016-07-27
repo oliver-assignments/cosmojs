@@ -8,6 +8,7 @@
    <script src="angular.js"></script><!--  1.5.3  -->
    <script src="angular-animate.js"></script><!--  1.5.3  -->
    <script src="ui-bootstrap-tpls-1.3.2.js"></script><!--  1.3.2  -->
+   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
 
    <script src="scripts/contextApp.js"></script>
    <script src="scripts/utilityApp.js"></script>
@@ -37,7 +38,7 @@
               <h1 id="title">Cosmopolitos</h1>
               
               <ul class="list-inline">
-                <li ng-class="page.name==pager.page.name ? 'selected' : ''" ng-repeat="page in pager.pages" ng-click="changePage(page.name,empty)">
+                <li ng-class="page.name==pager.page.name ? 'highlight-selected' : ''" ng-repeat="page in pager.pages" ng-click="changePage(page.name,empty)">
                   <h4 class="clickable subtitle">{{page.name}}</h4>
                 </li> 
                 <li>
@@ -51,8 +52,8 @@
               <h3 ng-controller="updateController">Worlds</h3>
               
               <ul class="list-unstyled">
-                <li class="world-listing" ng-repeat="sim in simulationManager.simulations">
-                  <span ng-class="sim.name==context.name ? 'selected' : ''">
+                <li class="world-listing" ng-repeat="sim in simulationManager.simulations" ng-class-even="'odd'">
+                  <span ng-class="sim.name==context.name ? 'bold-selected' : ''">
                      <span class="clickable" ng-click="pickSim(sim.name)">{{sim.name}}</span> 
                      &#8728; 
                      {{ sim.days | daysToDate:true }}
