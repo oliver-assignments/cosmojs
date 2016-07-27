@@ -88,7 +88,7 @@ exports.simulateDay = function(ctx,res)
                 ctx.nutro[z] = 0;
             }
         }
-        ctx.nutroStore[p] - nutroMetabolism;
+        ctx.nutroStore[p] -= nutroMetabolism;
         
         //  Nucium Consumption
         if(ctx.nucium[z] > 0)
@@ -104,12 +104,17 @@ exports.simulateDay = function(ctx,res)
                 ctx.nucium[z] = 0;
             }
         }
-        ctx.nutroStore[p] - nutroMetabolism;
+        ctx.nutroStore[p] -= nutroMetabolism;
+
+        //  Water
+        if(ctx.rules.water)
+        {
+            ctx.waterStore[p] += ctx.rainfall[z];
+            ctx.waterStore[p] -= waterMetabolism;
+        }
 
         //  Root competition
-        var rootCompetition = false;
-        if(rootCompetition) {
-            var tooManyNeighbors = 3;
+        if(ctx.rules.roots && Number(ctx.rules.roots > 0) && Number(ctx.rules.roots < 9)) {
             var numberNeighbors = 0;
             var neighbors = ctx.GetPlantNeighbors(p,true);
             for(var n = 0 ; n < neighbors.length ; n++)
@@ -117,7 +122,7 @@ exports.simulateDay = function(ctx,res)
                 if(ctx.hasPlant[neighbors[n]])
                     numberNeighbors++;
             }
-            if(numberNeighbors >= tooManyNeighbors)
+            if(numberNeighbors >= Number(ctx.rules.roots))
             {
                 killPlant(p,z,ctx)
                 continue;
@@ -152,7 +157,7 @@ exports.simulateDay = function(ctx,res)
                     {   
                         //  This needs to be made pending!
                         seeds[neighbor] = {
-                            dna: MutateDNA(ctx.dna[p])//"bcbdcd"
+                            dna: MutateDNA(ctx.dna[p], ctx.rules.mutation)//"bcbdcd"
                             , nutroStore: ctx.GetNutroEndowment(p)
                             , nuciumStore: ctx.GetNuciumEndowment(p)
                         }
@@ -187,14 +192,14 @@ exports.onYear = function(ctx,res)
     res(null);
 };
 
-function MutateDNA(dna)
+function MutateDNA(dna,mutationRate)
 {
     var newDna = "";
     var hasChanged = false;
     for(var d = 0 ; d < dna.length ; d++)
     {
         var valueAtDna = dna.charCodeAt(d)-97;
-        if(Math.random() > 0.999)
+        if(Math.random() > mutationRate)
         {
             hasChanged = true;
             //  Mutate

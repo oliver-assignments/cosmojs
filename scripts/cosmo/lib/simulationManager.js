@@ -28,7 +28,7 @@ exports.createSimulation = function(req, res)
     simulate.prepareSimulation(
         context(
             dimensions.columns, dimensions.rows
-            , req.plotsPer
+            , req.plantsPer
             , req.tilt, req.rotation
             , req.rules),
         function(err,ctx)

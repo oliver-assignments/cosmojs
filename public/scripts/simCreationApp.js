@@ -71,11 +71,20 @@ function($scope,$cookies, rulesService,creationService,utility)
 	$scope.rules = rulesService;
 
 	$scope.formData={
-		 name: 		""
+		 name: ""
 		, rotation: 1
-		, tilt: 	0.75
-		, size: 	"small"
-		, plotsPer: 9
+		, tilt: 0.75
+		, size: "small"
+		, plantsPer: 9
+
+		, rules: {
+			water: false
+			, maturity: false
+			, disease: false
+			, consumption: false
+		 	, mutation: 0.999
+			, roots: 8
+		}
 	};
 	$scope.isValidNumber = function(n)
 	{
@@ -95,10 +104,29 @@ function($scope,$cookies, rulesService,creationService,utility)
 		    }
 		}
 
-		$cookies.put('cosmo-tilt', "" + $scope.formData.tilt);
-		$cookies.put('cosmo-rotation', "" + $scope.formData.rotation);
-		$cookies.put('cosmo-plots-per', "" + $scope.formData.plotsPer);
-		$cookies.put('cosmo-size', $scope.formData.size);
+		//  Radio rules
+		for( var r = 0 ; r < rulesService.radios.length ; r++ )
+		{
+			$cookies.put(
+				'cosmo-' + rulesService.radios[r].variable, 
+				$scope.formData[rulesService.radios[r].variable]);
+		}
+
+		//  Boolean rules
+		for( var b = 0 ; b < rulesService.booleans.length ; b++ )
+		{
+			$cookies.put(
+				'cosmo-' + rulesService.booleans[b].variable, 
+				$scope.formData.rules[rulesService.booleans[b].variable]);
+		}
+
+		//  Input rules
+		for( var i = 0 ; i < rulesService.fields.length ; i++ )
+		{
+			$cookies.put(
+				'cosmo-' + rulesService.fields[i].variable, 
+				$scope.formData.rules[rulesService.fields[i].variable]);
+		}
 
 		creationService.createSim($scope.formData,
 			function(err)
@@ -131,25 +159,39 @@ function($scope,$cookies, rulesService,creationService,utility)
 	};
 	$scope.startApp = function()
 	{
-		$scope.randomizeName();//80x100
+		$scope.randomizeName();
 
-		var size = $cookies.get('cosmo-size');
-		if(size){
-			$scope.formData.size = size;
-		}
-		var rotation = $cookies.get('cosmo-rotation');
-		if(rotation){
-			$scope.formData.rotation = Number(rotation);
-		}
-		var tilt = $cookies.get('cosmo-tilt');
-		if(tilt){
-			$scope.formData.tilt = Number(tilt);
-		}
-		var plotsPer = $cookies.get('cosmo-plots-per');
-		if(plotsPer){
-			$scope.formData.plotsPer = Number(plotsPer);
+		//  Radio rules
+		for( var r = 0 ; r < rulesService.radios.length ; r++ )
+		{
+			var radio = $cookies.get('cosmo-' + rulesService.radios[r].variable);
+			if(radio) 
+			{	
+				if(rulesService.radios[r].type == "number")
+					radio = Number(radio);
+				$scope.formData[rulesService.radios[r].variable] = radio;
+			}
 		}
 
+		//  Boolean rules
+		for( var b = 0 ; b < rulesService.booleans.length ; b++ )
+		{
+			var boolean = $cookies.get('cosmo-' + rulesService.booleans[b].variable);
+			if(boolean){
+				$scope.formData.rules[rulesService.booleans[b].variable] = boolean === true;
+			}
+		}
+
+		//  Input rules
+		for( var i = 0 ; i < rulesService.fields.length ; i++ )
+		{
+			var input = $cookies.get('cosmo-' + rulesService.fields[i].variable);
+			if(input){
+				if(rulesService.fields[i].input.type == "number")
+					input = Number(input);
+				$scope.formData.rules[rulesService.fields[i].variable] = input;
+			}
+		}
 	};
 	$scope.camelize = function(str) {
 	  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
