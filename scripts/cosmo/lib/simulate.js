@@ -215,10 +215,6 @@ function MutateDNA(dna,mutationRate)
         }
         newDna += String.fromCharCode(97 + valueAtDna);
     }
-    // if(hasChanged)
-    // {
-    //     console.log(dna + " became " + newDna);
-    // }
     return newDna;
 }
 

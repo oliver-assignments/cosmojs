@@ -8,15 +8,7 @@ var simulations = new Array();
 
 exports.createSimulation = function(req, res) 
 {   
-    var dimensions = {columns:100,rows:80};
-    if(req.size=="medium")
-    {
-        dimensions = {columns:200,rows:160};
-    }
-    else if(req.size=="large")
-    {
-        dimensions = {columns:300,rows:240};
-    }
+    var dimensions = JSON.parse(req.size);
 
     var simulation = {
         name:      req.name

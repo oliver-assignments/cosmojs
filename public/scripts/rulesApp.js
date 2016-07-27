@@ -67,9 +67,10 @@ function()
 			title: "Size"
 			, description: "Planet size dictates the size and resolution of the simulation. Larger plant and animal populations and more complex continental shapes are possible with a bigger map."
 			, options: [
-				{ name: "Small", value: "small" }
-				, { name: "Medium", value: "medium" }
-				, { name: "Large", value: "large" }
+				{ name: "Tiny", value: '{"columns":50,"rows":40}' }
+				, { name: "Small", value: '{"columns":100,"rows":80}' }
+				, { name: "Medium", value: '{"columns":150,"rows":120}' }
+				, { name: "Large", value: '{"columns":200,"rows":160}' }
 			]
 			, variable: "size"
 			, type: "string"
@@ -102,9 +103,11 @@ function()
 			title: "Plants per Province"
 			, description: "The more plants share a plot the more they have to compete for shared soil nutrients."
 			, options: [
-				{ name: "Nine", value: 9 }
+				{ name: "One", value: 1 }
+				, { name: "Four", value: 4 }
+				, { name: "Nine", value: 9 }
 				, { name: "Sixteen", value: 16 }
-				, { name: "Twenty Five", value: 24 }
+				, { name: "Twenty Five", value: 25 }
 			]
 			, variable: "plantsPer"
 			, type: "number"
@@ -113,14 +116,15 @@ function()
 	];
 	rules.booleans = 
 	[
+		// {
+		// 	character: "C"
+		// 	, title: "Consumption"
+		// 	, tooltip: "Plants consume nutrients from the soil equal to their metabolism."
+		// 	, variable: "consumption"
+		// 	, init: false
+		// }
+		//,
 		{
-			character: "C"
-			, title: "Consumption"
-			, tooltip: "Plants consume nutrients from the soil equal to their metabolism."
-			, variable: "consumption"
-			, init: false
-		}
-		,{
 			character: "W"
 			, title: "Water"
 			, tooltip: "Plants recieve and store water from rainfall, and need it to survive."

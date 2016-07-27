@@ -74,7 +74,7 @@ function($scope,$cookies, rulesService,creationService,utility)
 		 name: ""
 		, rotation: 1
 		, tilt: 0.75
-		, size: "small"
+		, size: '{"columns":50,"rows":40}'
 		, plantsPer: 9
 
 		, rules: {

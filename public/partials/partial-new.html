@@ -33,6 +33,7 @@
       </ul>
 
       <!-- Boolean Rules -->
+      <h4>Simulation Rules</h4>
       <div class="btn-group rule">
         <button 
         ng-repeat="rule in rules.booleans" 
@@ -44,10 +45,11 @@
         <b>{{rule.character}}</b> {{rule.title}}</button>
       </div>
 
-      <!-- Input Rules -->
+      <!-- Field Rules -->
+
       <div ng-repeat="field in rules.fields" class="input-group rule">
         <span class="input-group-addon" 
-          uib-popover="{{ field.tooltip }}" 
+          uib-popover="{{ field.tooltip }} {{ field.input | inputPlaceholder }}" 
           popover-trigger="mouseenter">
           <b> {{ field.character }} </b> 
           {{ field.title }}
