@@ -153,7 +153,7 @@ exports.simulateDay = function(ctx,res)
                 {
                     var neighbor = neighbors[utility.randomNumberBetween(0,neighbors.length)];
                     
-                    if(!ctx.hasPlant[neighbor] && !seeds[neighbor])
+                    if(!ctx.hasPlant[neighbor] && !seeds[neighbor] && ctx.depth[ctx.ConvertPToZ[neighbor] == 0])
                     {   
                         //  This needs to be made pending!
                         seeds[neighbor] = {
@@ -548,7 +548,7 @@ function SprayPlants(ctx)
         var p = plantOrder[q];
         var z = ctx.ConvertPToZ(p);
 
-        if(Math.random()>0.99)
+        if(Math.random()>0.95)
         {
             ctx.dna[p] = 
                   String.fromCharCode(utility.randomNumberBetween(1,5)+97) 

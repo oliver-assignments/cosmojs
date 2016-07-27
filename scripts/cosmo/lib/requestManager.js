@@ -61,6 +61,7 @@ exports.clearSimulationRequests = function(res) {
 
 exports.processSimulationRequests = function(res)
 {
+    var lastOutputDay = 0;
     for(var r = 0 ; r < requests.length; r++) 
     {
         manager.getSimulation(requests[r].name,function(err,simulation)
@@ -103,10 +104,11 @@ exports.processSimulationRequests = function(res)
                 }
 
                 //  Weekly Logic
-                if(copyCtx.days % 10 == 0)
+                if(copyCtx.days % 10 == 0 && lastOutputDay != copyCtx.days)
                 {
                     //Save
                     simulation.dates.push(utility.cloneObject(copyCtx));
+                    lastOutputDay = copyCtx.days;
                 }
 
                 //  Daily logic
@@ -125,9 +127,10 @@ exports.processSimulationRequests = function(res)
                 });
                 
             }
-            if(requests[r].days < 10) {
+            if(requests[r].days < 10 && lastOutputDay != copyCtx.days) {
                 //Save if under a week
                 simulation.dates.push(utility.cloneObject(copyCtx));
+                lastOutputDay = copyCtx.days;
             }
         
         });
