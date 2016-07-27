@@ -52,13 +52,16 @@
               <h3 ng-controller="updateController">Worlds</h3>
               
               <ul class="list-unstyled">
-                <li class="world-listing" ng-repeat="sim in simulationManager.simulations" ng-class-even="'odd'">
+                <li class="world-listing" ng-repeat="sim in simulationManager.simulations" ng-class-even="'darker-odd'">
                   <span ng-class="sim.name==context.name ? 'bold-selected' : ''">
-                     <span class="clickable" ng-click="pickSim(sim.name)">{{sim.name}}</span> 
-                     &#8728; 
-                     {{ sim.days | daysToDate:true }}
-                     <span class="clickable" ng-click="deleteSim(sim.name)">x</span>
+                     <span class="clickable" 
+                      ng-click="pickSim(sim.name)">
+                      {{sim.name}}
+                      </span>
                   </span>
+                  &#8728; 
+                  {{ sim.days | daysToDate:true }}
+                  <span class="clickable" ng-click="deleteSim(sim.name)">x</span>
                 </li>
               </ul>
 
