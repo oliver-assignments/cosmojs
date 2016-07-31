@@ -51,6 +51,8 @@ function($http,context)
 			renderer.mode = req.mode;
 			
 			var canvas = document.getElementById("canvas");
+			if(!canvas)
+				return;
 			var ctx = canvas.getContext("2d");
 
 			var width = canvas.width / renderInstructions.columns;
