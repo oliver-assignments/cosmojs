@@ -46,6 +46,7 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
 
   //  PLOT DATA  //
   ctx.nucium = new Array(ctx.area);
+  while(size--) array[size] = value;
   ctx.nutro = new Array(ctx.area);
 
   ctx.nuciumCurrent = new Array(ctx.area);
@@ -56,6 +57,7 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.nuciumStore = new Array(ctx.plantArea);
   ctx.nutroStore = new Array(ctx.plantArea);
   ctx.waterStore = new Array(ctx.plantArea);
+  ctx.newGen = new Array(ctx.plantArea)
   //  Plant dna
   ctx.dna = new Array(ctx.plantArea);
 

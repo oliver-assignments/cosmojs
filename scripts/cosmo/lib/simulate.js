@@ -9,8 +9,13 @@ exports.prepareSimulation = function(ctx,res)
   SprayPlants(ctx);
   res(null,ctx);
 };
-function killPlant(p,z,ctx)
+function killPlant(p,z,ctx, cause)
 {
+  var logDeath = true;
+  if(cause && logDeath)
+  {
+    console.log("Plant Death: " + cause);
+  }
   ctx.hasPlant[p] = false;
   ctx.nutroStore[p] = null;
   ctx.nuciumStore[p] = null;
@@ -28,20 +33,13 @@ function seed(p,z,ctx)
 };
 exports.simulateDay = function(ctx,res)
 {
-  if(ctx.days % 10)
+  for( var z = 0 ; z < ctx.area ; z++)
   {
-    SprayPlants(ctx);
+    if(ctx.nutro[z] < 1)
+      ctx.nutro[z] = 1;
+    if(ctx.nucium[z] < 1)
+      ctx.nucium[z] = 1;
   }
-  //  Regrowing nutrients
-  // for(var z = 0 ; z < ctx.area ; z++)
-  // {
-  //    ctx.nutro[z] = 5000;
-  //    ctx.nucium[z] = 5000;
-  //   // if(ctx.nutro[z]<5)
-  //   //   ctx.nutro[z] += 15;
-  //   // if(ctx.nucium[z]<5)
-  //   //   ctx.nucium[z] += 15;
-  // }
 
   //  Seeds
   var seeds = new Array(ctx.plantArea);
@@ -58,7 +56,12 @@ exports.simulateDay = function(ctx,res)
     var p = plantOrder[q];
     var z = ctx.ConvertPToZ(p);
 
-    if(!ctx.hasPlant[p] || !ctx.dna[p] || ctx.depth[z] > 0)
+    if( ctx.depth[z] > 0 || !ctx.hasPlant[p])
+    {
+      killPlant(p,z,ctx)// No plant here
+    }
+
+    if(!ctx.dna[p])
     {
       killPlant(p,z,ctx);
       continue;
@@ -72,14 +75,6 @@ exports.simulateDay = function(ctx,res)
     var nuciumMetabolism = ctx.GetNuciumMetabolism(p);
     var nuciumEndowment = ctx.GetNuciumEndowment(p);
     var numberSeeds = ctx.GetNumberSeeds(p);
-
-    //  Stagnation
-    if (nutroConsumption == nutroMetabolism || 
-        nuciumConsumption == nuciumMetabolism)
-    {
-      killPlant(p,z,ctx);
-      continue;
-    }
 
     //  Nutro Consumption
     if(ctx.nutro[z] > 0)
@@ -131,15 +126,32 @@ exports.simulateDay = function(ctx,res)
       }
       if(numberNeighbors >= Number(ctx.rules.roots))
       {
-        killPlant(p,z,ctx)
+        killPlant(p,z,ctx, "Roots with " + numberNeighbors + " neighbors.")
         continue;
+      }
+    }
+
+    if(true)//ctx.rules.nutrientConversion)
+    {
+      var conversionRate = 1;
+      if(ctx.nutroStore[p] < 0 && ctx.nuciumStore[p] > -ctx.nutroStore[p] * conversionRate)
+      {
+        //  We have nucium to convert to nutro
+        ctx.nutroStore[p] += ctx.nuciumStore[p] * conversionRate;
+        ctx.nuciumStore[p] -= -ctx.nutroStore[p];
+      }
+      else if(ctx.nuciumStore[p] < 0 && ctx.nutroStore[p] > -ctx.nuciumStore[p] *conversionRate)
+      {
+        //  We have nucium to convert to nutro
+        ctx.nuciumStore[p] += ctx.nutroStore[p] * conversionRate;
+        ctx.nutroStore[p] -= -ctx.nuciumStore[p];
       }
     }
 
     //  Starvation
     if(ctx.nutroStore[p] < 0 || ctx.nuciumStore[p] < 0)
     {
-      killPlant(p,z,ctx);
+      killPlant(p,z,ctx, "Starvation with nutro: " + ctx.nutroStore[p] + ", nucium: "+ ctx.nuciumStore[p]);
       continue;
     }
 
@@ -147,9 +159,8 @@ exports.simulateDay = function(ctx,res)
     if (ctx.nutroStore[p]  > nutroEndowment  * numberSeeds && 
         ctx.nuciumStore[p] > nuciumEndowment * numberSeeds) 
     {
-
-      var neighbors = ctx.GetRingOfPlantCoordinates(p, ctx.GetSeedRadius(p), false);
-      for(var s = 0 ; s < numberSeeds ; s++)
+      var neighbors = ctx.GetRingOfPlantCoordinates(p, 1, false);//ctx.GetSeedRadius(p), false);
+      for(var s = 0 ; s < numberSeeds; s++)
       {
         var neighbor = neighbors[utility.randomNumberBetween(0,neighbors.length)];
         
@@ -168,14 +179,14 @@ exports.simulateDay = function(ctx,res)
           
           //  Sow the seed
           seeds[neighbor] = {
-            dna: MutateDNA(ctx.dna[p], ctx.rules.mutation)
+            dna: ctx.dna[p]//MutateDNA(ctx.dna[p], ctx.rules.mutation)
             , nutroStore: nutroEndowment
             , nuciumStore: nuciumEndowment
           }
 
-          //  In this case you only lose nutrients if the seed happens
-          ctx.nutroStore[p] -= nutroEndowment;// * numberSeeds;
-          ctx.nuciumStore[p] -= nuciumEndowment;// * numberSeeds;
+          //  Plants only lose nutrients if the seed happens
+          ctx.nutroStore[p] -= nutroEndowment;
+          ctx.nuciumStore[p] -= nuciumEndowment;
         }
       }
     }
@@ -574,9 +585,9 @@ function SprayPlants(ctx)
         + String.fromCharCode(utility.randomNumberBetween(1,3)+97)
         + String.fromCharCode(utility.randomNumberBetween(3,5)+97);
 
-      ctx.nutroStore[p] = 3;
-      ctx.nuciumStore[p] = 3;
-      ctx.waterStore[p] = 3;
+      ctx.nutroStore[p] = 1;
+      ctx.nuciumStore[p] = 1;
+      ctx.waterStore[p] = 1;
       ctx.hasPlant[p] = true;
     }    
   
