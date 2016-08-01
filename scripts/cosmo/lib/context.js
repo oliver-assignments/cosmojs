@@ -34,64 +34,29 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.plantRows = ctx.rows * ctx.plantRowsPer;
   ctx.plantArea = ctx.plantColumns * ctx.plantRows;
 
-  ctx.tectonic = new Array(ctx.area);
-  ctx.heat = new Array(ctx.area);
-  ctx.height = new Array(ctx.area);
-  ctx.depth = new Array(ctx.area);
-  ctx.sunlight = new Array(ctx.area);
-  ctx.rainfall = new Array(ctx.area);
+  ctx.tectonic  = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+  ctx.heat      = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+  ctx.height    = Array.apply(null, { length: ctx.area }).map( function() { return 2; });
+  ctx.depth     = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+  ctx.sunlight  = Array.apply(null, { length: ctx.area }).map( function() { return 1; });
+  ctx.rainfall  = Array.apply(null, { length: ctx.area }).map( function() { return 5; });
 
-  ctx.continent = new Array(ctx.area);
-  ctx.unresolvedWater = new Array(ctx.area);
+  ctx.continent = Array.apply(null, { length: ctx.area }).map( function() { return false; });
+  ctx.unresolvedWater = Array.apply(null, { length: ctx.area }).map( function() { return false; });
 
   //  PLOT DATA  //
-  ctx.nucium = new Array(ctx.area);
-  while(size--) array[size] = value;
-  ctx.nutro = new Array(ctx.area);
-
-  ctx.nuciumCurrent = new Array(ctx.area);
-  ctx.nutroCurrent = new Array(ctx.area);
+  ctx.nutro   = Array.apply(null, { length: ctx.area }).map( function() { return utility.randomNumberBetween(0,5) * ctx.plantsPer; });
+  ctx.nucium  = Array.apply(null, { length: ctx.area }).map( function() { return utility.randomNumberBetween(0,5) * ctx.plantsPer; });
 
   //  Plant data
-  ctx.hasPlant = new Array(ctx.plantArea);
-  ctx.nuciumStore = new Array(ctx.plantArea);
-  ctx.nutroStore = new Array(ctx.plantArea);
-  ctx.waterStore = new Array(ctx.plantArea);
-  ctx.newGen = new Array(ctx.plantArea)
-  //  Plant dna
-  ctx.dna = new Array(ctx.plantArea);
-
-  for(var z = 0 ; z < ctx.area; z++)
-  {   
-    ctx.tectonic[z] = 0;//-1;
-    ctx.heat[z] = 0;
-
-    ctx.height[z] = 2;// + utility.randomNumberBetween(0,500);
-    ctx.depth[z] = 0;
-
-    ctx.sunlight[z] = 1;
-    ctx.rainfall[z] = 5;
-
-    ctx.nutro[z] = utility.randomNumberBetween(0,5) * ctx.plantsPer;
-    ctx.nucium[z] = utility.randomNumberBetween(0,5) * ctx.plantsPer;
-
-    ctx.nutroCurrent[z] = ctx.nutro[z];
-    ctx.nuciumCurrent[z] = ctx.nucium[z];
-
-    ctx.unresolvedWater[z] = false;
-    ctx.continent[z] = false;
-  }
-
-  //  Initializing plots
-  for(var p = 0 ; p < ctx.plantArea; p++)
-  {
-    ctx.hasPlant[p] = false;
-    ctx.nuciumStore[p] = null;
-    ctx.nutroStore[p] = null;
-    ctx.waterStore[p] = null;
-    ctx.dna[p] = null;
-  }
+  ctx.hasPlant  = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
+  ctx.nutroStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.nuciumStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
+  ctx.waterStore = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
+  ctx.newGen = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
   
+  //  Plant dna
+  ctx.dna = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
 
   ctx.WrapCoordinate = function(coord)
   {
