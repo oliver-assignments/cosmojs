@@ -138,6 +138,7 @@ exports.simulateDay = function(ctx,res)
     if (ctx.nutroStore[p]  > ctx.nutroEndowment[p]  * ctx.numberSeeds[p] && 
         ctx.nuciumStore[p] > ctx.nuciumEndowment[p] *  ctx.numberSeeds[p]) 
     {
+      console.log("try")
       //if(ctx.newGen[p])
             //console.log( ctx.numberSeeds[p]);
 
