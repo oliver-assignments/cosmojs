@@ -14,6 +14,9 @@ exports.shuffle = function(array){
 
 exports.randomNumberBetween = function(l,r)
 {
+  if (l>r) 
+    return r;
+
   r = Math.floor(r);
   l = Math.floor(l);
   var random = Math.floor((Math.random() * (r-l)) + l);

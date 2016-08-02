@@ -51,9 +51,20 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   //  Plant data
   ctx.hasPlant  = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
   ctx.nutroStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
-  ctx.nuciumStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
-  ctx.waterStore = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
-  ctx.newGen = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
+  ctx.nuciumStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.waterStore = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.newGen = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+
+  ctx.nutroConsumption = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.nutroMetabolism = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.nutroEndowment = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  
+  ctx.nuciumConsumption = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.nuciumMetabolism = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.nuciumEndowment = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  
+  ctx.numberSeeds = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.seedSpread = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   
   //  Plant dna
   ctx.dna = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
@@ -353,67 +364,6 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
       }               
     }
     return plots;
-  };
-
-  /*
-  Nutro Metabolism (0, ∞)
-  Nucium Metabolism (0, ∞)
-  Water Metabolism (0, ∞)
-  //Nutrient Growth Ratio [0, 1]
-  Number Seeds [1, ∞)
-  Nucium Seed Endowment [1, ∞)
-  Nutro Seed Endowment [1, ∞)
-  Seed Dispersal Radius [1, 5)
-  Seed Bearing Height [1, ∞)
-  */
-
-  ctx.GetNutroMetabolism = function(p)
-  {
-    if(!ctx.dna[p])
-      return -1;
-    return ctx.dna[p].charCodeAt(0)-97;
-  };
-  ctx.GetNutroConsumption = function(p)
-  {
-    if(!ctx.dna[p])
-      return -1;
-    return ctx.dna[p].charCodeAt(1)-97;
-  };
-  ctx.GetNuciumMetabolism = function(p)
-  {
-    if(!ctx.dna[p])
-      return -1;
-    return ctx.dna[p].charCodeAt(2)-97;
-  };
-  ctx.GetNuciumConsumption= function(p)
-  {
-    if(!ctx.dna[p])
-      return -1;
-    return ctx.dna[p].charCodeAt(3)-97;
-  };
-  ctx.GetNutroEndowment = function(p)
-  {
-    if(!ctx.dna[p])
-      return -1;
-    return ctx.dna[p].charCodeAt(4)-97;
-  };
-  ctx.GetNuciumEndowment = function(p)
-  {
-    if(!ctx.dna[p])
-      return -1;
-    return ctx.dna[p].charCodeAt(5)-97;
-  };
-  ctx.GetNumberSeeds = function(p)
-  {
-    if(!ctx.dna[p])
-      return -1;
-    return ctx.dna[p].charCodeAt(6)-97;  
-  };
-  ctx.GetSeedRadius = function(p)
-  {
-    if(!ctx.dna[p])
-      return -1;
-    return ctx.dna[p].charCodeAt(7)-97; 
   };
   return ctx;
 };

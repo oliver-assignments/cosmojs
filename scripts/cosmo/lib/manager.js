@@ -1,6 +1,6 @@
 'use strict';
 
-var simulate = require('./simulate.js');
+var creation = require('./creation.js');
 var context = require('./context.js');
 var util = require('./utility.js');
 
@@ -17,7 +17,7 @@ exports.createSimulation = function(req, res)
     , dates:   []
   };
 
-  simulate.prepareSimulation(
+  creation.prepareSimulation(
     context(
       dimensions.columns, dimensions.rows
       , req.plantsPer
