@@ -23,8 +23,8 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.tallest = 1;
   ctx.richestNutro = 1;
   ctx.richestNucium = 1;
-  ctx.richestNutroStore = 1;
-  ctx.richestNuciumStore = 1;
+  ctx.richestntStore = 1;
+  ctx.richestncStore = 1;
   ctx.richestWaterStore = 1;
 
   ctx.plantColumnsPer = Math.sqrt(plotsPer);
@@ -45,23 +45,23 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.unresolvedWater = Array.apply(null, { length: ctx.area }).map( function() { return false; });
 
   //  PLOT DATA  //
-  ctx.nutro   = Array.apply(null, { length: ctx.area }).map( function() { return utility.randomNumberBetween(0,5) * ctx.plantsPer; });
-  ctx.nucium  = Array.apply(null, { length: ctx.area }).map( function() { return utility.randomNumberBetween(0,5) * ctx.plantsPer; });
+  ctx.nt   = Array.apply(null, { length: ctx.area }).map( function() { return utility.randomNumberBetween(0,5) * ctx.plantsPer; });
+  ctx.nc  = Array.apply(null, { length: ctx.area }).map( function() { return utility.randomNumberBetween(0,5) * ctx.plantsPer; });
 
   //  Plant data
   ctx.hasPlant  = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });
-  ctx.nutroStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
-  ctx.nuciumStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.ntStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.ncStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   ctx.waterStore = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   ctx.newGen = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
 
-  ctx.nutroConsumption = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
-  ctx.nutroMetabolism = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
-  ctx.nutroEndowment = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.ntConsumption = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.ntMetabolism = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.ntEndowment = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   
-  ctx.nuciumConsumption = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
-  ctx.nuciumMetabolism = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
-  ctx.nuciumEndowment = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.ncConsumption = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.ncMetabolism = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.ncEndowment = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   
   ctx.numberSeeds = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   ctx.seedSpread = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });

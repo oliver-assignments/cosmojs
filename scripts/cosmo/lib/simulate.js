@@ -7,19 +7,23 @@ function killPlant(p,z,ctx, cause, doLogDeath)
     console.log("Plant Death: " + cause);
   }
   ctx.hasPlant[p] = false;
-  ctx.nutroStore[p] = null;
-  ctx.nuciumStore[p] = null;
+  
+  ctx.nt[z]+= ctx.ntEndowment[p];
+  ctx.nc[z]+= ctx.ncEndowment[p];
+  
+  ctx.ntStore[p] = null;
+  ctx.ncStore[p] = null;
 };
 
 exports.simulateDay = function(ctx,res)
 {
-  for( var z = 0 ; z < ctx.area ; z++)
-  {
-    if(ctx.nutro[z] < 1)
-      ctx.nutro[z] = 1;
-    if(ctx.nucium[z] < 1)
-      ctx.nucium[z] = 1;
-  }
+  // for( var z = 0 ; z < ctx.area ; z++)
+  // {
+  //   if(ctx.nt[z] < 1)
+  //     ctx.nt[z] = 1;
+  //   if(ctx.nc[z] < 1)
+  //     ctx.nc[z] = 1;
+  // }
 
   //  Seeds
   var seeds = new Array(ctx.plantArea);
@@ -41,51 +45,61 @@ exports.simulateDay = function(ctx,res)
       killPlant(p,z,ctx)// No plant here
       continue;
     }
+    if(!ctx.ntConsumption[p] || !ctx.ntMetabolism[p] || !ctx.ntEndowment[p])
+    {
+      killPlant(p,z,ctx,"Null nt pulls", true);
+      continue;
+    }
+    if(!ctx.ncConsumption[p] || !ctx.ncMetabolism[p] || !ctx.ncEndowment[p])
+    {
+      killPlant(p,z,ctx,"Null nt pulls", true);
+      continue;
+    }
 
     if(ctx.numberSeeds[p] < 1){
-      killPlant(p,z,ctx,"Number seeds less than 1: " + ctx.numberSeeds[p]);
+      killPlant(p,z,ctx,"Number seeds less than 1: " + ctx.numberSeeds[p], true);
       continue;
     }
-    if(ctx.nutroEndowment[p] < 1){
-      killPlant(p,z,ctx,"ctx.nutroEndowment[p] is less than 1 : "+ ctx.nutroEndowment[p]);
+    if(ctx.ntEndowment[p] < 1){
+      killPlant(p,z,ctx,"ctx.ntEndowment[p] is less than 1 : "+ ctx.ntEndowment[p], true);
       continue;
     }
-    if(ctx.nuciumEndowment[p] < 1){
-      killPlant(p,z,ctx,"ctx.nuciumEndowment[p] is less than 1 : " + ctx.nuciumEndowment[p]);
+    if(ctx.ncEndowment[p] < 1){
+      killPlant(p,z,ctx,"ctx.ncEndowment[p] is less than 1 : " + ctx.ncEndowment[p], true);
       continue;
     }
 
-    //  Nutro Consumption
-    if(ctx.nutro[z] > 0)
+    //  nt Consumption
+    if(ctx.nt[z] > 0)
     {
-      if(ctx.nutro[z] - ctx.nutroConsumption[p] >= 0)
+      if(ctx.nt[z] - ctx.ntConsumption[p] >= 0)
       {
-        ctx.nutroStore[p] += ctx.nutroConsumption[p];
-        ctx.nutro[z] -= ctx.nutroConsumption[p];
+        ctx.ntStore[p] += ctx.ntConsumption[p];
+        ctx.nt[z] -= ctx.ntConsumption[p];
       }
       else 
       {
-        ctx.nutroStore[p] += ctx.nutro[z];
-        ctx.nutro[z] = 0;
+        ctx.ntStore[p] += ctx.nt[z];
+        ctx.nt[z] = 0;
       }
     }
-    ctx.nutroStore[p] -= ctx.nutroMetabolism[p];
+    ctx.ntStore[p] -= ctx.ntMetabolism[p];
     
-    //  Nucium Consumption
-    if(ctx.nucium[z] > 0)
+    //  nc Consumption
+    if(ctx.nc[z] > 0)
     {
-      if(ctx.nucium[z] - ctx.nuciumConsumption[p] >= 0)
+      if(ctx.nc[z] - ctx.ncConsumption[p] >= 0)
       {
-        ctx.nuciumStore[p] += ctx.nuciumConsumption[p];
-        ctx.nucium[z] -= ctx.nuciumConsumption[p];
+        ctx.ncStore[p] += ctx.ncConsumption[p];
+        ctx.nc[z] -= ctx.ncConsumption[p];
       }
       else 
       {
-        ctx.nuciumStore[p] += ctx.nucium[z];
-        ctx.nucium[z] = 0;
+        ctx.ncStore[p] += ctx.nc[z];
+        ctx.nc[z] = 0;
       }
     }
-    ctx.nuciumStore[p] -= ctx.nuciumMetabolism[p];
+    ctx.ncStore[p] -= ctx.ncMetabolism[p];
 
     //  Water
     if(ctx.rules.water)
@@ -113,32 +127,31 @@ exports.simulateDay = function(ctx,res)
     if(true)//ctx.rules.nutrientConversion)
     {
       var conversionRate = 1;
-      if(ctx.nutroStore[p] < 0 && ctx.nuciumStore[p] > -ctx.nutroStore[p] * conversionRate)
+      if(ctx.ntStore[p] < 0 && ctx.ncStore[p] > -ctx.ntStore[p] * conversionRate)
       {
-        //  We have nucium to convert to nutro
-        ctx.nutroStore[p] += ctx.nuciumStore[p] * conversionRate;
-        ctx.nuciumStore[p] -= -ctx.nutroStore[p];
+        //  We have nc to convert to nt
+        ctx.ntStore[p] += ctx.ncStore[p] * conversionRate;
+        ctx.ncStore[p] -= -ctx.ntStore[p];
       }
-      else if(ctx.nuciumStore[p] < 0 && ctx.nutroStore[p] > -ctx.nuciumStore[p] *conversionRate)
+      else if(ctx.ncStore[p] < 0 && ctx.ntStore[p] > -ctx.ncStore[p] *conversionRate)
       {
-        //  We have nucium to convert to nutro
-        ctx.nuciumStore[p] += ctx.nutroStore[p] * conversionRate;
-        ctx.nutroStore[p] -= -ctx.nuciumStore[p];
+        //  We have nc to convert to nt
+        ctx.ncStore[p] += ctx.ntStore[p] * conversionRate;
+        ctx.ntStore[p] -= -ctx.ncStore[p];
       }
     }
 
     //  Starvation
-    if(ctx.nutroStore[p] < 0 || ctx.nuciumStore[p] < 0)
+    if(ctx.ntStore[p] < 0 || ctx.ncStore[p] < 0)
     {
-      killPlant(p,z,ctx, "Starvation: nt " + ctx.nutroStore[p] + " nc " + ctx.nuciumStore[p]);//, "Starvation with nutro: " + ctx.nutroStore[p] + ", nucium: "+ ctx.nuciumStore[p]);
+      killPlant(p,z,ctx, "Starvation: nt " + ctx.ntStore[p] + " nc " + ctx.ncStore[p]);//, "Starvation with nt: " + ctx.ntStore[p] + ", nc: "+ ctx.ncStore[p]);
       continue;
     }
 
     //  Seed sowing
-    if (ctx.nutroStore[p]  > ctx.nutroEndowment[p]  * ctx.numberSeeds[p] && 
-        ctx.nuciumStore[p] > ctx.nuciumEndowment[p] *  ctx.numberSeeds[p]) 
+    if (ctx.ntStore[p]  > ctx.ntEndowment[p]  * ctx.numberSeeds[p] && 
+        ctx.ncStore[p] > ctx.ncEndowment[p] *  ctx.numberSeeds[p]) 
     {
-      console.log("try")
       //if(ctx.newGen[p])
             //console.log( ctx.numberSeeds[p]);
 
@@ -153,8 +166,8 @@ exports.simulateDay = function(ctx,res)
 
           if(seeds[neighbor]) //  If it already have a seed
           {  
-            if (ctx.nutroEndowment[p] < seeds[neighbor].nutroStore ||
-                ctx.nuciumEndowment[p] < seeds[neighbor].nuciumStore)
+            if (ctx.ntEndowment[p] < seeds[neighbor].ntStore ||
+                ctx.ncEndowment[p] < seeds[neighbor].ncStore)
             {
               //  The seed here has more of an endowment than us
               continue; //  Don't sow
@@ -163,14 +176,23 @@ exports.simulateDay = function(ctx,res)
           
           //  Sow the seed
           seeds[neighbor] = {
-            dna: ctx.dna[p]//MutateDNA(ctx.dna[p], ctx.rules.mutation)
-            , nutroStore: ctx.nutroEndowment[p]
-            , nuciumStore: ctx.nuciumEndowment[p]
+            ntConsumption: ctx.ntConsumption[p]
+            , ntMetabolism: ctx.ntMetabolism[p]
+            , ntEndowment: ctx.ntEndowment[p]
+
+            , ncConsumption: ctx.ncConsumption[p]
+            , ncMetabolism: ctx.ncMetabolism[p]
+            , ncEndowment: ctx.ncEndowment[p]
+
+            , numberSeeds: ctx.numberSeeds[p]
+            , seedSpread: ctx.seedSpread[p]
+            , ntStore: ctx.ntEndowment[p]
+            , ncStore: ctx.ncEndowment[p]
           }
 
           //  Plants only lose nutrients if the seed happens
-          ctx.nutroStore[p] -= ctx.nutroEndowment[p];
-          ctx.nuciumStore[p] -= ctx.nuciumEndowment[p];
+          ctx.ntStore[p] -= ctx.ntEndowment[p];
+          ctx.ncStore[p] -= ctx.ncEndowment[p];
         }
       }
     }
@@ -182,10 +204,20 @@ exports.simulateDay = function(ctx,res)
     if(seeds[s] != null)
     {
       ctx.newGen[s] = true;
-      //console.log(seeds[s].dna);
-      ctx.dna[s] = seeds[s].dna;
-      ctx.nutroStore[s] = seeds[s].nutroStore;
-      ctx.nuciumStore[s] = seeds[s].nuciumStore;
+
+      ctx.ntConsumption[s] = seeds[s].ntConsumption;
+      ctx.ntMetabolism[s] = seeds[s].ntMetabolism;
+      ctx.ntEndowment[s] = seeds[s].ntEndowment;
+
+      ctx.ncConsumption[s] = seeds[s].ncConsumption;
+      ctx.ncMetabolism[s] = seeds[s].ncMetabolism;
+      ctx.ncEndowment[s] = seeds[s].ncEndowment;
+
+      ctx.numberSeeds[s] = seeds[s].numberSeeds;
+      ctx.seedSpread[s] = seeds[s].seedSpread;
+
+      ctx.ntStore[s] = seeds[s].ntStore;
+      ctx.ncStore[s] = seeds[s].ncStore;
       ctx.hasPlant[s] = true;
     }
   }

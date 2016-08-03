@@ -16,11 +16,11 @@ var brightest ={c:0,m:1,y:20,k:5};
 var drizzle = {c:42,m:21,y:0,k:1};
 var monsoon = {c:70,m:30,y:0,k:63};
 
-var weakNucium = {c:0,m:0,y:0,k:0};//{c:42,m:21,y:0,k:11};
-var strongNucium = {c:70,m:35,y:0,k:43};
+var weaknc = {c:0,m:0,y:0,k:0};//{c:42,m:21,y:0,k:11};
+var strongnc = {c:70,m:35,y:0,k:43};
 
-var weakNutro = {c:0,m:0,y:0,k:0};;//{c:0,m:41,y:39,k:16};
-var strongNutro = {c:0,m:61,y:58,k:34};
+var weaknt = {c:0,m:0,y:0,k:0};;//{c:0,m:41,y:39,k:16};
+var strongnt = {c:0,m:61,y:58,k:34};
 
 var sparseVegetation = {c:0,m:0,y:0,k:0};
 var thickVegetation = {c:37,m:0,y:60,k:37};
@@ -119,7 +119,7 @@ exports.render = function(req,res)
       colors.push(cmykToHex(colorizeElevation(req.ctx.height[z] + req.ctx.depth[z],req.ctx)));
     }
   }
-  else if (req.mode == "Nutro")
+  else if (req.mode == "nt")
   {
     for(var z = 0; z < req.ctx.area; z++)
     {
@@ -129,11 +129,11 @@ exports.render = function(req,res)
       }
       else
       {
-        colors.push(cmykToHex(colorizeNutro(req.ctx.nutro[z],req.ctx)));
+        colors.push(cmykToHex(colorizent(req.ctx.nt[z],req.ctx)));
       }
     }
   }
-  else if (req.mode == "Nucium")
+  else if (req.mode == "nc")
   {
     for(var z = 0; z < req.ctx.area; z++)
     {
@@ -143,7 +143,7 @@ exports.render = function(req,res)
       }
       else
       {
-        colors.push(cmykToHex(colorizeNucium(req.ctx.nucium[z],req.ctx)));
+        colors.push(cmykToHex(colorizenc(req.ctx.nc[z],req.ctx)));
       }
     }
   }
@@ -157,7 +157,7 @@ exports.render = function(req,res)
       }
       else
       {
-        colors.push(cmykToHex(colorizeNutrients(req.ctx.nutro[z], req.ctx.nucium[z],req.ctx)));
+        colors.push(cmykToHex(colorizeNutrients(req.ctx.nt[z], req.ctx.nc[z],req.ctx)));
       }
     }
   }
@@ -200,7 +200,7 @@ exports.render = function(req,res)
       }
     }
   }
-  else if (req.mode == "Nucium Stores")
+  else if (req.mode == "nc Stores")
   {
     columns = req.ctx.plantColumns;
     rows = req.ctx.plantRows;
@@ -216,13 +216,13 @@ exports.render = function(req,res)
       else
       {
         colors.push(cmykToHex(
-          colorizeNuciumStore(
-            req.ctx.nuciumStore[p],
+          colorizencStore(
+            req.ctx.ncStore[p],
             req.ctx)));
       }
     }
   }
-  else if (req.mode == "Nutro Stores")
+  else if (req.mode == "nt Stores")
   {
     columns = req.ctx.plantColumns;
     rows = req.ctx.plantRows;
@@ -238,8 +238,8 @@ exports.render = function(req,res)
       else
       {
         colors.push(cmykToHex(
-          colorizeNutroStore(
-            req.ctx.nutroStore[p],
+          colorizentStore(
+            req.ctx.ntStore[p],
             req.ctx)));
       }
     }
@@ -261,8 +261,8 @@ exports.render = function(req,res)
       {
         colors.push(cmykToHex(
           colorizeNutrientStore(
-            req.ctx.nutroStore[p],
-            req.ctx.nuciumStore[p],
+            req.ctx.ntStore[p],
+            req.ctx.ncStore[p],
             req.ctx)));
       }
     }
@@ -336,8 +336,8 @@ function calculateHighestAndLowest(ctx)
   ctx.richestNutro = 1;
   ctx.richestNucium = 1;
 
-  ctx.richestNutroStore = 1;
-  ctx.richestNuciumStore = 1;
+  ctx.richestntStore = 1;
+  ctx.richestncStore = 1;
   ctx.richestWaterStore = 1;
 
   for(var z = 0 ; z < ctx.area ; z++)
@@ -368,25 +368,25 @@ function calculateHighestAndLowest(ctx)
     }
 
     //  Soil
-    if(ctx.nutro[z] > ctx.richestNutro)
+    if(ctx.nt[z] > ctx.richestnt)
     {
-      ctx.richestNutro = ctx.nutro[z];
+      ctx.richestNutro = ctx.nt[z];
     }
-    if(ctx.nucium[z] > ctx.richestNucium)
+    if(ctx.nc[z] > ctx.richestnc)
     {
-      ctx.richestNucium = ctx.nucium[z];
+      ctx.richestNucium= ctx.nc[z];
     }
   }
   for(var p = 0 ; p < ctx.plantArea ; p++)
   {
     //  Stores
-    if(ctx.nutroStore[p] > ctx.richestNutroStore)
+    if(ctx.ntStore[p] > ctx.richestntStore)
     {
-      ctx.richestNutroStore = ctx.nutroStore[p];
+      ctx.richestntStore = ctx.ntStore[p];
     }
-    if(ctx.nuciumStore[p] > ctx.richestNuciumStore)
+    if(ctx.ncStore[p] > ctx.richestncStore)
     {
-      ctx.richestNuciumStore = ctx.nuciumStore[p];
+      ctx.richestncStore = ctx.ncStore[p];
     }
     if(ctx.waterStore[p] > ctx.richestWaterStore)
     {
@@ -425,30 +425,30 @@ function colorizeRainfallAndHeight(rainfall,height,ctx)
   return addColors(colorizeRainfall(rainfall,ctx),colorizeEarth(height,ctx));
 }
 
-function colorizeNutro(value,ctx)
+function colorizent(value,ctx)
 {
-  return colorValueBetween(value,0,ctx.richestNutro,weakNutro,strongNutro); 
+  return colorValueBetween(value,0,ctx.richestnt,weaknt,strongnt); 
 }
-function colorizeNucium(value,ctx)
+function colorizenc(value,ctx)
 {
-  return colorValueBetween(value,0,ctx.richestNucium,weakNucium,strongNucium);  
+  return colorValueBetween(value,0,ctx.richestnc,weaknc,strongnc);  
 }
-function colorizeNutrients(nutro,nucium,ctx)
+function colorizeNutrients(nt,nc,ctx)
 {
-  return addColors(colorizeNutro(nutro,ctx), colorizeNucium(nucium,ctx));
+  return addColors(colorizent(nt,ctx), colorizenc(nc,ctx));
 }
 
-function colorizeNutroStore(value,ctx)
+function colorizentStore(value,ctx)
 {
-  return colorValueBetween(value,0,ctx.richestNutroStore,weakNutro,strongNutro);  
+  return colorValueBetween(value,0,ctx.richestntStore,weaknt,strongnt);  
 }
-function colorizeNuciumStore(value,ctx)
+function colorizencStore(value,ctx)
 {
-  return colorValueBetween(value,0,ctx.richestNuciumStore,weakNucium,strongNucium); 
+  return colorValueBetween(value,0,ctx.richestncStore,weaknc,strongnc); 
 }
-function colorizeNutrientStore(nutro,nucium,ctx)
+function colorizeNutrientStore(nt,nc,ctx)
 {
-  return addColors(colorizeNutroStore(nutro,ctx), colorizeNuciumStore(nucium,ctx));
+  return addColors(colorizentStore(nt,ctx), colorizencStore(nc,ctx));
 }
 
 function colorizeVegetation(value,ctx)

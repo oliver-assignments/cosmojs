@@ -331,19 +331,19 @@ function SprayPlants(ctx)
 
     if(Math.random()>0.95)
     {
-      ctx.nutroConsumption = utility.randomNumberBetween(6,10);
-      ctx.nutroMetabolism = utility.randomNumberBetween(1,3);
-      ctx.nutroEndowment = utility.randomNumberBetween(1,3);
+      ctx.ntConsumption[p] = utility.randomNumberBetween(6,10);
+      ctx.ntMetabolism[p] = utility.randomNumberBetween(1,3);
+      ctx.ntEndowment[p] = utility.randomNumberBetween(1,3);
 
-      ctx.nuciumConsumption = utility.randomNumberBetween(6,10);
-      ctx.nuciumMetabolism = utility.randomNumberBetween(1,3);
-      ctx.nuciumEndowment = utility.randomNumberBetween(1,3);
+      ctx.ncConsumption[p] = utility.randomNumberBetween(6,10);
+      ctx.ncMetabolism[p] = utility.randomNumberBetween(1,3);
+      ctx.ncEndowment[p] = utility.randomNumberBetween(1,3);
 
-      ctx.numberSeeds = utility.randomNumberBetween(1,3);
-      ctx.numberSpread = 1;
+      ctx.numberSeeds[p] = utility.randomNumberBetween(1,3);
+      ctx.seedSpread[p] = 1;
 
-      ctx.nutroStore[p] = 1;
-      ctx.nuciumStore[p] = 1;
+      ctx.ntStore[p] = 1;
+      ctx.ncStore[p] = 1;
       ctx.waterStore[p] = 1;
       ctx.hasPlant[p] = true;
     }    
