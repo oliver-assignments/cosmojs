@@ -26,6 +26,7 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.richestntStore = 1;
   ctx.richestncStore = 1;
   ctx.richestWaterStore = 1;
+  ctx.tallestTree = 1;
 
   ctx.plantColumnsPer = Math.sqrt(plotsPer);
   ctx.plantColumns = ctx.columns * ctx.plantColumnsPer;
@@ -53,7 +54,7 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.ntStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   ctx.ncStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   ctx.waterStore = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
-  ctx.newGen = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.growth = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
 
   ctx.ntConsumption = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   ctx.ntMetabolism = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
@@ -65,6 +66,8 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   
   ctx.numberSeeds = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   ctx.seedSpread = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.requiredGrowth = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  
   
   //  Plant dna
   ctx.dna = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });

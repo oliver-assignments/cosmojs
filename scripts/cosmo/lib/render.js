@@ -16,14 +16,17 @@ var brightest ={c:0,m:1,y:20,k:5};
 var drizzle = {c:42,m:21,y:0,k:1};
 var monsoon = {c:70,m:30,y:0,k:63};
 
-var weaknc = {c:0,m:0,y:0,k:0};//{c:42,m:21,y:0,k:11};
-var strongnc = {c:70,m:35,y:0,k:43};
+var weakNucium = {c:0,m:0,y:0,k:0};
+var strongNucium = {c:70,m:35,y:0,k:43};
 
-var weaknt = {c:0,m:0,y:0,k:0};;//{c:0,m:41,y:39,k:16};
-var strongnt = {c:0,m:61,y:58,k:34};
+var weakNutro = {c:0,m:0,y:0,k:0};
+var strongNutro = {c:0,m:61,y:58,k:34};
 
 var sparseVegetation = {c:0,m:0,y:0,k:0};
 var thickVegetation = {c:37,m:0,y:60,k:37};
+
+var shortestPlant = sparseVegetation;
+var tallestPlant = thickVegetation;
 
 exports.renderSimulationContextWithMode = function(req,res)
 {
@@ -56,214 +59,237 @@ exports.renderSimulationContextWithMode = function(req,res)
 
 exports.render = function(req,res)
 {
-  calculateHighestAndLowest(req.ctx);
+  var ctx = req.ctx;
+  calculateHighest(ctx);
 
   var colors = new Array();
-  var columns = req.ctx.columns;
-  var rows = req.ctx.rows;
+  var columns = ctx.columns;
+  var rows = ctx.rows;
 
   if(req.mode == "Depth")
   {
-    for(var z = 0 ; z < req.ctx.area ; z++)
+    for(var z = 0 ; z < ctx.area ; z++)
     {
-      if(req.ctx.depth[z]>0)
+      if(ctx.depth[z]>0)
       {
-        colors.push(cmykToHex(colorizeWater(req.ctx.depth[z],req.ctx)));
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
       }
       else
       {
-        colors.push(cmykToHex(colorizeEarth(0,req.ctx)));
+        colors.push(cmykToHex(colorizeEarth(0,ctx)));
       }
     }
   }
   else if (req.mode == "Height")
   {
-    for(var z = 0 ; z < req.ctx.area ; z++)
+    for(var z = 0 ; z < ctx.area ; z++)
     {
-      //console.log(req.ctx.height[z]);
-      colors.push(cmykToHex(colorizeEarth(req.ctx.height[z],req.ctx)));
+      //console.log(ctx.height[z]);
+      colors.push(cmykToHex(colorizeEarth(ctx.height[z],ctx)));
     }
   }
   else if (req.mode == "Satellite")
   {
-    columns = req.ctx.plantColumns;
-    rows = req.ctx.plantRows;
+    columns = ctx.plantColumns;
+    rows = ctx.plantRows;
 
-    for(var p = 0 ; p < req.ctx.plantArea ; p++)
+    for(var p = 0 ; p < ctx.plantArea ; p++)
     {
-      var z = req.ctx.ConvertPToZ(p);
+      var z = ctx.ConvertPToZ(p);
 
-      if(req.ctx.depth[z]>0)
+      if(ctx.depth[z]>0)
       {
-        colors.push(cmykToHex(colorizeWater(req.ctx.depth[z],req.ctx)));
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
       }
       else
       {
         var plants = 0;
-        if(req.ctx.hasPlant[p])
+        if(ctx.hasPlant[p])
         {
-          plants = req.ctx.plantRowsPer * req.ctx.plantColumnsPer;
+          plants = ctx.plantRowsPer * ctx.plantColumnsPer;
         }
         colors.push(cmykToHex(
           colorizeVegetationAndHeight(
             plants,
-            req.ctx.height[z],
-            req.ctx)));
+            ctx.height[z],
+            ctx)));
       }
     }
   }
   else if (req.mode == "Elevation")
   {
-    for(var z=0; z < req.ctx.area; z++)
+    for(var z=0; z < ctx.area; z++)
     {
-      colors.push(cmykToHex(colorizeElevation(req.ctx.height[z] + req.ctx.depth[z],req.ctx)));
+      colors.push(cmykToHex(colorizeElevation(ctx.height[z] + ctx.depth[z],ctx)));
     }
   }
-  else if (req.mode == "nt")
+  else if (req.mode == "Nutro")
   {
-    for(var z = 0; z < req.ctx.area; z++)
+    for(var z = 0; z < ctx.area; z++)
     {
-      if(req.ctx.depth[z]>0)
+      if(ctx.depth[z]>0)
       {
-        colors.push(cmykToHex(colorizeWater(req.ctx.depth[z],req.ctx)));
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
       }
       else
       {
-        colors.push(cmykToHex(colorizent(req.ctx.nt[z],req.ctx)));
+        colors.push(cmykToHex(colorizeNutro(ctx.nt[z],ctx)));
       }
     }
   }
-  else if (req.mode == "nc")
+  else if (req.mode == "Nucium")
   {
-    for(var z = 0; z < req.ctx.area; z++)
+    for(var z = 0; z < ctx.area; z++)
     {
-      if(req.ctx.depth[z]>0)
+      if(ctx.depth[z]>0)
       {
-        colors.push(cmykToHex(colorizeWater(req.ctx.depth[z],req.ctx)));
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
       }
       else
       {
-        colors.push(cmykToHex(colorizenc(req.ctx.nc[z],req.ctx)));
+        colors.push(cmykToHex(colorizeNucium(ctx.nc[z],ctx)));
       }
     }
   }
   else if (req.mode == "Nutrients")
   {
-    for(var z = 0; z < req.ctx.area; z++)
+    for(var z = 0; z < ctx.area; z++)
     {
-      if(req.ctx.depth[z]>0)
+      if(ctx.depth[z]>0)
       {
-        colors.push(cmykToHex(colorizeWater(req.ctx.depth[z],req.ctx)));
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
       }
       else
       {
-        colors.push(cmykToHex(colorizeNutrients(req.ctx.nt[z], req.ctx.nc[z],req.ctx)));
+        colors.push(cmykToHex(colorizeNutrients(ctx.nt[z], ctx.nc[z],ctx)));
       }
     }
   }
   else if (req.mode == "Sunlight")
   {
-    for(var z=0; z < req.ctx.area; z++)
+    for(var z=0; z < ctx.area; z++)
     {
-      colors.push(cmykToHex(colorizeSunlightAndHeight(req.ctx.sunlight[z],req.ctx.height[z],req.ctx)));
+      colors.push(cmykToHex(colorizeSunlightAndHeight(ctx.sunlight[z],ctx.height[z],ctx)));
     }
   }
   else if (req.mode == "Rainfall")
   {
-    for(var z=0; z < req.ctx.area; z++)
+    for(var z=0; z < ctx.area; z++)
     {
-      colors.push(cmykToHex(colorizeRainfallAndHeight(req.ctx.rainfall[z],req.ctx.height[z],req.ctx)));
+      colors.push(cmykToHex(colorizeRainfallAndHeight(ctx.rainfall[z],ctx.height[z],ctx)));
     }
   }
   else if (req.mode == "Density")
   {
-    for(var z = 0 ; z < req.ctx.area ; z++)
+    for(var z = 0 ; z < ctx.area ; z++)
     {
-      if(req.ctx.depth[z]>0)
+      if(ctx.depth[z]>0)
       {
-        colors.push(cmykToHex(colorizeWater(req.ctx.depth[z],req.ctx)));
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
       }
       else
       {
-        var plots = req.ctx.GetPlotsOfZ(z);
+        var plots = ctx.GetPlotsOfZ(z);
         var numberPlants = 0;
         for(var p = 0 ; p < plots.length ; p++)
         {
-          if(req.ctx.hasPlant[plots[p]] == true)
+          if(ctx.hasPlant[plots[p]] == true)
           {
             numberPlants++;
           }
         }
         colors.push(cmykToHex(
           colorizeVegetation(
-            numberPlants,req.ctx)));
+            numberPlants,ctx)));
       }
     }
   }
-  else if (req.mode == "nc Stores")
+  else if (req.mode == "Nutro Stores")
   {
-    columns = req.ctx.plantColumns;
-    rows = req.ctx.plantRows;
+    columns = ctx.plantColumns;
+    rows = ctx.plantRows;
 
-    for(var p = 0 ; p < req.ctx.plantArea ; p++)
+    for(var p = 0 ; p < ctx.plantArea ; p++)
     {
-      var z = req.ctx.ConvertPToZ(p);
+      var z = ctx.ConvertPToZ(p);
 
-      if(req.ctx.depth[z]>0)
+      if(ctx.depth[z]>0)
       {
-        colors.push(cmykToHex(colorizeWater(req.ctx.depth[z],req.ctx)));
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
       }
       else
       {
         colors.push(cmykToHex(
-          colorizencStore(
-            req.ctx.ncStore[p],
-            req.ctx)));
+          colorizeNuciumStore(
+            ctx.ncStore[p],
+            ctx)));
       }
     }
   }
-  else if (req.mode == "nt Stores")
+  else if (req.mode == "Nucium Stores")
   {
-    columns = req.ctx.plantColumns;
-    rows = req.ctx.plantRows;
+    columns = ctx.plantColumns;
+    rows = ctx.plantRows;
 
-    for(var p = 0 ; p < req.ctx.plantArea ; p++)
+    for(var p = 0 ; p < ctx.plantArea ; p++)
     {
-      var z = req.ctx.ConvertPToZ(p);
+      var z = ctx.ConvertPToZ(p);
 
-      if(req.ctx.depth[z]>0)
+      if(ctx.depth[z]>0)
       {
-        colors.push(cmykToHex(colorizeWater(req.ctx.depth[z],req.ctx)));
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
       }
       else
       {
         colors.push(cmykToHex(
-          colorizentStore(
-            req.ctx.ntStore[p],
-            req.ctx)));
+          colorizeNutroStore(
+            ctx.ntStore[p],
+            ctx)));
       }
     }
   }
   else if (req.mode == "Nutrient Stores")
   {
-    columns = req.ctx.plantColumns;
-    rows = req.ctx.plantRows;
+    columns = ctx.plantColumns;
+    rows = ctx.plantRows;
 
-    for(var p = 0 ; p < req.ctx.plantArea ; p++)
+    for(var p = 0 ; p < ctx.plantArea ; p++)
     {
-      var z = req.ctx.ConvertPToZ(p);
+      var z = ctx.ConvertPToZ(p);
 
-      if(req.ctx.depth[z]>0)
+      if(ctx.depth[z]>0)
       {
-        colors.push(cmykToHex(colorizeWater(req.ctx.depth[z],req.ctx)));
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
       }
       else
       {
         colors.push(cmykToHex(
           colorizeNutrientStore(
-            req.ctx.ntStore[p],
-            req.ctx.ncStore[p],
-            req.ctx)));
+            ctx.ntStore[p],
+            ctx.ncStore[p],
+            ctx)));
+      }
+    }
+  }
+  else if (req.mode == "Growth")
+  {
+    columns = ctx.plantColumns;
+    rows = ctx.plantRows;
+
+    for(var p = 0 ; p < ctx.plantArea ; p++)
+    {
+      var z = ctx.ConvertPToZ(p);
+
+      if(ctx.depth[z]>0)
+      {
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
+      }
+      else
+      {
+        colors.push(cmykToHex(
+          colorizeGrowth(
+            ctx.growth[p],
+            ctx)));
       }
     }
   }
@@ -324,7 +350,7 @@ function rgbToHex(r, g, b) {
 }
 
 
-function calculateHighestAndLowest(ctx)
+function calculateHighest(ctx)
 {
   ctx.highest = 1;
   ctx.hottest = 1;
@@ -336,63 +362,33 @@ function calculateHighestAndLowest(ctx)
   ctx.richestNutro = 1;
   ctx.richestNucium = 1;
 
-  ctx.richestntStore = 1;
-  ctx.richestncStore = 1;
+  ctx.richestNutroStore = 1;
+  ctx.richestNuciumStore = 1;
   ctx.richestWaterStore = 1;
+  ctx.tallestTree = 1;
 
   for(var z = 0 ; z < ctx.area ; z++)
   {
-    if(ctx.height[z] > ctx.highest)
-    {
-      ctx.highest = ctx.height[z];
-    }
-    if(ctx.heat[z] > ctx.hottest)
-    {
-      ctx.hottest = ctx.heat[z];
-    }
-    if(ctx.depth[z] > ctx.deepest)
-    {
-      ctx.deepest = ctx.depth[z];
-    }
-    if(ctx.sunlight[z] > ctx.brightest)
-    {
-      ctx.brightest = ctx.sunlight[z];
-    }
-    if(ctx.rainfall[z] > ctx.wettest)
-    {
-      ctx.wettest = ctx.rainfall[z];
-    }
-    if(ctx.height[z] + ctx.depth[z] > ctx.tallest)
-    {
-      ctx.tallest = ctx.height[z] + ctx.depth[z];
-    }
+    ctx.highest = Math.max(ctx.highest, ctx.height[z]);
+    ctx.hottest = Math.max(ctx.hottest, ctx.heat[z]);
+    ctx.deepest = Math.max(ctx.deepest, ctx.depth[z]);
+    ctx.brightest = Math.max(ctx.brightest, ctx.sunlight[z]);
+    ctx.wettest = Math.max(ctx.wettest, ctx.rainfall[z]);
+    ctx.tallest = Math.max(ctx.tallest, ctx.height[z] + ctx.depth[z]);
 
     //  Soil
-    if(ctx.nt[z] > ctx.richestnt)
-    {
-      ctx.richestNutro = ctx.nt[z];
-    }
-    if(ctx.nc[z] > ctx.richestnc)
-    {
-      ctx.richestNucium= ctx.nc[z];
-    }
+    ctx.richestNutro = Math.max(ctx.nt[z]);
+    ctx.richestNucium= Math.max(ctx.nc[z]);
+    
   }
   for(var p = 0 ; p < ctx.plantArea ; p++)
   {
     //  Stores
-    if(ctx.ntStore[p] > ctx.richestntStore)
-    {
-      ctx.richestntStore = ctx.ntStore[p];
-    }
-    if(ctx.ncStore[p] > ctx.richestncStore)
-    {
-      ctx.richestncStore = ctx.ncStore[p];
-    }
-    if(ctx.waterStore[p] > ctx.richestWaterStore)
-    {
-      ctx.richestWaterStore = ctx.waterStore[p];
-    }
+    ctx.richestNutroStore = Math.max(ctx.richestNutroStore, ctx.ntStore[p]);  
+    ctx.richestNuciumStore = Math.max(ctx.richestNuciumStore, ctx.ncStore[p]);
+    ctx.richestWaterStore = Math.max(ctx.richestWaterStore, ctx.waterStore[p]);
     
+    ctx.tallestTree = Math.max(ctx.tallestTree, ctx.growth[p]);
   }
 }
 
@@ -425,35 +421,39 @@ function colorizeRainfallAndHeight(rainfall,height,ctx)
   return addColors(colorizeRainfall(rainfall,ctx),colorizeEarth(height,ctx));
 }
 
-function colorizent(value,ctx)
+function colorizeNutro(value,ctx)
 {
-  return colorValueBetween(value,0,ctx.richestnt,weaknt,strongnt); 
+  return colorValueBetween(value,0,ctx.richestnt,weakNutro,strongNutro); 
 }
-function colorizenc(value,ctx)
+function colorizeNucium(value,ctx)
 {
-  return colorValueBetween(value,0,ctx.richestnc,weaknc,strongnc);  
+  return colorValueBetween(value,0,ctx.richestnc,weakNucium,strongNucium);  
 }
 function colorizeNutrients(nt,nc,ctx)
 {
-  return addColors(colorizent(nt,ctx), colorizenc(nc,ctx));
+  return addColors(colorizeNutro(nt,ctx), colorizeNucium(nc,ctx));
 }
 
-function colorizentStore(value,ctx)
+function colorizeNutroStore(value,ctx)
 {
-  return colorValueBetween(value,0,ctx.richestntStore,weaknt,strongnt);  
+  return colorValueBetween(value,0,ctx.richestNutroStore,weakNutro,strongNutro);  
 }
-function colorizencStore(value,ctx)
+function colorizeNuciumStore(value,ctx)
 {
-  return colorValueBetween(value,0,ctx.richestncStore,weaknc,strongnc); 
+  return colorValueBetween(value,0,ctx.richestNuciumStore,weakNucium,strongNucium); 
 }
 function colorizeNutrientStore(nt,nc,ctx)
 {
-  return addColors(colorizentStore(nt,ctx), colorizencStore(nc,ctx));
+  return addColors(colorizeNutroStore(nt,ctx), colorizeNuciumStore(nc,ctx));
 }
 
 function colorizeVegetation(value,ctx)
 {
   return colorValueBetween(value,0,ctx.plantColumnsPer*ctx.plantRowsPer,sparseVegetation,thickVegetation);
+}
+function colorizeGrowth(value,ctx)
+{
+  return colorValueBetween(value, 0, ctx.tallestTree, shortestPlant, tallestPlant)
 }
 
 function colorizeVegetationAndHeight(vegetation,height,ctx)

@@ -340,11 +340,13 @@ function SprayPlants(ctx)
       ctx.ncEndowment[p] = utility.randomNumberBetween(1,3);
 
       ctx.numberSeeds[p] = utility.randomNumberBetween(1,3);
+      ctx.requiredGrowth[p] = utility.randomNumberBetween(5,10);
       ctx.seedSpread[p] = 1;
 
       ctx.ntStore[p] = 1;
       ctx.ncStore[p] = 1;
       ctx.waterStore[p] = 1;
+      ctx.growth[p] = 0;
       ctx.hasPlant[p] = true;
     }    
   

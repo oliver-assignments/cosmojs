@@ -8,8 +8,8 @@ function killPlant(p,z,ctx, cause, doLogDeath)
   }
   ctx.hasPlant[p] = false;
   
-  ctx.nt[z]+= ctx.ntEndowment[p];
-  ctx.nc[z]+= ctx.ncEndowment[p];
+  ctx.nt[z] += ctx.ntEndowment[p];
+  ctx.nc[z] += ctx.ncEndowment[p];
   
   ctx.ntStore[p] = null;
   ctx.ncStore[p] = null;
@@ -17,14 +17,6 @@ function killPlant(p,z,ctx, cause, doLogDeath)
 
 exports.simulateDay = function(ctx,res)
 {
-  // for( var z = 0 ; z < ctx.area ; z++)
-  // {
-  //   if(ctx.nt[z] < 1)
-  //     ctx.nt[z] = 1;
-  //   if(ctx.nc[z] < 1)
-  //     ctx.nc[z] = 1;
-  // }
-
   //  Seeds
   var seeds = new Array(ctx.plantArea);
   for (var i = 0; i < ctx.plantArea; ++i) { seeds[i] = null; }
@@ -148,12 +140,20 @@ exports.simulateDay = function(ctx,res)
       continue;
     }
 
+    //  Maturing
+    while(  ctx.growth[p] < ctx.requiredGrowth[p] &&
+            ctx.ntStore[p] > ctx.ntEndowment[p] && 
+            ctx.ncStore[p] > ctx.ncEndowment[p]) 
+    {
+      ctx.growth[p]++;
+      ctx.ntStore[p] -= ctx.ntEndowment[p];
+      ctx.ncStore[p] -= ctx.ncEndowment[p];
+    }
+
     //  Seed sowing
-    if (ctx.ntStore[p]  > ctx.ntEndowment[p]  * ctx.numberSeeds[p] && 
+    if (ctx.ntStore[p] > ctx.ntEndowment[p]  * ctx.numberSeeds[p] && 
         ctx.ncStore[p] > ctx.ncEndowment[p] *  ctx.numberSeeds[p]) 
     {
-      //if(ctx.newGen[p])
-            //console.log( ctx.numberSeeds[p]);
 
       var neighbors = ctx.GetRingOfPlantCoordinates(p, ctx.seedSpread[p], false);
       for(var s = 0 ; s <  ctx.numberSeeds[p]; s++)
@@ -186,6 +186,8 @@ exports.simulateDay = function(ctx,res)
 
             , numberSeeds: ctx.numberSeeds[p]
             , seedSpread: ctx.seedSpread[p]
+            , requiredGrowth: ctx.requiredGrowth[p]
+
             , ntStore: ctx.ntEndowment[p]
             , ncStore: ctx.ncEndowment[p]
           }
@@ -203,8 +205,6 @@ exports.simulateDay = function(ctx,res)
   {
     if(seeds[s] != null)
     {
-      ctx.newGen[s] = true;
-
       ctx.ntConsumption[s] = seeds[s].ntConsumption;
       ctx.ntMetabolism[s] = seeds[s].ntMetabolism;
       ctx.ntEndowment[s] = seeds[s].ntEndowment;
@@ -215,6 +215,7 @@ exports.simulateDay = function(ctx,res)
 
       ctx.numberSeeds[s] = seeds[s].numberSeeds;
       ctx.seedSpread[s] = seeds[s].seedSpread;
+      ctx.requiredGrowth[s] = seeds[s].requiredGrowth;
 
       ctx.ntStore[s] = seeds[s].ntStore;
       ctx.ncStore[s] = seeds[s].ncStore;
