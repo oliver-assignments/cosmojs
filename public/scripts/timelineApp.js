@@ -114,7 +114,7 @@ function($scope,$interval,timelineService,context,utility)
             case 37: direction = -1; break; //Up key
             case 38: direction = -1; break; //Up key
             case 40: direction = 1; break; //Down key
-            case 41: direction = 1; break; //Down key
+            case 39: direction = 1; break; //Down key
             default:
           }
           if(!direction) return;

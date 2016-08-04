@@ -103,8 +103,7 @@ function()
 			title: "Plants per Province"
 			, description: "The more plants share a plot the more they have to compete for shared soil nutrients."
 			, options: [
-				{ name: "One", value: 1 }
-				, { name: "Four", value: 4 }
+				{ name: "Four", value: 4 }
 				, { name: "Nine", value: 9 }
 				, { name: "Sixteen", value: 16 }
 				, { name: "Twenty Five", value: 25 }
