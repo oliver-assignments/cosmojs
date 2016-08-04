@@ -8,8 +8,8 @@ function killPlant(p,z,ctx, cause, doLogDeath)
   }
   ctx.hasPlant[p] = false;
   
-  ctx.nt[z] += ctx.ntEndowment[p];
-  ctx.nc[z] += ctx.ncEndowment[p];
+  ctx.nt[z] += ctx.ntEndowment[p] * ctx.growth[p];
+  ctx.nc[z] += ctx.ncEndowment[p] * ctx.growth[p];
   
   ctx.ntStore[p] = null;
   ctx.ncStore[p] = null;
