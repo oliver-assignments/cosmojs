@@ -5,11 +5,11 @@ function($http,context)
 	var renderer = {};
 
 	renderer.modeSections = [
-		{name:"Geography",	modes : ["Satellite", "Depth", "Elevation", "Height"]},
-		{name:"Mantle", 	modes : ["Tectonic", "Asthenosphere"]},
-		{name:"Weather", 	modes : ["Sunlight", "Rainfall"]},
-		{name:"Soil",    	modes : ["Nutrients", "Nutro", "Nucium"]},
-		{name:"Flora",   	modes : ["Density","DNA","Nutrient Stores", "Nutro Stores", "Nucium Stores", "Water Stores", "Growth"]}
+		  {name:"Flora",   		modes : ["Density","Nutrient Stores", "Nutro Stores", "Nucium Stores", "Water Stores", "Growth"]}		
+		, {name:"Geography",	modes : ["Satellite", "Depth", "Elevation", "Height"]}
+		, {name:"Mantle", 		modes : ["Tectonic", "Asthenosphere"]}
+		, {name:"Soil",    		modes : ["Nutrients", "Nutro", "Nucium"]}
+		, {name:"Weather", 		modes : ["Sunlight", "Rainfall"]}
 	];
 
 	renderer.changeMapMode = function(req,res)

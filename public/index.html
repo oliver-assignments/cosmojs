@@ -1,7 +1,7 @@
 <!-- <!DOCTYPE html> -->
 <html>
 <head>
-  <meta text="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Cosmopolitos</title>
   <meta author="Oliver Barnum">
@@ -27,54 +27,51 @@
 
   <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/style.css">
-
 </head>
 
 <body ng-app="cosmoApp">
-  <div class="container-fluid">
+  <div class="container-fluid" ng-controller="updateController">
     <div class="row" ng-controller="pageController">
-      <div class="col-md-2 toolbar">
-         <div class="row titleArea" >
-            <img id="logo" src="images/cosmo-logo.png">
-            <h1 id="title">Cosmopolitos</h1>
-            
-            <ul class="list-inline">
-              <li ng-class="page.name==pager.page.name ? 'highlight-selected' : ''" ng-repeat="page in pager.pages" ng-click="changePage(page.name,empty)">
-                <h4 class="clickable subtitle">{{page.name}}</h4>
-              </li> 
-              <li>
-                <h4 class="subtitle"><a href="https://oliverbarnum.wordpress.com/category/cosmopolitos/">Blog</a></h4>
-              </li>
-            </ul>
+      <div class="col-xs-12 col-md-3 col-lg-2 toolbar">
+         
+        <div class="titleArea">
+          <img id="logo" src="images/cosmo-logo.png">
+          <h1 class="hidden-xs hidden-sm" id="title">Cosmopolitos</h1>
 
-         </div>
-         <div class="row" ng-controller="simulationManagerController">
-            <h3 ng-controller="updateController">Worlds</h3>
-              
-            <ul class="list-unstyled">
-              <li class="world-listing" ng-repeat="sim in simulationManager.simulations" ng-class-even="'darker-odd'">
-                <span ng-class="sim.name==context.name ? 'bold-selected' : ''">
-                   <span class="clickable" 
-                      ng-click="pickSim(sim.name)">
-                    {{sim.name}}
-                    </span>
+          <ul class="list-inline">
+            <li ng-class="page.name==pager.page.name ? 'highlight-selected' : ''" ng-repeat="page in pager.pages" ng-click="changePage(page.name,empty)">
+              <h4 class="clickable subtitle">{{page.name}}</h4>
+            </li> 
+            <li>
+              <h4 class="subtitle"><a href="https://oliverbarnum.wordpress.com/category/cosmopolitos/">Blog</a></h4>
+            </li>
+          </ul>
+        </div>
+        <div ng-controller="simulationManagerController">
+
+          <h3>Worlds</h3>    
+          <ul class="list-unstyled">
+            <li class="world-listing listing" ng-repeat="sim in simulationManager.simulations" ng-class-even="'darker-odd'">
+              <span ng-class="sim.name==context.name ? 'bold-selected' : ''">
+                 <span class="clickable" 
+                    ng-click="pickSim(sim.name)">
+                  {{sim.name}}
+                  
+                  &#8728; 
+                  {{ sim.days | daysToDate:true }}
                 </span>
-                &#8728; 
-                {{ sim.days | daysToDate:true }}
-                <span class="clickable" ng-click="deleteSim(sim.name)">x</span>
-              </li>
-            </ul>
+              </span>
+              <span class="hidden-xs hidden-sm clickable" ng-click="deleteSim(sim.name)">x</span>
+            </li>
+          </ul>
+        </div>
+      </div>
 
-         </div>
+      <div class="col-xs-12 col-md-9 col-lg-10">
+        <div ng-include="pager.page.url"></div>
       </div>
-      <div class="col-md-10">
-           
-         <div class="partial slide-animate-container">
-            <div ng-include="pager.page.url"></div>
-         </div>
-        
-      </div>
+
     </div>
-   </div>
+  </div>
 </body>
 </html>

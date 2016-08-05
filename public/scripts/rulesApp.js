@@ -67,10 +67,10 @@ function()
       title: "Size"
       , description: "Planet size dictates the size and resolution of the simulation. Larger plant and animal populations and more complex continental shapes are possible with a bigger map."
       , options: [
-        { name: "Tiny", value: '{"columns":50,"rows":40}' }
-        , { name: "Small", value: '{"columns":100,"rows":80}' }
-        , { name: "Medium", value: '{"columns":150,"rows":120}' }
-        , { name: "Large", value: '{"columns":200,"rows":160}' }
+        { name: "Small", value: '{"columns":50,"rows":40}' }
+        , { name: "Medium", value: '{"columns":100,"rows":80}' }
+        , { name: "Large", value: '{"columns":150,"rows":120}' }
+        // , { name: "Large", value: '{"columns":200,"rows":160}' }
       ]
       , variable: "size"
       , type: "string"
@@ -106,7 +106,7 @@ function()
         { name: "Four", value: 4 }
         , { name: "Nine", value: 9 }
         , { name: "Sixteen", value: 16 }
-        , { name: "Twenty Five", value: 25 }
+        // , { name: "Twenty Five", value: 25 }
       ]
       , variable: "plantsPer"
       , type: "number"
