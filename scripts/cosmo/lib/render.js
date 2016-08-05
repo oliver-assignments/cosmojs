@@ -60,7 +60,6 @@ exports.renderSimulationContextWithMode = function(req,res)
 exports.render = function(req,res)
 {
   var ctx = req.ctx;
-  calculateHighest(ctx);
 
   var colors = new Array();
   var columns = ctx.columns;
@@ -221,7 +220,7 @@ exports.render = function(req,res)
       {
         colors.push(cmykToHex(
           colorizeNuciumStore(
-            ctx.ncStore[p],
+            (ctx.hasPlant[p] ? ctx.ntStore[p] : 0),
             ctx)));
       }
     }
@@ -243,7 +242,7 @@ exports.render = function(req,res)
       {
         colors.push(cmykToHex(
           colorizeNutroStore(
-            ctx.ntStore[p],
+            (ctx.hasPlant[p] ? ctx.ncStore[p] : 0),
             ctx)));
       }
     }
@@ -265,8 +264,8 @@ exports.render = function(req,res)
       {
         colors.push(cmykToHex(
           colorizeNutrientStore(
-            ctx.ntStore[p],
-            ctx.ncStore[p],
+            (ctx.hasPlant[p] ? ctx.ntStore[p] : 0),
+            (ctx.hasPlant[p] ? ctx.ncStore[p] : 0),
             ctx)));
       }
     }
@@ -288,7 +287,7 @@ exports.render = function(req,res)
       {
         colors.push(cmykToHex(
           colorizeGrowth(
-            ctx.growth[p],
+            (ctx.hasPlant[p] ? ctx.growth[p] : 0),
             ctx)));
       }
     }
@@ -349,50 +348,6 @@ function rgbToHex(r, g, b) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
-
-function calculateHighest(ctx)
-{
-  ctx.highest = 1;
-  ctx.hottest = 1;
-  ctx.deepest = 1;
-  ctx.brightest = 1;
-  ctx.wettest = 1;
-  ctx.tallest = 1;
-
-  ctx.richestNutro = 1;
-  ctx.richestNucium = 1;
-
-  ctx.richestNutroStore = 1;
-  ctx.richestNuciumStore = 1;
-  ctx.richestWaterStore = 1;
-  ctx.tallestTree = 1;
-
-  for(var z = 0 ; z < ctx.area ; z++)
-  {
-    ctx.highest = Math.max(ctx.highest, ctx.height[z]);
-    ctx.hottest = Math.max(ctx.hottest, ctx.heat[z]);
-    ctx.deepest = Math.max(ctx.deepest, ctx.depth[z]);
-    ctx.brightest = Math.max(ctx.brightest, ctx.sunlight[z]);
-    ctx.wettest = Math.max(ctx.wettest, ctx.rainfall[z]);
-    ctx.tallest = Math.max(ctx.tallest, ctx.height[z] + ctx.depth[z]);
-
-    //  Soil
-    ctx.richestNutro = Math.max(ctx.nt[z]);
-    ctx.richestNucium= Math.max(ctx.nc[z]);
-    
-  }
-  for(var p = 0 ; p < ctx.plantArea ; p++)
-  {
-    //  Stores
-    ctx.richestNutroStore = Math.max(ctx.richestNutroStore, ctx.ntStore[p]);  
-    ctx.richestNuciumStore = Math.max(ctx.richestNuciumStore, ctx.ncStore[p]);
-    ctx.richestWaterStore = Math.max(ctx.richestWaterStore, ctx.waterStore[p]);
-    
-    ctx.tallestTree = Math.max(ctx.tallestTree, ctx.growth[p]);
-  }
-}
-
-
 function addColors(a,b)
 {
   return {c: a.c + b.c,
@@ -423,11 +378,11 @@ function colorizeRainfallAndHeight(rainfall,height,ctx)
 
 function colorizeNutro(value,ctx)
 {
-  return colorValueBetween(value,0,ctx.richestnt,weakNutro,strongNutro); 
+  return colorValueBetween(value,0,ctx.richestNutro,weakNutro,strongNutro); 
 }
 function colorizeNucium(value,ctx)
 {
-  return colorValueBetween(value,0,ctx.richestnc,weakNucium,strongNucium);  
+  return colorValueBetween(value,0,ctx.richestNucium,weakNucium,strongNucium);  
 }
 function colorizeNutrients(nt,nc,ctx)
 {

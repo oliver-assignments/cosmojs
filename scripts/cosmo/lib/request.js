@@ -58,7 +58,11 @@ exports.clearSimulationRequests = function(res) {
   requests = new Array();
   res(null,requests);
 };
-
+exports.saveCtx = function(simulation, ctx)
+{
+  simulate.calculateHighest(ctx);
+  simulation.dates.push(utility.cloneObject(ctx));
+}
 exports.processSimulationRequests = function(res)
 {
   var lastOutputDay = 0;
@@ -107,7 +111,7 @@ exports.processSimulationRequests = function(res)
         if(copyCtx.days % 10 == 0 && lastOutputDay != copyCtx.days)
         {
           //Save
-          simulation.dates.push(utility.cloneObject(copyCtx));
+          exports.saveCtx(simulation,copyCtx);
           lastOutputDay = copyCtx.days;
         }
 
@@ -121,7 +125,6 @@ exports.processSimulationRequests = function(res)
           }
           else
           {
-            //simulation.dates.push(utility.cloneObject(copyCtx));
           }
 
         });
@@ -129,7 +132,7 @@ exports.processSimulationRequests = function(res)
       }
       if(requests[r].days < 10 && lastOutputDay != copyCtx.days) {
         //Save if under a week
-        simulation.dates.push(utility.cloneObject(copyCtx));
+        exports.saveCtx(simulation,copyCtx);
         lastOutputDay = copyCtx.days;
       }
     

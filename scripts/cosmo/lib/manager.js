@@ -3,6 +3,7 @@
 var creation = require('./create.js');
 var context = require('./context.js');
 var util = require('./utility.js');
+var request = require('./request.js')
 
 var simulations = new Array();
 
@@ -29,8 +30,7 @@ exports.createSimulation = function(req, res)
         res(err);
         return;
       }
-
-      simulation.dates.push(ctx);
+      request.saveCtx(simulation,ctx);
       simulations.push(simulation);
 
       res(null,simulations);

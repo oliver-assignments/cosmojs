@@ -8,8 +8,8 @@ function killPlant(p,z,ctx, cause, doLogDeath)
   }
   ctx.hasPlant[p] = false;
   
-  ctx.nt[z] += ctx.ntEndowment[p] * ctx.growth[p];
-  ctx.nc[z] += ctx.ncEndowment[p] * ctx.growth[p];
+  ctx.nt[z] += ctx.ntEndowment[p];// * ctx.growth[p];
+  ctx.nc[z] += ctx.ncEndowment[p];// * ctx.growth[p];
   
   ctx.ntStore[p] = null;
   ctx.ncStore[p] = null;
@@ -37,27 +37,17 @@ exports.simulateDay = function(ctx,res)
       killPlant(p,z,ctx)// No plant here
       continue;
     }
-    if(!ctx.ntConsumption[p] || !ctx.ntMetabolism[p] || !ctx.ntEndowment[p])
-    {
-      killPlant(p,z,ctx,"Null nt pulls", true);
-      continue;
-    }
-    if(!ctx.ncConsumption[p] || !ctx.ncMetabolism[p] || !ctx.ncEndowment[p])
-    {
-      killPlant(p,z,ctx,"Null nt pulls", true);
-      continue;
-    }
 
     if(ctx.numberSeeds[p] < 1){
-      killPlant(p,z,ctx,"Number seeds less than 1: " + ctx.numberSeeds[p], true);
+      killPlant(p,z,ctx,"Number seeds less than 1: " + ctx.numberSeeds[p], false);
       continue;
     }
-    if(ctx.ntEndowment[p] < 1){
-      killPlant(p,z,ctx,"ctx.ntEndowment[p] is less than 1 : "+ ctx.ntEndowment[p], true);
+    if(ctx.ntEndowment[p] < 0){
+      killPlant(p,z,ctx,"ctx.ntEndowment[p] is less than 0 : "+ ctx.ntEndowment[p], false);
       continue;
     }
-    if(ctx.ncEndowment[p] < 1){
-      killPlant(p,z,ctx,"ctx.ncEndowment[p] is less than 1 : " + ctx.ncEndowment[p], true);
+    if(ctx.ncEndowment[p] < 0){
+      killPlant(p,z,ctx,"ctx.ncEndowment[p] is less than 0 : " + ctx.ncEndowment[p], false);
       continue;
     }
 
@@ -170,23 +160,25 @@ exports.simulateDay = function(ctx,res)
                 ctx.ncEndowment[p] < seeds[neighbor].ncStore)
             {
               //  The seed here has more of an endowment than us
+              ctx.nt[z]+= ctx.ntEndowment[p];
+              ctx.nc[z]+= ctx.ncEndowment[p];
               continue; //  Don't sow
             }
           }
           
           //  Sow the seed
           seeds[neighbor] = {
-            ntConsumption: ctx.ntConsumption[p]
-            , ntMetabolism: ctx.ntMetabolism[p]
-            , ntEndowment: ctx.ntEndowment[p]
+              ntConsumption: ctx.ntConsumption[p] + MutateDNA(ctx.rules.mutation)
+            , ntMetabolism: ctx.ntMetabolism[p] + MutateDNA(ctx.rules.mutation)
+            , ntEndowment: ctx.ntEndowment[p] + MutateDNA(ctx.rules.mutation)
 
-            , ncConsumption: ctx.ncConsumption[p]
-            , ncMetabolism: ctx.ncMetabolism[p]
-            , ncEndowment: ctx.ncEndowment[p]
+            , ncConsumption: ctx.ncConsumption[p] + MutateDNA(ctx.rules.mutation)
+            , ncMetabolism: ctx.ncMetabolism[p] + MutateDNA(ctx.rules.mutation)
+            , ncEndowment: ctx.ncEndowment[p] + MutateDNA(ctx.rules.mutation)
 
-            , numberSeeds: ctx.numberSeeds[p]
-            , seedSpread: ctx.seedSpread[p]
-            , requiredGrowth: ctx.requiredGrowth[p]
+            , numberSeeds: ctx.numberSeeds[p] //+ MutateDNA(ctx.rules.mutation)
+            , seedSpread: ctx.seedSpread[p] //+ MutateDNA(ctx.rules.mutation)
+            , requiredGrowth: ctx.requiredGrowth[p] + MutateDNA(ctx.rules.mutation)
 
             , ntStore: ctx.ntEndowment[p]
             , ncStore: ctx.ncEndowment[p]
@@ -225,6 +217,50 @@ exports.simulateDay = function(ctx,res)
 
   res(null);
 };
+exports.calculateHighest=function(ctx)
+{
+  ctx.highest = 1;
+  ctx.hottest = 1;
+  ctx.deepest = 1;
+  ctx.brightest = 1;
+  ctx.wettest = 1;
+  ctx.tallest = 1;
+
+  ctx.richestNutro = 1;
+  ctx.richestNucium = 1;
+
+  ctx.richestNutroStore = 1;
+  ctx.richestNuciumStore = 1;
+  ctx.richestWaterStore = 1;
+  ctx.tallestTree = 1;
+
+  for(var z = 0 ; z < ctx.area ; z++)
+  {
+    ctx.highest = Math.max(ctx.highest, ctx.height[z]);
+    ctx.hottest = Math.max(ctx.hottest, ctx.heat[z]);
+    ctx.deepest = Math.max(ctx.deepest, ctx.depth[z]);
+    ctx.brightest = Math.max(ctx.brightest, ctx.sunlight[z]);
+    ctx.wettest = Math.max(ctx.wettest, ctx.rainfall[z]);
+    ctx.tallest = Math.max(ctx.tallest, ctx.height[z] + ctx.depth[z]);
+
+    //  Soil
+    ctx.richestNutro = Math.max(ctx.nt[z]);
+    ctx.richestNucium= Math.max(ctx.nc[z]);
+    
+  }
+  for(var p = 0 ; p < ctx.plantArea ; p++)
+  {
+    //  Stores
+    if(ctx.hasPlant[p])
+    {
+      ctx.richestNutroStore = Math.max(ctx.richestNutroStore, ctx.ntStore[p]);  
+      ctx.richestNuciumStore = Math.max(ctx.richestNuciumStore, ctx.ncStore[p]);
+      ctx.richestWaterStore = Math.max(ctx.richestWaterStore, ctx.waterStore[p]);
+      
+      ctx.tallestTree = Math.max(ctx.tallestTree, ctx.growth[p]);
+    }
+  }
+}
 exports.onMonth = function(ctx,res)
 {
   //console.log("A month! " + ctx.month);
@@ -236,28 +272,19 @@ exports.onYear = function(ctx,res)
   res(null);
 };
 
-function MutateDNA(dna,mutationRate)
+function MutateDNA(mutationRate)
 {
-  var newDna = "";
-  var hasChanged = false;
-  for(var d = 0 ; d < dna.length ; d++)
+  if(Math.random() > mutationRate)
   {
-    var valueAtDna = dna.charCodeAt(d)-97;
-    if(Math.random() > mutationRate)
-    {
-      hasChanged = true;
-      //  Mutate
-      if(Math.random() > 0.5)
-      {  
-        valueAtDna ++;
-      }
-      else
-      {
-        valueAtDna--;
-        if(valueAtDna <1) valueAtDna++;
-      }
+    //  Mutate
+    if(Math.random() > 0.5)
+    {  
+      return 1;
     }
-    newDna += String.fromCharCode(97 + valueAtDna);
+    else
+    {
+      return -1;
+    }
   }
-  return newDna;
+  return 0;
 }
