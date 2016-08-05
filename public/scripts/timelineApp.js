@@ -118,8 +118,6 @@ function($scope,$interval,timelineService,context,utility)
             default:
           }
           if(!direction) return;
-          
-          console.log(direction);
 
           timelineService.jumpToNextDate(direction,function(err,data) {
             if(err) console.log(err);

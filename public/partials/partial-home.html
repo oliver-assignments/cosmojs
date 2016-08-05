@@ -6,9 +6,9 @@
           {{ context.name }}
           <span class="hidden-xs hidden-sm"> 
             &#8728;  
-            {{ context.days | daysToDate: false }}
+            {{ context.days | daysToDate: true }}
             &#8728; 
-            {{ context.mode }} Mode
+            {{ context.mode }}
           </span>
         </h3>
       </div>
@@ -42,8 +42,8 @@
       <div class="col-xs-12">
         <div class="hidden-xs hidden-sm" ng-controller="simulationRequestsController">
           <h4>Requests</h4>
-          <p>Request
-          <span class="clickable" ng-click="createRequest(context.name,1)"> day</span>,
+          <p>
+          <span class="clickable" ng-click="createRequest(context.name,1)">day</span>,
           <span class="clickable" ng-click="createRequest(context.name,10)"> week</span>,
           <span class="clickable" ng-click="createRequest(context.name,30)"> month</span>,
           <span class="clickable" ng-click="createRequest(context.name,360)"> year</span>

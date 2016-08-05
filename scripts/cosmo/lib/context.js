@@ -46,8 +46,8 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.unresolvedWater = Array.apply(null, { length: ctx.area }).map( function() { return false; });
 
   //  PLOT DATA  //
-  ctx.nt   = Array.apply(null, { length: ctx.area }).map( function() { return utility.randomNumberBetween(0,5) * ctx.plantsPer; });
-  ctx.nc  = Array.apply(null, { length: ctx.area }).map( function() { return utility.randomNumberBetween(0,5) * ctx.plantsPer; });
+  ctx.nt = Array.apply(null, { length: ctx.area }).map( function() { return utility.randomNumberBetween(0,5) * ctx.plantsPer; });
+  ctx.nc = Array.apply(null, { length: ctx.area }).map( function() { return utility.randomNumberBetween(0,5) * ctx.plantsPer; });
 
   //  Plant data
   ctx.hasPlant  = Array.apply(null, { length: ctx.plantArea }).map( function() { return false; });

@@ -244,9 +244,8 @@ exports.calculateHighest=function(ctx)
     ctx.tallest = Math.max(ctx.tallest, ctx.height[z] + ctx.depth[z]);
 
     //  Soil
-    ctx.richestNutro = Math.max(ctx.nt[z]);
-    ctx.richestNucium= Math.max(ctx.nc[z]);
-    
+    ctx.richestNutro = Math.max(ctx.richestNutro, ctx.nt[z]);
+    ctx.richestNucium= Math.max( ctx.richestNucium, ctx.nc[z]);
   }
   for(var p = 0 ; p < ctx.plantArea ; p++)
   {
