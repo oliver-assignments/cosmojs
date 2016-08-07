@@ -1,12 +1,17 @@
 var utility = require('./utility.js');
+var tectonic = require('./tectonic.js');
 
 exports.prepareSimulation = function(ctx,res)
 {
   CreateBlobbyLandmass(ctx);
+  CreateOcean(ctx, ctx.area * 2);
+
+  tectonic.createTectonicPlates(ctx);
+  SprayPlants(ctx);
+
   SetSunlight(ctx);
   EstimateRainfall(ctx);
-  CreateOcean(ctx, ctx.area * 2);
-  SprayPlants(ctx);
+
   res(null,ctx);
 };
 
@@ -52,9 +57,6 @@ function CreateBlob(ctx,startingCoord,radius,numberNodes)
         }
         ,radius : radius / numberNodes
       });
-    
-    //  Use this line to denote the ball position
-    //ctx.height[ctx.ConvertToZ(balls[n].coord)] += 10;
   }
 
   //  Tralling throuhg all provinces seeing if they are the blob.

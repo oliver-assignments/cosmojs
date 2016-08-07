@@ -16,10 +16,14 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.days = 0;
 
   ctx.highest = 1;
-  ctx.hottest = 1;
   ctx.deepest = 1;
+
+  ctx.hottest = 1;
+  ctx.highestStress = 1;
+  
   ctx.brightest = 1;
   ctx.wettest = 1;
+  
   ctx.tallest = 1;
   ctx.richestNutro = 1;
   ctx.richestNucium = 1;
@@ -37,6 +41,7 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
 
   ctx.tectonic  = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
   ctx.heat      = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+  ctx.stress    = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
   ctx.height    = Array.apply(null, { length: ctx.area }).map( function() { return 2; });
   ctx.depth     = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
   ctx.sunlight  = Array.apply(null, { length: ctx.area }).map( function() { return 1; });

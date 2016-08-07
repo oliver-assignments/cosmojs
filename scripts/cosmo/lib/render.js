@@ -28,6 +28,12 @@ var thickVegetation = {c:37,m:0,y:60,k:37};
 var shortestPlant = sparseVegetation;
 var tallestPlant = thickVegetation;
 
+var hottest = {c:0,m:88,y:79,k:1};
+var coolest = {c:20,m:20,y:20,k:1};
+
+var tectonicColors = [ "#9bf123"
+];
+
 exports.renderSimulationContextWithMode = function(req,res)
 {
   manager.getSimulationContext(req,
@@ -85,6 +91,20 @@ exports.render = function(req,res)
     {
       //console.log(ctx.height[z]);
       colors.push(cmykToHex(colorizeEarth(ctx.height[z],ctx)));
+    }
+  }
+  else if (req.mode == "Asthenosphere")
+  {
+    for(var z = 0 ; z < ctx.area ; z++)
+    {
+      colors.push(cmykToHex(colorizeHeat(ctx.heat[z],ctx)));
+    }
+  }
+  else if (req.mode == "Stress")
+  {
+    for(var z = 0 ; z < ctx.area ; z++)
+    {
+      colors.push(cmykToHex(colorizeStress(ctx.stress[z],ctx)));
     }
   }
   else if (req.mode == "Satellite")
@@ -376,10 +396,22 @@ function colorizeRainfallAndHeight(rainfall,height,ctx)
   return addColors(colorizeRainfall(rainfall,ctx),colorizeEarth(height,ctx));
 }
 
+
+function colorizeHeat(value,ctx)
+{
+  return colorValueBetween(value,0,ctx.hottest,coolest,hottest); 
+}
+function colorizeStress(value,ctx)
+{
+  return colorValueBetween(value,0,ctx.highestStress,coolest,hottest); 
+}
+
+
 function colorizeNutro(value,ctx)
 {
   return colorValueBetween(value,0,ctx.richestNutro,weakNutro,strongNutro); 
 }
+
 function colorizeNucium(value,ctx)
 {
   return colorValueBetween(value,0,ctx.richestNucium,weakNucium,strongNucium);  
