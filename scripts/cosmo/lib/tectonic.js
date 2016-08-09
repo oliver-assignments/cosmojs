@@ -2,7 +2,7 @@ var utility = require('./utility');
 
 function heatProvince(z, ctx)
 {
-	ctx.heat[z] = Math.max(0, ctx.heat[z] +  ctx.height[z] - (ctx.depth[z]));
+	ctx.heat[z] = Math.max(0, Math.round(ctx.heat[z] +  ctx.height[z] - (ctx.depth[z]/2)));
 };
 function giveHeat (z, ctx)
 {
@@ -24,12 +24,12 @@ function giveHeat (z, ctx)
     {
       var n_index = neighbors[n];
 
-      var neighborHeat = ctx.height[n_index];
+      var neighborHeat = ctx.heat[n_index];
 
       var slope = heat - neighborHeat;
 
       //  Do we have a downward slow too great?
-      if (slope)
+      if (slope > 0)
       {
         numberPossibleDonees++;
 
@@ -62,11 +62,11 @@ function giveHeat (z, ctx)
     }
   }
   //If we had more than one possibility than we can try again
-  while (false);//numberPossibleDonees > 1 && ctx.heat[z] > 0);
+  while (false)//(numberPossibleDonees > 1 && ctx.heat[z] > 0);
 };
-function heatAndStress(ctx)
+function heat(ctx)
 {
-for(var z = 0 ; z < ctx.area ; z++) {
+	for(var z = 0 ; z < ctx.area ; z++) {
 		heatProvince(z, ctx);
 	}
 		
@@ -81,20 +81,38 @@ for(var z = 0 ; z < ctx.area ; z++) {
 
 	  giveHeat(z,ctx);
 	}
+};
+function stress(ctx)
+{
+	for(var z = 0 ; z < ctx.area ; z++) 
+	{
+    var heat = ctx.heat[z];
+    var plate = ctx.tectonic[z];
 
-	//  Caclulate stress
-	for(var z = 0 ; z < ctx.area ; z++) {
-		ctx.stress[z] = Math.max(0,ctx.heat[z] - ctx.height[z]);
+		var neighbors = ctx.GetNeighbors(z,false);
+    for (var n = 0; n < neighbors.length; n++)
+    {
+    	if(ctx.tectonic[neighbors[n]] == plate) {
+      	ctx.stress[z] += ctx.heat[z] - ctx.heat[neighbors[n]];
+	    	
+	      if(ctx.stress[z] < 0) {
+	      	// ctx.stress[z] = -ctx.stress[z];
+	      	ctx.stress[z] = 0;
+	      }
+	    }
+    }
 	}
 };
 exports.createTectonicPlates = function(ctx)
 {
-  heatAndStress(ctx);
+  heat(ctx);
+  stress(ctx);
 };
 
 exports.advanceTectonics = function (ctx)
 {
-	heatAndStress(ctx);
+	heat(ctx);
+  stress(ctx);
 }
 
 // void TectonicHandler::CreateTectonicPlates()

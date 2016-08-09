@@ -24,7 +24,6 @@ function($http,context,renderer)
           $http.get('/apis/worlds/' + context.name + '/timeline')
             .success(function(data)
             {
-              console.log(data);
               timeline.dates = data;
               res(null,data);
             })

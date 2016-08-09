@@ -3,6 +3,7 @@
 //exports = module.exports;
 var manager = require('./manager.js');
 var utility = require('./utility.js');
+var randomColor = require('randomcolor');
 
 var shallowestOcean = {c:42,m:21,y:0,k:1};
 var deepestOcean = {c:70,m:30,y:0,k:63};
@@ -31,8 +32,7 @@ var tallestPlant = thickVegetation;
 var hottest = {c:0,m:88,y:79,k:1};
 var coolest = {c:20,m:20,y:20,k:1};
 
-var tectonicColors = [ "#9bf123"
-];
+var tectonicColors = randomColor.randomColor({count:1000,luminosity:'light'});
 
 exports.renderSimulationContextWithMode = function(req,res)
 {
@@ -91,6 +91,13 @@ exports.render = function(req,res)
     {
       //console.log(ctx.height[z]);
       colors.push(cmykToHex(colorizeEarth(ctx.height[z],ctx)));
+    }
+  }
+  else if (req.mode == "Tectonic")
+  {
+    for(var z = 0 ; z < ctx.area ; z++)
+    {
+      colors.push(tectonicColors[ctx.tectonic[z]]);
     }
   }
   else if (req.mode == "Asthenosphere")
