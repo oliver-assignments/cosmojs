@@ -78,10 +78,10 @@ function($scope,$cookies, rulesService,creationService,utility)
     , plantsPer: 9
 
     , rules: {
-      water: false
-      , maturity: false
+      maturity: true
       , disease: false
-      , consumption: false
+      , heliophilia: true
+      , thirst: true
       , mutation: 0.999
       , roots: 8
     }
@@ -178,7 +178,7 @@ function($scope,$cookies, rulesService,creationService,utility)
     {
       var boolean = $cookies.get('cosmo-' + rulesService.booleans[b].variable);
       if(boolean){
-        $scope.formData.rules[rulesService.booleans[b].variable] = boolean === true;
+        $scope.formData.rules[rulesService.booleans[b].variable] = boolean =="true";
       }
     }
 
