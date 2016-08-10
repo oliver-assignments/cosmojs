@@ -102,14 +102,14 @@ exports.simulatePlants = function(ctx)
   //  Water
   if(ctx.rules.water)
   {
-    if(ctx.rainfall[z] - ctx.thirst[p] < 0 || tx.rainfall[z] - ctx.thirst[p] > 25)
+    if(ctx.rainfall[z] - ctx.thirst[p] < 0 || ctx.rainfall[z] - ctx.thirst[p] > 50)
     {
       killPlant(p,z,ctx, "So thirst..." + (ctx.rainfall[z] - ctx.thirst[p]), false);
     }
   }
   if(ctx.rules.heliophilia)
   {
-    if(ctx.sunlight[z] - ctx.heliophilia[p] < 0 || tx.sunlight[z] - ctx.heliophilia[p] > 25)
+    if(ctx.sunlight[z] - ctx.heliophilia[p] < 0 || ctx.sunlight[z] - ctx.heliophilia[p] > 50)
     {
       killPlant(p,z,ctx, "So cold..." + (ctx.sunlight[z] - ctx.heliophilia[p]), false);
     }

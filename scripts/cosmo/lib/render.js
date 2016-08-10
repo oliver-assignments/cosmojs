@@ -423,7 +423,7 @@ exports.render = function(req,res)
           cmykToHex(
             colorValueBetween(
                 (ctx.hasPlant[p] ? ctx.thirst[p] : 0), 
-                0, ctx.thirstiest, deepestOcean, white)));
+                0, ctx.thirstiest, drizzle, monsoon)));
       }
     }
   }
@@ -446,7 +446,7 @@ exports.render = function(req,res)
           cmykToHex(
             colorValueBetween(
                 (ctx.hasPlant[p] ? ctx.heliophilia[p] : 0), 
-                0, ctx.heliest, lowestValley, white)));
+                0, ctx.heliest, lowestValley, brightest)));
       }
     }
   }

@@ -6,7 +6,7 @@ function($http,context)
 
 	renderer.modeSections = [
 		  {name:"Flora Stats", 	modes : ["Density","Nutrient Stores", "Nutro Stores", "Nucium Stores", "Water Stores", "Growth"]}	
-		, {name:"Flora DNA",    modes : ["Nutro Net","Seed Nutro Endowment", "Nucium Net", "Seed Nucium Endowment", "Number Seeds", "Thirst", "Heliophilia"]}	
+		, {name:"Flora DNA",    modes : ["Nutro Net","Seed Nutro Endowment", "Nucium Net", "Seed Nucium Endowment", "Number Seeds", "Heliophilia", "Thirst"]}	
 		, {name:"Geography",	modes : ["Satellite", "Depth", "Elevation", "Height"]}
 		, {name:"Mantle", 		modes : ["Tectonic", "Asthenosphere", "Stress"]}
 		, {name:"Soil",    		modes : ["Nutrients", "Nutro", "Nucium"]}
