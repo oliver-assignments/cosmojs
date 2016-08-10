@@ -33,6 +33,8 @@ exports.calculateHighest=function(ctx)
   ctx.richestNuciumStore = 1;
   ctx.richestWaterStore = 1;
   ctx.tallestTree = 1;
+  ctx.thirstiest = 0;;
+  ctx.heliest = 0;
 
   for(var z = 0 ; z < ctx.area ; z++)
   {
@@ -58,6 +60,8 @@ exports.calculateHighest=function(ctx)
       ctx.richestWaterStore = Math.max(ctx.richestWaterStore, ctx.waterStore[p]);
       
       ctx.tallestTree = Math.max(ctx.tallestTree, ctx.growth[p]);
+      ctx.thirstiest = Math.max(ctx.thirstiest, ctx.thirst[p]);
+      ctx.heliest = Math.max(ctx.heliest, ctx.heliophilia[p]);
     }
   }
 }

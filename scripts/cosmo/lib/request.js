@@ -108,7 +108,7 @@ exports.processSimulationRequests = function(res)
         }
 
         //  Weekly Logic
-        if(copyCtx.days % 10 == 0 && lastOutputDay != copyCtx.days)
+        if(copyCtx.days % 30 == 0 && lastOutputDay != copyCtx.days)
         {
           //Save
           exports.saveCtx(simulation,copyCtx);
@@ -123,14 +123,11 @@ exports.processSimulationRequests = function(res)
             res("Problem wiht simulating a day");
             return;
           }
-          else
-          {
-          }
 
         });
         
       }
-      if(requests[r].days < 10 && lastOutputDay != copyCtx.days) {
+      if(requests[r].days < 30 && lastOutputDay != copyCtx.days) {
         //Save if under a week
         exports.saveCtx(simulation,copyCtx);
         lastOutputDay = copyCtx.days;

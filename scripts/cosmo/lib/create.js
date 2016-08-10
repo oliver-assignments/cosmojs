@@ -343,7 +343,10 @@ function SprayPlants(ctx)
 
       ctx.numberSeeds[p] = utility.randomNumberBetween(1,3);
       ctx.requiredGrowth[p] = utility.randomNumberBetween(5,10);
-      ctx.seedSpread[p] = 1;
+      ctx.seedSpread[p] = utility.randomNumberBetween(1,3);
+
+      ctx.thirst[p] = utility.randomNumberBetween(1,99);
+      ctx.heliophilia[p] = utility.randomNumberBetween(1,99);
 
       ctx.ntStore[p] = 1;
       ctx.ncStore[p] = 1;

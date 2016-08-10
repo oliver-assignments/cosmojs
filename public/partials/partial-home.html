@@ -46,7 +46,8 @@
           <span class="clickable" ng-click="createRequest(context.name,1)">day</span>,
           <span class="clickable" ng-click="createRequest(context.name,10)"> week</span>,
           <span class="clickable" ng-click="createRequest(context.name,30)"> month</span>,
-          <span class="clickable" ng-click="createRequest(context.name,360)"> year</span>
+          <span class="clickable" ng-click="createRequest(context.name,360)"> year</span>,
+          <span class="clickable" ng-click="createRequest(context.name,360*5)"> lustrum</span>
           </p>
           <ul class="list-unstyled">
             <li ng-repeat="request in requestManager.requests" ng-class-even="'odd'">

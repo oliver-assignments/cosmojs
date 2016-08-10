@@ -124,18 +124,25 @@ function()
     // }
     //,
     {
-      character: "W"
-      , title: "Water"
-      , tooltip: "Plants recieve and store water from rainfall, and need it to survive."
-      , variable: "water"
-      , init: false
-    }
-    ,{
       character: "M"
       , required: "S"
       , title: "Maturity"
       , tooltip: "Plants must mature before they can reproduce. Requires seeding."
       , variable: "maturity"
+      , init: false
+    }
+    ,{
+      character: "H"
+      , title: "Heliophilia"
+      , tooltip: "Plants love the sun."
+      , variable: "heliophilia"
+      , init: false
+    }
+    ,{
+      character: "T"
+      , title: "Thirst"
+      , tooltip: "Plants love the rain."
+      , variable: "thirst"
       , init: false
     }
     ,{

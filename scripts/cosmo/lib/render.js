@@ -5,32 +5,112 @@ var manager = require('./manager.js');
 var utility = require('./utility.js');
 var randomColor = require('randomcolor');
 
-var shallowestOcean = {c:42,m:21,y:0,k:1};
-var deepestOcean = {c:70,m:30,y:0,k:63};
+var white = {c: 0, m: 0, y: 0, k: 0};
+var shallowestOcean = {c: 42, m: 21, y: 0, k: 1};
+var deepestOcean = {c: 70, m: 30, y: 0, k: 63};
 
-var lowestValley = {c:0,m:11,y:32,k:71};
-var tallestMountain = {c:0,m:10,y:30,k:4};
+var lowestValley = {c: 0, m: 11, y: 32, k: 71};
+var tallestMountain = {c: 0, m: 10, y: 30, k: 4};
 
-var darkest = {c:0,m:12,y:41,k:16};
-var brightest ={c:0,m:1,y:20,k:5};
+var darkest = {c: 0, m: 12, y: 41, k: 16};
+var brightest = {c: 0, m: 1, y: 20, k: 5};
 
-var drizzle = {c:42,m:21,y:0,k:1};
-var monsoon = {c:70,m:30,y:0,k:63};
+var drizzle = {c: 42, m: 21, y: 0, k: 1};
+var monsoon = {c: 70, m: 30, y: 0, k: 63};
 
-var weakNucium = {c:0,m:0,y:0,k:0};
-var strongNucium = {c:70,m:35,y:0,k:43};
+var weakNucium = white;
+var strongNucium = {c: 70, m: 35, y: 0, k: 43};
 
-var weakNutro = {c:0,m:0,y:0,k:0};
-var strongNutro = {c:0,m:61,y:58,k:34};
+var weakNutro = white;
+var strongNutro = {c: 0, m: 61, y: 58, k: 34};
 
-var sparseVegetation = {c:0,m:0,y:0,k:0};
-var thickVegetation = {c:37,m:0,y:60,k:37};
+var sparseVegetation = white;
+var thickVegetation = {c: 37, m: 0, y: 60, k: 37};
 
-var shortestPlant = sparseVegetation;
-var tallestPlant = thickVegetation;
+var shortestPlant = sparseVegetation;//  aaa
+var tallestPlant = thickVegetation;//  aaa
 
-var hottest = {c:0,m:88,y:79,k:1};
-var coolest = {c:20,m:20,y:20,k:1};
+var hottest = {c: 0, m: 88, y: 79, k: 1};
+var coolest = {c: 20, m: 20, y: 20, k: 1};
+
+
+// var modes = {};
+// modes.depth = {
+//   usePlots: false
+//   , water: {
+//     value: "depth"
+//     , min: 0
+//     , max: deepest
+//     , minColor: shallowestOcean
+//     , maxColors: maxdeepestOcean
+//   }
+// };
+// modes.height = {
+//   usePlots: false
+//   , land: {
+//     value: "height"
+//     , min:1
+//     , max: "highest",
+//     , minColor: "lowestValley"
+//     , maxColor: "highestMountain"
+//   }
+//   , water: colors.depth.water
+// };
+// depth.land = colors.height.land;
+
+// modes.asthenosphere = 
+// {
+//   usePlots: false
+//   , all: {
+//     value: "heat"
+//     , min: 0
+//     , max: "hottest"
+//     , minColor: coolest
+//     , maxColor: hottest
+//   }
+// };
+// modes.stress = 
+// {
+//   usePlots: false
+//   , all: {
+//     value: "stress"
+//     , min: 0
+//     , max: "highestStress"
+//     , minColor: coolest
+//     , maxColor: hottest
+//   }
+// };
+// modes.nutro = {
+//   usePlots: false
+//   , water: colors.depth.water
+//   , land: {
+//     value: "nt"
+//     , min: 0
+//     , max: "richestNutro",
+//     , minColor: weakNutro
+//     , maxColors: strongNutro
+//   }
+// };
+// modes.nucium = {
+//   name: "Nucium"
+//   , usePlots: false
+//   , water: colors.depth.water
+//   , land: {
+//     value: "nc"
+//     , min: 0
+//     , max: "richestNutcium",
+//     , minColor: weakNucium
+//     , maxColors: strongNucium
+//   }
+// };
+// modes.rainfall = {
+//   name: "Rainfall",
+//   , usePlots: false
+//   , all: {
+
+//   }
+// };
+
 
 var tectonicColors = randomColor.randomColor({count:1000,luminosity:'light'});
 
@@ -81,7 +161,7 @@ exports.render = function(req,res)
       }
       else
       {
-        colors.push(cmykToHex(colorizeEarth(0,ctx)));
+        colors.push(cmykToHex(colorizeEarth(ctx.height[z],ctx)));
       }
     }
   }
@@ -89,7 +169,6 @@ exports.render = function(req,res)
   {
     for(var z = 0 ; z < ctx.area ; z++)
     {
-      //console.log(ctx.height[z]);
       colors.push(cmykToHex(colorizeEarth(ctx.height[z],ctx)));
     }
   }
@@ -104,14 +183,16 @@ exports.render = function(req,res)
   {
     for(var z = 0 ; z < ctx.area ; z++)
     {
-      colors.push(cmykToHex(colorizeHeat(ctx.heat[z],ctx)));
+      colors.push(cmykToHex(
+        colorValueBetween(ctx.heat[z],0,ctx.hottest,coolest,hottest)));
     }
   }
   else if (req.mode == "Stress")
   {
     for(var z = 0 ; z < ctx.area ; z++)
     {
-      colors.push(cmykToHex(colorizeStress(ctx.stress[z],ctx)));
+      colors.push(cmykToHex(
+        colorValueBetween(ctx.stress[z],0,ctx.highestStress,coolest,hottest)));
     }
   }
   else if (req.mode == "Satellite")
@@ -135,10 +216,8 @@ exports.render = function(req,res)
           plants = ctx.plantRowsPer * ctx.plantColumnsPer;
         }
         colors.push(cmykToHex(
-          colorizeVegetationAndHeight(
-            plants,
-            ctx.height[z],
-            ctx)));
+          addColors(colorizeVegetation(plants,ctx), 
+                    colorizeEarth(ctx.height[z],ctx))));
       }
     }
   }
@@ -146,7 +225,8 @@ exports.render = function(req,res)
   {
     for(var z=0; z < ctx.area; z++)
     {
-      colors.push(cmykToHex(colorizeElevation(ctx.height[z] + ctx.depth[z],ctx)));
+      colors.push(cmykToHex(
+        colorValueBetween(ctx.height[z] + ctx.depth[z],0,ctx.tallest,lowestValley,tallestMountain)));
     }
   }
   else if (req.mode == "Nutro")
@@ -187,7 +267,9 @@ exports.render = function(req,res)
       }
       else
       {
-        colors.push(cmykToHex(colorizeNutrients(ctx.nt[z], ctx.nc[z],ctx)));
+        colors.push(cmykToHex(
+          addColors(colorizeNutro(ctx.nt[z],ctx), 
+                    colorizeNucium(ctx.nc[z],ctx))));
       }
     }
   }
@@ -195,14 +277,18 @@ exports.render = function(req,res)
   {
     for(var z=0; z < ctx.area; z++)
     {
-      colors.push(cmykToHex(colorizeSunlightAndHeight(ctx.sunlight[z],ctx.height[z],ctx)));
+      colors.push(cmykToHex(
+        addColors(colorizeSunlight(ctx.sunlight[z],ctx),
+                  colorizeEarth(ctx.height[z],ctx))));
     }
   }
   else if (req.mode == "Rainfall")
   {
     for(var z=0; z < ctx.area; z++)
     {
-      colors.push(cmykToHex(colorizeRainfallAndHeight(ctx.rainfall[z],ctx.height[z],ctx)));
+      colors.push(cmykToHex(
+        addColors(colorizeRainfall(ctx.rainfall[z],ctx),
+                  colorizeEarth(ctx.height[z],ctx))));
     }
   }
   else if (req.mode == "Density")
@@ -290,10 +376,9 @@ exports.render = function(req,res)
       else
       {
         colors.push(cmykToHex(
-          colorizeNutrientStore(
-            (ctx.hasPlant[p] ? ctx.ntStore[p] : 0),
-            (ctx.hasPlant[p] ? ctx.ncStore[p] : 0),
-            ctx)));
+          addColors(colorizeNutroStore((ctx.hasPlant[p] ? ctx.ntStore[p] : 0),ctx), 
+                    colorizeNuciumStore((ctx.hasPlant[p] ? ctx.ncStore[p] : 0),ctx))));
+            
       }
     }
   }
@@ -313,9 +398,55 @@ exports.render = function(req,res)
       else
       {
         colors.push(cmykToHex(
-          colorizeGrowth(
+          colorValueBetween(
             (ctx.hasPlant[p] ? ctx.growth[p] : 0),
-            ctx)));
+            0, ctx.tallestTree, shortestPlant, tallestPlant)));
+      }
+    }
+  }
+  else if (req.mode == "Thirst")
+  {
+    columns = ctx.plantColumns;
+    rows = ctx.plantRows;
+
+    for(var p = 0 ; p < ctx.plantArea ; p++)
+    {
+      var z = ctx.ConvertPToZ(p);
+
+      if(ctx.depth[z]>0 )
+      {
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
+      }
+      else
+      {
+        colors.push(
+          cmykToHex(
+            colorValueBetween(
+                (ctx.hasPlant[p] ? ctx.thirst[p] : 0), 
+                0, ctx.thirstiest, deepestOcean, white)));
+      }
+    }
+  }
+  else if (req.mode == "Heliophilia")
+  {
+    columns = ctx.plantColumns;
+    rows = ctx.plantRows;
+
+    for(var p = 0 ; p < ctx.plantArea ; p++)
+    {
+      var z = ctx.ConvertPToZ(p);
+
+      if(ctx.depth[z]>0 )
+      {
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
+      }
+      else
+      {
+        colors.push(
+          cmykToHex(
+            colorValueBetween(
+                (ctx.hasPlant[p] ? ctx.heliophilia[p] : 0), 
+                0, ctx.heliest, lowestValley, white)));
       }
     }
   }
@@ -340,7 +471,7 @@ function colorValueBetween (value,minValue,maxValue,bottomColor,topColor) {
     k:bottomColor.k-topColor.k
   };
 
-  var cymk = {
+  var cymk=  {
     c: Math.round(bottomColor.c - (deltaColor.c*ratio)),
     m: Math.round(bottomColor.m - (deltaColor.m*ratio)),
     y: Math.round(bottomColor.y - (deltaColor.y*ratio)),
@@ -350,10 +481,10 @@ function colorValueBetween (value,minValue,maxValue,bottomColor,topColor) {
 }
 function cmykToHex(cmyk){
   
-  var c = cmyk.c / 100;
-  var m = cmyk.m / 100;
+  var c =  cmyk.c / 100;
+  var m =  cmyk.m / 100;
   var y = cmyk.y / 100;
-  var k = cmyk.k / 100;
+  var k =  cmyk.k / 100;
   
   var result = {};
   result.r = 1 - Math.min( 1, c * ( 1 - k ) + k );
@@ -394,26 +525,6 @@ function colorizeSunlight(value,ctx)
   return colorValueBetween(value,1,ctx.brightest,darkest,brightest);  
 }
 
-function colorizeSunlightAndHeight(sunlight,height,ctx)
-{
-  return addColors(colorizeSunlight(sunlight,ctx),colorizeEarth(height,ctx));
-}
-function colorizeRainfallAndHeight(rainfall,height,ctx)
-{
-  return addColors(colorizeRainfall(rainfall,ctx),colorizeEarth(height,ctx));
-}
-
-
-function colorizeHeat(value,ctx)
-{
-  return colorValueBetween(value,0,ctx.hottest,coolest,hottest); 
-}
-function colorizeStress(value,ctx)
-{
-  return colorValueBetween(value,0,ctx.highestStress,coolest,hottest); 
-}
-
-
 function colorizeNutro(value,ctx)
 {
   return colorValueBetween(value,0,ctx.richestNutro,weakNutro,strongNutro); 
@@ -422,10 +533,6 @@ function colorizeNutro(value,ctx)
 function colorizeNucium(value,ctx)
 {
   return colorValueBetween(value,0,ctx.richestNucium,weakNucium,strongNucium);  
-}
-function colorizeNutrients(nt,nc,ctx)
-{
-  return addColors(colorizeNutro(nt,ctx), colorizeNucium(nc,ctx));
 }
 
 function colorizeNutroStore(value,ctx)
@@ -436,28 +543,12 @@ function colorizeNuciumStore(value,ctx)
 {
   return colorValueBetween(value,0,ctx.richestNuciumStore,weakNucium,strongNucium); 
 }
-function colorizeNutrientStore(nt,nc,ctx)
-{
-  return addColors(colorizeNutroStore(nt,ctx), colorizeNuciumStore(nc,ctx));
-}
 
 function colorizeVegetation(value,ctx)
 {
   return colorValueBetween(value,0,ctx.plantColumnsPer*ctx.plantRowsPer,sparseVegetation,thickVegetation);
 }
-function colorizeGrowth(value,ctx)
-{
-  return colorValueBetween(value, 0, ctx.tallestTree, shortestPlant, tallestPlant)
-}
 
-function colorizeVegetationAndHeight(vegetation,height,ctx)
-{
-  return addColors(colorizeVegetation(vegetation,ctx), colorizeEarth(height,ctx));
-}
-function colorizeElevation(value,ctx)
-{
-  return colorValueBetween(value,0,ctx.tallest,lowestValley,tallestMountain); 
-}
 function colorizeEarth(value,ctx)
 {
   return colorValueBetween(value,0,ctx.highest,lowestValley,tallestMountain);
