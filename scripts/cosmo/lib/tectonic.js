@@ -105,10 +105,10 @@ function stress(ctx)
 
 function fracture(ctx)
 {
-  // for(var z = 0 ; z < ctx.area ; z++) 
-  // {
-  //   ctx.fracture[z] = 0;
-  // }
+  for(var z = 0 ; z < ctx.area ; z++) 
+  {
+    ctx.fracture[z] = 0;
+  }
   var stress = 0;
   var stressIndex = 0;
   for(var z = 0 ; z < ctx.area ; z++)
@@ -178,8 +178,10 @@ function continuity(ctx)
       {
         //  This isnt the whole plate, it must have gotten seperated, relabel!
         var newPlateNumber = 0;
+        
+        //  This isnt stopping tkaing over
         while(checkedPlateNumbers[newPlateNumber] != null || newPlateNumber == ctx.tectonic[z]){
-          newPlateNumber++;        
+          newPlateNumber = utility.randomNumberBetween(0,1000);        
         }
 
         //  Recolor the new plate wiht the new plate number
