@@ -231,6 +231,7 @@ function cleanupFracture(z, visited, oldNumber, newNumber, ctx)
     var count = 0;
     if(ctx.fracture[z] && ctx.tectonic[z] == oldNumber)
     {
+      ctx.fracture[z] = false;
       count++;
     }
     ctx.tectonic[z] = newNumber;

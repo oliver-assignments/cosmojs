@@ -33,7 +33,7 @@ var tallestPlant = thickVegetation;//  aaa
 var hottest = {c: 0, m: 88, y: 79, k: 1};
 var coolest = {c: 20, m: 20, y: 20, k: 1};
 
-var tectonicColors = randomColor.randomColor({count:1000});//luminosity:'light'
+var tectonicColors = randomColor.randomColor({count:1000, hue: 'red'});//luminosity:'light'
 
 exports.renderSimulationContextWithMode = function(req,res)
 {
