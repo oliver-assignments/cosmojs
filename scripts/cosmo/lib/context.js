@@ -44,8 +44,11 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.tectonic  = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
   ctx.heat      = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
   ctx.stress    = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+  ctx.fracture  = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+
   ctx.height    = Array.apply(null, { length: ctx.area }).map( function() { return 2; });
   ctx.depth     = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+  
   ctx.sunlight  = Array.apply(null, { length: ctx.area }).map( function() { return 1; });
   ctx.rainfall  = Array.apply(null, { length: ctx.area }).map( function() { return 5; });
 

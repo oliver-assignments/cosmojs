@@ -33,85 +33,6 @@ var tallestPlant = thickVegetation;//  aaa
 var hottest = {c: 0, m: 88, y: 79, k: 1};
 var coolest = {c: 20, m: 20, y: 20, k: 1};
 
-
-// var modes = {};
-// modes.depth = {
-//   usePlots: false
-//   , water: {
-//     value: "depth"
-//     , min: 0
-//     , max: deepest
-//     , minColor: shallowestOcean
-//     , maxColors: maxdeepestOcean
-//   }
-// };
-// modes.height = {
-//   usePlots: false
-//   , land: {
-//     value: "height"
-//     , min:1
-//     , max: "highest",
-//     , minColor: "lowestValley"
-//     , maxColor: "highestMountain"
-//   }
-//   , water: colors.depth.water
-// };
-// depth.land = colors.height.land;
-
-// modes.asthenosphere = 
-// {
-//   usePlots: false
-//   , all: {
-//     value: "heat"
-//     , min: 0
-//     , max: "hottest"
-//     , minColor: coolest
-//     , maxColor: hottest
-//   }
-// };
-// modes.stress = 
-// {
-//   usePlots: false
-//   , all: {
-//     value: "stress"
-//     , min: 0
-//     , max: "highestStress"
-//     , minColor: coolest
-//     , maxColor: hottest
-//   }
-// };
-// modes.nutro = {
-//   usePlots: false
-//   , water: colors.depth.water
-//   , land: {
-//     value: "nt"
-//     , min: 0
-//     , max: "richestNutro",
-//     , minColor: weakNutro
-//     , maxColors: strongNutro
-//   }
-// };
-// modes.nucium = {
-//   name: "Nucium"
-//   , usePlots: false
-//   , water: colors.depth.water
-//   , land: {
-//     value: "nc"
-//     , min: 0
-//     , max: "richestNutcium",
-//     , minColor: weakNucium
-//     , maxColors: strongNucium
-//   }
-// };
-// modes.rainfall = {
-//   name: "Rainfall",
-//   , usePlots: false
-//   , all: {
-
-//   }
-// };
-
-
 var tectonicColors = randomColor.randomColor({count:1000,luminosity:'light'});
 
 exports.renderSimulationContextWithMode = function(req,res)
@@ -176,7 +97,7 @@ exports.render = function(req,res)
   {
     for(var z = 0 ; z < ctx.area ; z++)
     {
-      colors.push(tectonicColors[ctx.tectonic[z]]);
+      colors.push(tectonicColors[ctx.tectonic[z] % tectonicColors.length]);
     }
   }
   else if (req.mode == "Asthenosphere")
@@ -185,6 +106,14 @@ exports.render = function(req,res)
     {
       colors.push(cmykToHex(
         colorValueBetween(ctx.heat[z],0,ctx.hottest,coolest,hottest)));
+    }
+  }
+  else if (req.mode == "Fractures")
+  {
+    for(var z = 0 ; z < ctx.area ; z++)
+    {
+      colors.push(cmykToHex(
+        colorValueBetween(ctx.fracture[z],0,1,coolest,hottest)));
     }
   }
   else if (req.mode == "Stress")

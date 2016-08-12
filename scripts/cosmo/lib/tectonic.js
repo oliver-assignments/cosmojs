@@ -84,6 +84,10 @@ function heat(ctx)
 };
 function stress(ctx)
 {
+  for(var z = 0 ; z < ctx.area ; z++) 
+  {
+    ctx.stress[z] = 0;
+  }
 	for(var z = 0 ; z < ctx.area ; z++) 
 	{
     var heat = ctx.heat[z];
@@ -93,26 +97,181 @@ function stress(ctx)
     for (var n = 0; n < neighbors.length; n++)
     {
     	if(ctx.tectonic[neighbors[n]] == plate) {
-      	ctx.stress[z] += ctx.heat[z] - ctx.heat[neighbors[n]];
-	    	
-	      if(ctx.stress[z] < 0) {
-	      	// ctx.stress[z] = -ctx.stress[z];
-	      	ctx.stress[z] = 0;
-	      }
+      	ctx.stress[z] += Math.abs(ctx.heat[z] - ctx.heat[neighbors[n]]);
 	    }
     }
 	}
 };
+
+function fracture(ctx)
+{
+  for(var z = 0 ; z < ctx.area ; z++) 
+  {
+    ctx.fracture[z] = 0;
+  }
+  var stress = 0;
+  var stressIndex = 0;
+  for(var z = 0 ; z < ctx.area ; z++)
+  {
+    if(ctx.stress[z] > stress && !ctx.fracture[z])
+    {
+      stress = ctx.stress[z];
+      stressIndex = z;
+    }
+  }
+
+  while(true)
+  {
+    var neighbors = ctx.GetNeighbors(stressIndex,false);
+
+    var mostStressedNeighbor = -1;
+    var mostStressedNeighborIndex = -1;
+    for (var n = 0; n < neighbors.length; n++)
+    {
+      if(!ctx.fracture[neighbors[n]]) 
+      {
+        if(ctx.stress[neighbors[n]] > mostStressedNeighbor)
+        {
+          mostStressedNeighbor = ctx.stress[neighbors[n]];
+          mostStressedNeighborIndex = neighbors[n];
+        }
+      }
+    }
+
+    if(mostStressedNeighborIndex==-1)
+      break;
+
+    ctx.fracture[mostStressedNeighborIndex] = 1;
+    stressIndex = mostStressedNeighborIndex;
+  }
+};
+
+function continuity(ctx)
+{
+  //  Counting the total area of unsplit plates
+  var plateCounts = {};
+  for(var z = 0 ; z < ctx.area ; z++)
+  {
+    if(ctx.fracture[z])
+      continue;
+  
+    if(!plateCounts[ctx.tectonic[z]])
+      plateCounts[ctx.tectonic[z]] = 0;
+    
+    plateCounts[ctx.tectonic[z]]++;
+  }
+
+  var checkedPlateNumbers = {};
+
+  for(var z = 0 ; z < ctx.area ; z++)
+  {
+    if(ctx.fracture[z])
+      continue;
+
+    if(checkedPlateNumbers[ctx.tectonic[z]] == null)
+    {
+      //  We havent checked this plate, consider this block its check
+      var visited = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+      var piece = checkPlateSize(z, visited, ctx);
+      
+      console.log("Our piece was " + piece + " and the whole was " + plateCounts[ctx.tectonic[z]]);
+      if(piece != plateCounts[ctx.tectonic[z]])
+      {
+        //  This isnt the whole plate, it must have gotten seperated, relabel!
+        var newPlateNumber = 0;
+        while(checkedPlateNumbers[newPlateNumber] != null || newPlateNumber == ctx.tectonic[z]){
+          newPlateNumber++;        
+        }
+
+        //  Recolor the new plate wiht the new plate number
+        // var originalPlate = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+        // markOriginalPlate(z, originalPlate, ctx.tectonic[z], ctx);
+        // var count = renumberShard(originalPlate, ctx.tectonic[z], newPlateNumber, ctx);
+
+        var count = renumberPlate(z, ctx.tectonic[z], newPlateNumber, ctx);
+        
+        //  The new plate has the full count, while the original plate loses this breakoff
+        plateCounts[newPlateNumber] = count;
+        plateCounts[ctx.tectonic[z]] -= count;
+
+        //  This new plate is checked, but the plate we started as isnt.
+        checkedPlateNumbers[newPlateNumber] = 1;
+      }
+      else {
+        //  We did not alter the plate, it is complete and uncut, checked.
+        checkedPlateNumbers[ctx.tectonic[z]] = 1;
+      }
+    }
+  }
+};
+function markOriginalPlate(z, visited, oldNumber, ctx)
+{
+  if(ctx.tectonic[z] != oldNumber || visited[z])
+    return;
+  
+  visited[z] = true;
+
+  var coord = ctx.ConvertToCoord(z);
+  markOriginalPlate(ctx.ConvertToZ({ f: coord.f+1, s: coord.s }), visited, oldNumber, ctx);
+  markOriginalPlate(ctx.ConvertToZ({ f: coord.f-1, s: coord.s }), visited, oldNumber, ctx);
+  markOriginalPlate(ctx.ConvertToZ({ f: coord.f, s: coord.s+1 }), visited, oldNumber, ctx);
+  markOriginalPlate(ctx.ConvertToZ({ f: coord.f, s: coord.s-1 }), visited, oldNumber, ctx);
+};
+function renumberShard(visited, oldNumber, newNumber, ctx)
+{
+  for(var z = 0 ; z < ctx.area ; z++)
+  {
+    if(ctx.tectonic[z] != oldNumber || visited[z])
+      continue;
+
+    return renumberPlate(z, oldNumber, newNumber, ctx);
+  }
+};
+function renumberPlate(z, oldNumber, newNumber, ctx)
+{
+  if(ctx.tectonic[z] != oldNumber || ctx.fracture[z])
+    return 0;
+  
+  var count = 1;
+  ctx.tectonic[z] = newNumber;
+
+  var coord = ctx.ConvertToCoord(z);
+  count += renumberPlate(ctx.ConvertToZ({ f: coord.f+1, s: coord.s }), oldNumber, newNumber, ctx);
+  count += renumberPlate(ctx.ConvertToZ({ f: coord.f-1, s: coord.s }), oldNumber, newNumber, ctx);
+  count += renumberPlate(ctx.ConvertToZ({ f: coord.f, s: coord.s+1 }), oldNumber, newNumber, ctx);
+  count += renumberPlate(ctx.ConvertToZ({ f: coord.f, s: coord.s-1 }), oldNumber, newNumber, ctx);
+  return count;
+};
+function checkPlateSize(z, visited, ctx)
+{
+  if(visited[z] || ctx.fracture[z])
+    return 0;
+  
+  visited[z] = 1;
+  var count = 1;
+
+  var coord = ctx.ConvertToCoord(z);
+  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f+1, s: coord.s }), visited, ctx);
+  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f-1, s: coord.s }), visited, ctx);
+  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f, s: coord.s+1 }), visited, ctx);
+  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f, s: coord.s-1 }), visited, ctx);
+  return count;
+};
+
 exports.createTectonicPlates = function(ctx)
 {
   heat(ctx);
   stress(ctx);
+  fracture(ctx);
+  continuity(ctx);
 };
 
 exports.advanceTectonics = function (ctx)
 {
 	heat(ctx);
   stress(ctx);
+  fracture(ctx);
+  continuity(ctx);
 }
 
 // void TectonicHandler::CreateTectonicPlates()
