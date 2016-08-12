@@ -105,10 +105,10 @@ function stress(ctx)
 
 function fracture(ctx)
 {
-  for(var z = 0 ; z < ctx.area ; z++) 
-  {
-    ctx.fracture[z] = 0;
-  }
+  // for(var z = 0 ; z < ctx.area ; z++) 
+  // {
+  //   ctx.fracture[z] = 0;
+  // }
   var stress = 0;
   var stressIndex = 0;
   for(var z = 0 ; z < ctx.area ; z++)
