@@ -145,24 +145,26 @@ function fracture(ctx)
     stressIndex = mostStressedNeighborIndex;
   }
 };
-
-function continuity(ctx)
+function countPlates(counter, ctx)
 {
-  //  Counting the total area of unsplit plates
-  var plateCounts = {};
   for(var z = 0 ; z < ctx.area ; z++)
   {
     if(ctx.fracture[z])
       continue;
   
-    if(!plateCounts[ctx.tectonic[z]])
-      plateCounts[ctx.tectonic[z]] = 0;
+    if(!counter[ctx.tectonic[z]])
+      counter[ctx.tectonic[z]] = 0;
     
-    plateCounts[ctx.tectonic[z]]++;
+    counter[ctx.tectonic[z]]++;
   }
+};
+function continuity(ctx)
+{
+  //  Counting the total area of unsplit plates
+  var plateCounts = {};
+  countPlates(plateCounts, ctx);
 
   var checkedPlateNumbers = {};
-
   for(var z = 0 ; z < ctx.area ; z++)
   {
     if(ctx.fracture[z])
@@ -171,41 +173,51 @@ function continuity(ctx)
     if(checkedPlateNumbers[ctx.tectonic[z]] == null)
     {
       //  We havent checked this plate, consider this block its check
+      var oldNumber = ctx.tectonic[z];
+
       var visited = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
-      var piece = checkPlateSize(z, visited, ctx);
+      var pieceSize = checkPlateSize(z, oldNumber, visited, ctx);
+      // console.log("Plate " + oldNumber + " has a piece of size " + pieceSize +" with a full size of " + plateCounts[oldNumber]);
       
-      if(piece != plateCounts[ctx.tectonic[z]])
+      if(pieceSize == plateCounts[ctx.tectonic[z]])
       {
-        //  This isnt the whole plate, it must have gotten seperated, relabel!
-        var newPlateNumber = 0;
-        
-        //  This isnt stopping tkaing over
-        while(checkedPlateNumbers[newPlateNumber] != null || newPlateNumber == ctx.tectonic[z]){
-          newPlateNumber = utility.randomNumberBetween(0,1000);        
-        }
-
-        //  Recolor the new plate wiht the new plate number
-        var oldNumber = ctx.tectonic[z];
-        var count = renumberPlate(z, oldNumber, newPlateNumber, ctx);
-        
-        var cleanupVisited = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
-        count += cleanupFracture(z,cleanupVisited, oldNumber, newPlateNumber,ctx);;
-
-        //  The new plate has the full count, while the original plate loses this breakoff
-        plateCounts[newPlateNumber] = count;
-        plateCounts[oldNumber] -= count;
-
-        //  CONSIDER swapping the tectonic values so the colors work differently
-
-        //  This new plate is checked, but the plate we started as isnt.
-        checkedPlateNumbers[newPlateNumber] = 1;
-      }
-      else {
-        //  We did not alter the plate, it is complete and uncut, checked.
+        //  No dicontinuity
         checkedPlateNumbers[ctx.tectonic[z]] = 1;
+        continue;
       }
+
+      //  This isnt the whole plate, it must have gotten seperated, relabel!
+      var newPlateNumber = oldNumber;
+
+      //  This isnt stopping tkaing over
+      while(checkedPlateNumbers[newPlateNumber] != null || newPlateNumber == ctx.tectonic[z] || plateCounts[newPlateNumber] != null){
+        newPlateNumber++;
+      }
+
+      //  Recolor the new plate wiht the new plate number
+      var count = renumberPlate(z, oldNumber, newPlateNumber, ctx);
+      
+      var cleanupVisited = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+      cleanupFracture(z,cleanupVisited, oldNumber, newPlateNumber,ctx);
+
+      //  The new plate has the full count, while the original plate loses this breakoff, other way around
+      //console.log("Creating Plate " + newPlateNumber + " with size " + count);
+      plateCounts[newPlateNumber] = count;
+
+      //console.log(plateCounts);
+
+      //console.log("Subtracting " + count + " from Plate " + oldNumber + " which has a size of " + plateCounts[oldNumber]);
+      plateCounts[oldNumber] -= count;
+
+      //console.log(plateCounts);
+
+
+      //  This new plate is checked, but the plate we started as isnt.
+      checkedPlateNumbers[newPlateNumber] = 1;
     }
   }
+  //console.log(checkedPlateNumbers);
+  //console.log("end of month\n\n");
 };
 function cleanupFracture(z, visited, oldNumber, newNumber, ctx)
 {
@@ -247,19 +259,19 @@ function renumberPlate(z, oldNumber, newNumber, ctx)
   count += renumberPlate(ctx.ConvertToZ({ f: coord.f, s: coord.s-1 }), oldNumber, newNumber, ctx);
   return count;
 };
-function checkPlateSize(z, visited, ctx)
+function checkPlateSize(z, plateNumber, visited, ctx)
 {
-  if(visited[z] || ctx.fracture[z])
+  if(visited[z] || ctx.fracture[z] || ctx.tectonic[z] != plateNumber)
     return 0;
   
   visited[z] = 1;
   var count = 1;
 
   var coord = ctx.ConvertToCoord(z);
-  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f+1, s: coord.s }), visited, ctx);
-  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f-1, s: coord.s }), visited, ctx);
-  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f, s: coord.s+1 }), visited, ctx);
-  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f, s: coord.s-1 }), visited, ctx);
+  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f+1, s: coord.s }), plateNumber, visited, ctx);
+  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f-1, s: coord.s }), plateNumber, visited, ctx);
+  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f, s: coord.s+1 }), plateNumber, visited, ctx);
+  count += checkPlateSize(ctx.ConvertToZ({ f: coord.f, s: coord.s-1 }), plateNumber, visited, ctx);
   return count;
 };
 
