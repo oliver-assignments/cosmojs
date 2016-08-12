@@ -174,7 +174,6 @@ function continuity(ctx)
       var visited = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
       var piece = checkPlateSize(z, visited, ctx);
       
-      console.log("Our piece was " + piece + " and the whole was " + plateCounts[ctx.tectonic[z]]);
       if(piece != plateCounts[ctx.tectonic[z]])
       {
         //  This isnt the whole plate, it must have gotten seperated, relabel!
@@ -184,14 +183,17 @@ function continuity(ctx)
         }
 
         //  Recolor the new plate wiht the new plate number
-        var originalPlate = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
-        markOriginalPlate(z, originalPlate, ctx.tectonic[z], ctx);
-        var count = renumberShard(originalPlate, ctx.tectonic[z], newPlateNumber, ctx);
-        console.log(count);
+        var oldNumber = ctx.tectonic[z];
+        var count = renumberPlate(z, oldNumber, newPlateNumber, ctx);
         
+        var cleanupVisited = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+        count += cleanupFracture(z,cleanupVisited, oldNumber, newPlateNumber,ctx);;
+
         //  The new plate has the full count, while the original plate loses this breakoff
         plateCounts[newPlateNumber] = count;
-        plateCounts[ctx.tectonic[z]] -= count;
+        plateCounts[oldNumber] -= count;
+
+        //  CONSIDER swapping the tectonic values so the colors work differently
 
         //  This new plate is checked, but the plate we started as isnt.
         checkedPlateNumbers[newPlateNumber] = 1;
@@ -203,28 +205,30 @@ function continuity(ctx)
     }
   }
 };
-function markOriginalPlate(z, visited, oldNumber, ctx)
+function cleanupFracture(z, visited, oldNumber, newNumber, ctx)
 {
-  if(ctx.tectonic[z] != oldNumber || visited[z])
-    return;
-  
+  if(visited[z])
+    return 0;
+
   visited[z] = true;
 
-  var coord = ctx.ConvertToCoord(z);
-  markOriginalPlate(ctx.ConvertToZ({ f: coord.f+1, s: coord.s }), visited, oldNumber, ctx);
-  markOriginalPlate(ctx.ConvertToZ({ f: coord.f-1, s: coord.s }), visited, oldNumber, ctx);
-  markOriginalPlate(ctx.ConvertToZ({ f: coord.f, s: coord.s+1 }), visited, oldNumber, ctx);
-  markOriginalPlate(ctx.ConvertToZ({ f: coord.f, s: coord.s-1 }), visited, oldNumber, ctx);
-};
-function renumberShard(visited, oldNumber, newNumber, ctx)
-{
-  for(var z = 0 ; z < ctx.area ; z++)
+  if(ctx.tectonic[z] == newNumber || (ctx.fracture[z] && ctx.tectonic[z] == oldNumber))
   {
-    if(ctx.tectonic[z] != oldNumber || visited[z])
-      continue;
+    var count = 0;
+    if(ctx.fracture[z] && ctx.tectonic[z] == oldNumber)
+    {
+      count++;
+    }
+    ctx.tectonic[z] = newNumber;
 
-    return renumberPlate(z, oldNumber, newNumber, ctx);
+    var coord = ctx.ConvertToCoord(z);
+    count += cleanupFracture(ctx.ConvertToZ({ f: coord.f+1, s: coord.s }), visited, oldNumber, newNumber, ctx);
+    count += cleanupFracture(ctx.ConvertToZ({ f: coord.f-1, s: coord.s }), visited, oldNumber, newNumber, ctx);
+    count += cleanupFracture(ctx.ConvertToZ({ f: coord.f, s: coord.s+1 }), visited, oldNumber, newNumber, ctx);
+    count += cleanupFracture(ctx.ConvertToZ({ f: coord.f, s: coord.s-1 }), visited, oldNumber, newNumber, ctx);
+    return count;
   }
+  return 0;
 };
 function renumberPlate(z, oldNumber, newNumber, ctx)
 {
