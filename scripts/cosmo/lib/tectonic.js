@@ -184,11 +184,10 @@ function continuity(ctx)
         }
 
         //  Recolor the new plate wiht the new plate number
-        // var originalPlate = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
-        // markOriginalPlate(z, originalPlate, ctx.tectonic[z], ctx);
-        // var count = renumberShard(originalPlate, ctx.tectonic[z], newPlateNumber, ctx);
-
-        var count = renumberPlate(z, ctx.tectonic[z], newPlateNumber, ctx);
+        var originalPlate = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+        markOriginalPlate(z, originalPlate, ctx.tectonic[z], ctx);
+        var count = renumberShard(originalPlate, ctx.tectonic[z], newPlateNumber, ctx);
+        console.log(count);
         
         //  The new plate has the full count, while the original plate loses this breakoff
         plateCounts[newPlateNumber] = count;
