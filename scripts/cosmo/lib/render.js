@@ -4,6 +4,7 @@
 var manager = require('./manager.js');
 var utility = require('./utility.js');
 var randomColor = require('randomcolor');
+var nameColor = require('./name-that-color.js');
 
 var white = {c: 0, m: 0, y: 0, k: 0};
 var shallowestOcean = {c: 42, m: 21, y: 0, k: 1};
@@ -34,6 +35,11 @@ var hottest = {c: 0, m: 88, y: 79, k: 1};
 var coolest = {c: 20, m: 20, y: 20, k: 1};
 
 var tectonicColors = randomColor.randomColor({count:1000, hue: 'red'});//luminosity:'light'
+
+exports.describePlateColor = function(plateNumber)
+{
+  return nameColor.ntc.name(tectonicColors[plateNumber%1000])[1];
+};
 
 exports.renderSimulationContextWithMode = function(req,res)
 {
@@ -121,7 +127,7 @@ exports.render = function(req,res)
     for(var z = 0 ; z < ctx.area ; z++)
     {
       colors.push(cmykToHex(
-        colorValueBetween(ctx.stress[z],0,ctx.highestStress,coolest,hottest)));
+        colorValueBetween(ctx.stress[z], 0, ctx.highestStress, coolest, hottest)));
     }
   }
   else if (req.mode == "Satellite")
@@ -308,6 +314,30 @@ exports.render = function(req,res)
           addColors(colorizeNutroStore((ctx.hasPlant[p] ? ctx.ntStore[p] : 0),ctx), 
                     colorizeNuciumStore((ctx.hasPlant[p] ? ctx.ncStore[p] : 0),ctx))));
             
+      }
+    }
+  }
+  else if (req.mode == "Generation")
+  {
+    columns = ctx.plantColumns;
+    rows = ctx.plantRows;
+
+    for(var p = 0 ; p < ctx.plantArea ; p++)
+    {
+      var z = ctx.ConvertPToZ(p);
+
+      if(ctx.depth[z]>0)
+      {
+        colors.push(cmykToHex(colorizeWater(ctx.depth[z],ctx)));
+      }
+      else
+      {
+        if(ctx.hasPlant[p]) {
+          colors.push(cmykToHex(
+            colorValueBetween(ctx.generation[p], 0, ctx.youngest, tallestPlant, shortestPlant)));
+        }
+        else
+          colors.push(cmykToHex(white));
       }
     }
   }

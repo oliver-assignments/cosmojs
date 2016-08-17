@@ -35,6 +35,7 @@ exports.calculateHighest=function(ctx)
   ctx.tallestTree = 1;
   ctx.thirstiest = 0;;
   ctx.heliest = 0;
+  ctx.youngest = 0;
 
   for(var z = 0 ; z < ctx.area ; z++)
   {
@@ -62,6 +63,7 @@ exports.calculateHighest=function(ctx)
       ctx.tallestTree = Math.max(ctx.tallestTree, ctx.growth[p]);
       ctx.thirstiest = Math.max(ctx.thirstiest, ctx.thirst[p]);
       ctx.heliest = Math.max(ctx.heliest, ctx.heliophilia[p]);
+      ctx.youngest = Math.max(ctx.youngest, ctx.generation[p]);
     }
   }
 }

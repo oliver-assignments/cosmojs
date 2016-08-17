@@ -1,9 +1,14 @@
 'use strict';
 
-var creation = require('./create.js');
 var context = require('./context.js');
 var util = require('./utility.js');
-var request = require('./request.js')
+var request = require('./request.js');
+
+var land = require('./land.js');
+var tectonic = require('./tectonic.js');
+var weather = require('./weather.js');
+var plant = require('./plant.js');
+var water = require('./water.js');
 
 var simulations = new Array();
 
@@ -18,7 +23,7 @@ exports.createSimulation = function(req, res)
     , dates:   []
   };
 
-  creation.prepareSimulation(
+  prepareSimulation(
     context(
       dimensions.columns, dimensions.rows
       , req.plantsPer
@@ -35,6 +40,20 @@ exports.createSimulation = function(req, res)
 
       res(null,simulations);
     });
+};
+
+function prepareSimulation (ctx,res)
+{
+  land.CreateBlobbyLandmass(ctx);
+  water.CreateOcean(ctx, ctx.area * 2);
+
+  tectonic.createTectonicPlates(ctx);
+  plant.SprayPlants(ctx);
+
+  weather.SetSunlight(ctx);
+  weather.EstimateRainfall(ctx);
+
+  res(null,ctx);
 };
 
 exports.deleteSimulation = function(req,res) {

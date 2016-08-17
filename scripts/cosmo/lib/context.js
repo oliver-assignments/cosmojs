@@ -33,6 +33,7 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.tallestTree = 1;
   ctx.thirstiest = 0;
   ctx.heliest = 0;
+  ctx.youngest = 0;
 
   ctx.plantColumnsPer = Math.sqrt(plotsPer);
   ctx.plantColumns = ctx.columns * ctx.plantColumnsPer;
@@ -65,6 +66,7 @@ module.exports = function(columns, rows, plotsPer, tilt, rotation,rules)
   ctx.ncStore  = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   ctx.waterStore = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   ctx.growth = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
+  ctx.generation = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
 
   ctx.ntConsumption = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });
   ctx.ntMetabolism = Array.apply(null, { length: ctx.plantArea }).map( function() { return null; });

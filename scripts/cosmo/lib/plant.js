@@ -1,34 +1,43 @@
+'use strict';
 var utility = require('./utility.js');
 
-function MutateDNA(mutationRate)
+exports.SprayPlants = function(ctx)
 {
-  if(Math.random() > mutationRate)
+  var plantOrder = new Array(ctx.plantArea);
+  for (var i = 0; i < ctx.plantArea; ++i) { plantOrder[i] = i; }
+  plantOrder = utility.shuffle(plantOrder);
+
+  //  Simulations
+  for(var q = 0 ; q < ctx.plantArea ; q++)
   {
-  //  Mutate
-  if(Math.random() > 0.5)
-  {  
-    return 1;
+    var p = plantOrder[q];
+    var z = ctx.ConvertPToZ(p);
+
+    if(Math.random()>0.95)
+    {
+      ctx.ntConsumption[p] = utility.randomNumberBetween(6,10);
+      ctx.ntMetabolism[p] = utility.randomNumberBetween(1,3);
+      ctx.ntEndowment[p] = utility.randomNumberBetween(1,3);
+
+      ctx.ncConsumption[p] = utility.randomNumberBetween(6,10);
+      ctx.ncMetabolism[p] = utility.randomNumberBetween(1,3);
+      ctx.ncEndowment[p] = utility.randomNumberBetween(1,3);
+
+      ctx.numberSeeds[p] = utility.randomNumberBetween(1,3);
+      ctx.requiredGrowth[p] = utility.randomNumberBetween(5,10);
+      ctx.seedSpread[p] = utility.randomNumberBetween(1,3);
+
+      ctx.thirst[p] = utility.randomNumberBetween(1,99);
+      ctx.heliophilia[p] = utility.randomNumberBetween(1,99);
+
+      ctx.ntStore[p] = 1;
+      ctx.ncStore[p] = 1;
+      ctx.waterStore[p] = 1;
+      ctx.growth[p] = 0;
+      ctx.hasPlant[p] = true;
+      ctx.generation[p] = 0;
+    }    
   }
-  else
-  {
-    return -1;
-  }
-  }
-  return 0;
-}
-function killPlant(p,z,ctx, cause, doLogDeath)
-{
-  if(cause && doLogDeath)
-  {
-  console.log("Plant Death: " + cause);
-  }
-  ctx.hasPlant[p] = false;
-  
-  ctx.nt[z] += ctx.ntEndowment[p];// * ctx.growth[p];
-  ctx.nc[z] += ctx.ncEndowment[p];// * ctx.growth[p];
-  
-  ctx.ntStore[p] = null;
-  ctx.ncStore[p] = null;
 };
 
 exports.simulatePlants = function(ctx)
@@ -50,20 +59,20 @@ exports.simulatePlants = function(ctx)
 
   if( ctx.depth[z] > 0 || !ctx.hasPlant[p] )
   {
-    killPlant(p,z,ctx)// No plant here
+    exports.killPlant(p,z,ctx)// No plant here
     continue;
   }
 
   if(ctx.numberSeeds[p] < 1){
-    killPlant(p,z,ctx,"Number seeds less than 1: " + ctx.numberSeeds[p], false);
+    exports.killPlant(p,z,ctx,"Number seeds less than 1: " + ctx.numberSeeds[p], false);
     continue;
   }
   if(ctx.ntEndowment[p] < 0){
-    killPlant(p,z,ctx,"ctx.ntEndowment[p] is less than 0 : "+ ctx.ntEndowment[p], false);
+    exports.killPlant(p,z,ctx,"ctx.ntEndowment[p] is less than 0 : "+ ctx.ntEndowment[p], false);
     continue;
   }
   if(ctx.ncEndowment[p] < 0){
-    killPlant(p,z,ctx,"ctx.ncEndowment[p] is less than 0 : " + ctx.ncEndowment[p], false);
+    exports.killPlant(p,z,ctx,"ctx.ncEndowment[p] is less than 0 : " + ctx.ncEndowment[p], false);
     continue;
   }
 
@@ -104,14 +113,14 @@ exports.simulatePlants = function(ctx)
   {
     if(ctx.rainfall[z] - ctx.thirst[p] < 0 || ctx.rainfall[z] - ctx.thirst[p] > 50)
     {
-      killPlant(p,z,ctx, "So thirst..." + (ctx.rainfall[z] - ctx.thirst[p]), false);
+      exports.killPlant(p,z,ctx, "So thirst..." + (ctx.rainfall[z] - ctx.thirst[p]), false);
     }
   }
   if(ctx.rules.heliophilia)
   {
     if(ctx.sunlight[z] - ctx.heliophilia[p] < 0 || ctx.sunlight[z] - ctx.heliophilia[p] > 50)
     {
-      killPlant(p,z,ctx, "So cold..." + (ctx.sunlight[z] - ctx.heliophilia[p]), false);
+      exports.killPlant(p,z,ctx, "So cold..." + (ctx.sunlight[z] - ctx.heliophilia[p]), false);
     }
   }
 
@@ -126,7 +135,7 @@ exports.simulatePlants = function(ctx)
     }
     if(numberNeighbors >= Number(ctx.rules.roots))
     {
-    killPlant(p,z,ctx, "Roots with " + numberNeighbors + " neighbors.")
+    exports.killPlant(p,z,ctx, "Roots with " + numberNeighbors + " neighbors.")
     continue;
     }
   }
@@ -151,7 +160,7 @@ exports.simulatePlants = function(ctx)
   //  Starvation
   if(ctx.ntStore[p] < 0 || ctx.ncStore[p] < 0)
   {
-    killPlant(p,z,ctx, "Starvation: nt " + ctx.ntStore[p] + " nc " + ctx.ncStore[p]);//, "Starvation with nt: " + ctx.ntStore[p] + ", nc: "+ ctx.ncStore[p]);
+    exports.killPlant(p,z,ctx, "Starvation: nt " + ctx.ntStore[p] + " nc " + ctx.ncStore[p]);//, "Starvation with nt: " + ctx.ntStore[p] + ", nc: "+ ctx.ncStore[p]);
     continue;
   }
 
@@ -207,6 +216,8 @@ exports.simulatePlants = function(ctx)
       , seedSpread: ctx.seedSpread[p] + MutateDNA(ctx.rules.mutation)
       , requiredGrowth: ctx.requiredGrowth[p] + MutateDNA(ctx.rules.mutation)
 
+      , generation: ctx.generation[p] + 1
+
       , thirst: ctx.thirst[p] + MutateDNA(ctx.rules.mutation)
       , heliophilia: ctx.heliophilia[p] + MutateDNA(ctx.rules.mutation)
 
@@ -225,26 +236,58 @@ exports.simulatePlants = function(ctx)
   //  Seeds taking root
   for(var s = 0 ; s < ctx.plantArea ; s++)
   {
-  if(seeds[s] != null)
+    if(seeds[s] != null)
+    {
+      ctx.ntConsumption[s] = seeds[s].ntConsumption;
+      ctx.ntMetabolism[s] = seeds[s].ntMetabolism;
+      ctx.ntEndowment[s] = seeds[s].ntEndowment;
+
+      ctx.ncConsumption[s] = seeds[s].ncConsumption;
+      ctx.ncMetabolism[s] = seeds[s].ncMetabolism;
+      ctx.ncEndowment[s] = seeds[s].ncEndowment;
+
+      ctx.numberSeeds[s] = seeds[s].numberSeeds;
+      ctx.seedSpread[s] = seeds[s].seedSpread;
+      ctx.requiredGrowth[s] = seeds[s].requiredGrowth;
+
+      ctx.thirst[s] = seeds[s].thirst;
+      ctx.heliophilia[s] = seeds[s].heliophilia;
+
+      ctx.generation[s] = seeds[s].generation; 
+
+      ctx.ntStore[s] = seeds[s].ntStore;
+      ctx.ncStore[s] = seeds[s].ncStore;
+      ctx.hasPlant[s] = true;
+    }
+  }
+};
+function MutateDNA(mutationRate)
+{
+  if(Math.random() > mutationRate)
   {
-    ctx.ntConsumption[s] = seeds[s].ntConsumption;
-    ctx.ntMetabolism[s] = seeds[s].ntMetabolism;
-    ctx.ntEndowment[s] = seeds[s].ntEndowment;
-
-    ctx.ncConsumption[s] = seeds[s].ncConsumption;
-    ctx.ncMetabolism[s] = seeds[s].ncMetabolism;
-    ctx.ncEndowment[s] = seeds[s].ncEndowment;
-
-    ctx.numberSeeds[s] = seeds[s].numberSeeds;
-    ctx.seedSpread[s] = seeds[s].seedSpread;
-    ctx.requiredGrowth[s] = seeds[s].requiredGrowth;
-
-    ctx.thirst[s] = seeds[s].thirst;
-    ctx.heliophilia[s] = seeds[s].heliophilia;
-
-    ctx.ntStore[s] = seeds[s].ntStore;
-    ctx.ncStore[s] = seeds[s].ncStore;
-    ctx.hasPlant[s] = true;
+  //  Mutate
+  if(Math.random() > 0.5)
+  {  
+    return 1;
+  }
+  else
+  {
+    return -1;
   }
   }
+  return 0;
+}
+exports.killPlant = function(p,z, ctx, cause, doLogDeath)
+{
+  if(cause && doLogDeath)
+  {
+  console.log("Plant Death: " + cause);
+  }
+  ctx.hasPlant[p] = false;
+  
+  ctx.nt[z] += ctx.ntEndowment[p];// * ctx.growth[p];
+  ctx.nc[z] += ctx.ncEndowment[p];// * ctx.growth[p];
+  
+  ctx.ntStore[p] = null;
+  ctx.ncStore[p] = null;
 };

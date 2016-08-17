@@ -1,8 +1,31 @@
-var utility = require('./utility');
+'use strict';
+
+var utility = require('./utility.js');
+var plants = require('./plant.js');
+var water = require('./water.js');
+var render = require('./render.js');
+
+exports.createTectonicPlates = function(ctx)
+{
+  heat(ctx);
+  stress(ctx);
+  fracture(ctx);
+  continuity(ctx);
+};
+
+exports.advanceTectonics = function (ctx)
+{
+  heat(ctx);
+  stress(ctx);
+  fracture(ctx);
+  continuity(ctx);
+
+  // movement(ctx);
+};
 
 function heatProvince(z, ctx)
 {
-	ctx.heat[z] = Math.max(0, Math.round(ctx.heat[z] +  ctx.height[z] - (ctx.depth[z]/2)));
+	ctx.heat[z] = Math.max(0, Math.round(ctx.height[z] - (ctx.depth[z]/2)));//Math.max(0, Math.round(ctx.heat[z] +  ctx.height[z] - (ctx.depth[z]/2)));
 };
 function giveHeat (z, ctx)
 {
@@ -27,6 +50,7 @@ function giveHeat (z, ctx)
       var neighborHeat = ctx.heat[n_index];
 
       var slope = heat - neighborHeat;
+      // slope = -slope;  Heat flows to hot spots
 
       //  Do we have a downward slow too great?
       if (slope > 0)
@@ -105,45 +129,46 @@ function stress(ctx)
 
 function fracture(ctx)
 {
-  // for(var z = 0 ; z < ctx.area ; z++) 
-  // {
-  //   ctx.fracture[z] = 0;
-  // }
-  var stress = 0;
-  var stressIndex = 0;
+  for(var z = 0 ; z < ctx.area ; z++) 
+  {
+    ctx.fracture[z] = 0;
+  }
+  var hottest = 0;
+  var hottestIndex = 0;
   for(var z = 0 ; z < ctx.area ; z++)
   {
-    if(ctx.stress[z] > stress && !ctx.fracture[z])
+    if(ctx.heat[z] > hottest && !ctx.fracture[z])
     {
-      stress = ctx.stress[z];
-      stressIndex = z;
+      hottest = ctx.heat[z];
+      hottestIndex = z;
     }
   }
-
+  console.log(hottest);
+  var stressIndex = hottestIndex;
+  var plate = ctx.tectonic[stressIndex];
   while(true)
   {
-    var neighbors = ctx.GetNeighbors(stressIndex,false);
-
+    var neighbors = ctx.GetNeighbors(stressIndex,true);
     var mostStressedNeighbor = -1;
     var mostStressedNeighborIndex = -1;
     for (var n = 0; n < neighbors.length; n++)
     {
-      if(!ctx.fracture[neighbors[n]]) 
+      if( !ctx.fracture[neighbors[n]] && 
+          ctx.stress[neighbors[n]] > mostStressedNeighbor &&
+          ctx.tectonic[stressIndex] == plate) 
       {
-        if(ctx.stress[neighbors[n]] > mostStressedNeighbor)
-        {
-          mostStressedNeighbor = ctx.stress[neighbors[n]];
-          mostStressedNeighborIndex = neighbors[n];
-        }
+        mostStressedNeighbor = ctx.stress[neighbors[n]];
+        mostStressedNeighborIndex = neighbors[n]; 
       }
     }
 
     if(mostStressedNeighborIndex==-1)
       break;
 
-    ctx.fracture[mostStressedNeighborIndex] = 1;
+    ctx.fracture[stressIndex] = 1;
     stressIndex = mostStressedNeighborIndex;
   }
+
 };
 function countPlates(counter, ctx)
 {
@@ -179,12 +204,15 @@ function continuity(ctx)
       var pieceSize = checkPlateSize(z, oldNumber, visited, ctx);
       // console.log("Plate " + oldNumber + " has a piece of size " + pieceSize +" with a full size of " + plateCounts[oldNumber]);
       
-      if(pieceSize == plateCounts[ctx.tectonic[z]])
+      if(pieceSize == plateCounts[ctx.tectonic[z]] || 
+        Math.abs(pieceSize - plateCounts[oldNumber]) < 6)
       {
         //  No dicontinuity
+        //console.log("The " + render.describePlateColor(ctx.tectonic[z]) + " plate is contiguous.");
         checkedPlateNumbers[ctx.tectonic[z]] = 1;
         continue;
       }
+      
 
       //  This isnt the whole plate, it must have gotten seperated, relabel!
       var newPlateNumber = oldNumber;
@@ -193,12 +221,14 @@ function continuity(ctx)
       while(checkedPlateNumbers[newPlateNumber] != null || newPlateNumber == ctx.tectonic[z] || plateCounts[newPlateNumber] != null){
         newPlateNumber++;
       }
+      // console.log("The " + render.describePlateColor(ctx.tectonic[z]) + " plate fractured, the new plate is " + 
+      //   render.describePlateColor(newPlateNumber) + " colored.");
 
       //  Recolor the new plate wiht the new plate number
       var count = renumberPlate(z, oldNumber, newPlateNumber, ctx);
       
-      var cleanupVisited = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
-      cleanupFracture(z,cleanupVisited, oldNumber, newPlateNumber,ctx);
+      // var cleanupVisited = Array.apply(null, { length: ctx.area }).map( function() { return 0; });
+      // cleanupFracture(z,cleanupVisited, oldNumber, newPlateNumber,ctx);
 
       //  The new plate has the full count, while the original plate loses this breakoff, other way around
       //console.log("Creating Plate " + newPlateNumber + " with size " + count);
@@ -276,347 +306,121 @@ function checkPlateSize(z, plateNumber, visited, ctx)
   return count;
 };
 
-exports.createTectonicPlates = function(ctx)
+function movement(ctx)
 {
-  heat(ctx);
-  stress(ctx);
-  fracture(ctx);
-  continuity(ctx);
+  var plateXVelocities = {};
+  var plateYVelocities = {};
+  velocity(ctx,plateXVelocities,plateYVelocities);
+
+  if(Object.keys(plateXVelocities).length == 1)
+    return; //  We only have one plate, no need to move
+
+  var newPlateLocations = [];
+
+  for(var z = 0 ; z < ctx.area ; z++)
+  {
+    var plate = ctx.tectonic[z];
+    var currentLocationCoord = ctx.ConvertToCoord(z);
+
+    var newLocation = ctx.ConvertToZ(
+      { 
+          f: currentLocationCoord.f + (plateXVelocities[plate] >= 0 ? 1 : -1)
+        , s: currentLocationCoord.s + (plateYVelocities[plate] >= 0 ? 1 : -1)
+      });
+
+    if(newPlateLocations[newLocation] == null)
+      newPlateLocations[newLocation] = [];
+     
+    newPlateLocations[newLocation].push({
+      plate: plate
+      , heat: ctx.heat[z]
+      , height: ctx.height[z]
+      , oldLocation: z
+      , plants: {} 
+    });
+  }
+
+  stackResolution(newPlateLocations, plateXVelocities, plateYVelocities, ctx);
+  water.flushWater(ctx);
+};
+function velocity(ctx, plateXVelocities, plateYVelocities)
+{
+  for(var z = 0 ; z < ctx.area ; z++)
+  {
+    var plate = ctx.tectonic[z];
+
+    if(plateXVelocities[plate] == null)
+    {
+      plateXVelocities[plate] = 0;
+      plateYVelocities[plate] = 0;
+    }
+
+    //  Note the coordinates are reversed, tall heat on left pushes you RIGHT.
+    var coord = ctx.ConvertToCoord(z);
+    var rightLean = ctx.heat[ctx.ConvertToZ({ f: coord.f-1, s: coord.s })];
+    var leftLean = ctx.heat[ctx.ConvertToZ({ f: coord.f+1, s: coord.s })];
+    var upLean = ctx.heat[ctx.ConvertToZ({ f: coord.f, s: coord.s+1 })];
+    var downLean = ctx.heat[ctx.ConvertToZ({ f: coord.f, s: coord.s-1 })];
+
+    plateXVelocities[plate] += Math.round(rightLean - leftLean);
+    plateYVelocities[plate] += Math.round(downLean - upLean);
+  }
+  //console.log(plateXVelocities);
+  // console.log(plateYVelocities);
 };
 
-exports.advanceTectonics = function (ctx)
+function stackResolution(newLocations, plateXVelocities, plateYVelocities, ctx)
 {
-	heat(ctx);
-  stress(ctx);
-  fracture(ctx);
-  continuity(ctx);
-}
+  for(var z = 0 ; z < ctx.area ; z ++)
+  {
+    var conflicts = newLocations[z];
 
-// void TectonicHandler::CreateTectonicPlates()
-// {
-// 	int provinces_without_plate = context->world_height * context->world_width;
+    if(conflicts == [] || !conflicts)
+    {
+      //  This is a rift from where a plate was
+      ctx.height[z] += utility.randomNumberBetween(2,2);
+      
+      var plots = ctx.GetPlotsOfZ(z);
+      for( var q = 0 ; q < plots.length ; q ++)
+      {
+        plants.killPlant(plots[q], z, ctx, "These plants moved", false);
+      }
+      continue;
+    }
 
-// 	int plate_count = 0;
-// 	int reject_count=0;
+    if(conflicts.length == 1) {
+      ctx.tectonic[z] = conflicts[0].plate;
+    }
+    else {
+      //  Combine heat and and heihgt to see which plate is on top and the resulting mountain
+      var newHeight = 0;
+      var tallestPlateIndex = 0;
+      var tallestPlate = 0;
+      for( var c = 0 ; c < conflicts.length ; c++)
+      {
+        var conflictHeight = conflicts[c].heat + conflicts[c].height;
+        if(conflictHeight > tallestPlate)
+        {
+          tallestPlate = conflictHeight;
+          tallestPlateIndex = c;
+        }
 
-// 	//Initializing the grid for tectonic plates
-// 	for (int y = 0; y < context->world_height; y++)
-// 	{
-// 		std::vector<bool> row_of_taken_provinces;
-// 		has_plate.push_back(row_of_taken_provinces);
+      }
+      var chosenPlate = conflicts[tallestPlateIndex];
 
-// 		std::vector<int> row_of_altitude_changes;
-// 		pending_altitude_changes.push_back(row_of_altitude_changes);
-
-// 		std::vector<int> row_of_astehnosphere_heat;
-// 		context->asthenosphere_heat_map.push_back(row_of_astehnosphere_heat);
-
-// 		std::vector<std::vector<int>> row_of_list_of_new_plates_on_province;
-// 		context->new_plates_on_province.push_back(row_of_list_of_new_plates_on_province);
-
-// 		std::vector<std::vector<int>> row_of_list_of_old_plates_on_province;
-// 		context->old_plates_on_province.push_back(row_of_list_of_old_plates_on_province);
-
-// 		for (int x = 0; x < context->world_width; x++)
-// 		{
-// 			has_plate[y].push_back(false);
-// 			pending_altitude_changes[y].push_back(0);
-// 			context->asthenosphere_heat_map[y].push_back(0);
-// 			context->new_plates_on_province[y].push_back(*new std::vector<int>);
-// 			context->old_plates_on_province[y].push_back(*new std::vector<int>);
-// 		}
-// 	}
-
-// 	//CREATING ALL THE PLATES
-// 	while(provinces_without_plate>0)
-// 	{
-// 		if(reject_count<1000)
-// 		{
-// 			int radius = (context->world_width+context->world_height)/15;
-
-// 			TectonicPlate* tectonic_plate = new TectonicPlate();
-// 			tectonic_plate->plate_number = plate_count;
-// 			plate_count++;
-
-// 			//Finding a good blob origin that isnt already taken
-// 			int cluster_origin_province_x=-1;
-// 			int cluster_origin_province_y=-1;
-
-// 			//Finding a starting location
-// 			while(cluster_origin_province_x==-1 && cluster_origin_province_y==-1)
-// 			{
-// 				int attempted_x = RandomNumberBelow(context->world_width);
-// 				int attempted_y = RandomNumberBelow(context->world_height);
-
-// 				//This hasnt been taken, go ahead and use it as your center
-// 				if(has_plate[attempted_y][attempted_x] == false)
-// 				{
-// 					cluster_origin_province_x = attempted_x;
-// 					cluster_origin_province_y = attempted_y;
-// 				}
-// 				tectonic_plate->provinces_in_plate.push_back(new Vector2(cluster_origin_province_x,cluster_origin_province_y = attempted_y));
-// 			}
-
-// 			//Creating # of smaller diamonds near our center
-// 			for (int q = 0; q < 60; q++)
-// 			{
-// 				//Wrap the x
-// 				int piece_origin_x = cluster_origin_province_x + RandomNumberBetween(-radius,radius);
-// 				if(piece_origin_x<0)
-// 					piece_origin_x+=context->world_width;
-// 				if(piece_origin_x>=context->world_width)
-// 					piece_origin_x-=context->world_width;
-
-// 				//But not the y
-// 				int piece_origin_y = cluster_origin_province_y + RandomNumberBetween(-radius,radius);
-// 				if(piece_origin_y<0)
-// 					continue;
-// 				if(piece_origin_y>=context->world_height)
-// 					continue;
-
-// 				//A mildy random piece size
-// 				//radius =(context->world_width+context->world_height)/RandomNumberBetween(6,15);
-// 				int piece_radius = radius/2;
-
-// 				//The coordinates of the piece
-// 				std::vector<Province*> piece = context->GetDiamondOfProvinces(piece_origin_x,piece_origin_y,piece_radius,true);
-
-// 				//Making sure this province is not taken by another plate or itself
-// 				for (int m = 0; m < piece.size(); m++)
-// 				{
-// 					if(has_plate[piece[m]->province_y][piece[m]->province_x] == false)
-// 					{
-// 						//Add it to our plate!
-// 						tectonic_plate->provinces_in_plate.push_back(new Vector2(piece[m]->province_x,piece[m]->province_y));
-// 					}
-// 				}
-// 			}
-
-// 			//	DUPLICATE CLEANING	//
-// 			int duplicate_count = 0;
-// 			vector<Vector2*> nonduplicated_provinces;
-// 			for (int w = 0; w < tectonic_plate->provinces_in_plate.size(); w++)
-// 			{
-// 				bool duplicate = false;
-// 				for (int a = 0; a < nonduplicated_provinces.size(); a++)
-// 				{
-// 					if(tectonic_plate->provinces_in_plate[w]->x==nonduplicated_provinces[a]->x && tectonic_plate->provinces_in_plate[w]->y==nonduplicated_provinces[a]->y)
-// 					{
-// 						duplicate = true;
-// 						duplicate_count++;
-// 						break;
-// 					}
-// 				}
-// 				if(!duplicate)
-// 				{
-// 					nonduplicated_provinces.push_back(tectonic_plate->provinces_in_plate[w]);
-// 				}
-// 			}
-// 			//Replacing tectonic plate province list with nonduplicate version
-// 			tectonic_plate->provinces_in_plate.clear();
-// 			for (int l = 0; l < nonduplicated_provinces.size(); l++)
-// 			{
-// 				tectonic_plate->provinces_in_plate.push_back(nonduplicated_provinces[l]);
-// 			}
-
-// 			//If its not a super tiny plate
-// 			if(tectonic_plate->provinces_in_plate.size()>5)
-// 			{
-// 				//Depth first search to see if its contiguous
-// 				std::vector<Vector2> confirmed_contiguous_provinces;
-
-// 				Vector2 starting (tectonic_plate->provinces_in_plate[0]->x,tectonic_plate->provinces_in_plate[0]->y);
-
-// 				TectonicHandler::PlateContiguitySearch(
-// 					starting,
-// 					&tectonic_plate->provinces_in_plate,
-// 					&confirmed_contiguous_provinces);
-
-// 				//If this tectonic plate checks out
-// 				if(confirmed_contiguous_provinces.size() == tectonic_plate->provinces_in_plate.size())
-// 				{
-// 					//std::cout<<"Plate	CREATED		; it was size "<<tectonic_plate->provinces_in_plate.size()<<"."<<endl;
-// 					//std::cout<<provinces_without_plate<<" provinces left to fill."<<endl;
-
-// 					context->tectonic_plates.push_back(tectonic_plate);
-// 					provinces_without_plate -= tectonic_plate->provinces_in_plate.size();
-
-// 					for (int p = 0; p < tectonic_plate->provinces_in_plate.size(); p++)
-// 					{
-// 						context->old_plates_on_province[tectonic_plate->provinces_in_plate[p]->y][tectonic_plate->provinces_in_plate[p]->x].push_back(tectonic_plate->plate_number);
-// 						has_plate[tectonic_plate->provinces_in_plate[p]->y][tectonic_plate->provinces_in_plate[p]->x] = true;
-// 					}
-// 				}
-// 				else
-// 				{
-// 					//Not contiguous
-// 					plate_count--;
-// 					reject_count++;
-// 				}
-// 			}
-// 			else
-// 			{
-// 				//To small
-// 				plate_count--;
-// 				reject_count++;
-// 			}
-// 		}
-// 		else
-// 		{
-// 			std::cout<<"Reject max achieved."<<endl;
-// 			break;
-// 		}
-// 	}
-
-// 	//Meshing together the remaining spots
-// 	std::vector<Province*> provinces_without_plate_neighbors;//Any provinces that have no nearby plates are put into this list and handled later
-// 	for (int y = 0; y < context->world_height; y++)
-// 	{
-// 		for (int x = 0; x < context->world_width; x++)
-// 		{
-// 			if(context->old_plates_on_province[y][x].size() == 0)
-// 			{
-// 				//The number of times a plate is a neighbor
-// 				std::unordered_map<int,int> neighboring_plate_occurences;
-// 				bool no_nearby_plates = true;
-
-// 				//Cylcing through neighbors
-// 				std::vector<Province*> neighbors = context->GetDiamondOfProvinces(x,y,1,false);
-// 				for (int p = 0; p < neighbors.size(); p++)
-// 				{
-// 					Province* prov = neighbors[p];
-// 					if(context->old_plates_on_province[prov->province_y][prov->province_x].size()!=0)
-// 					{
-// 						neighboring_plate_occurences[context->old_plates_on_province[prov->province_y][prov->province_x][0]]++;
-// 						no_nearby_plates = false;
-// 					}
-// 				}
-// 				if(no_nearby_plates == false)
-// 				{
-// 					int highest_occurence = 0;
-// 					int chosen_plate = 0;
-// 					//Figuring out which plate occurs the most
-// 					for (auto it = neighboring_plate_occurences.begin(); it != neighboring_plate_occurences.end(); ++it) 
-// 					{
-// 						if(it->second>highest_occurence	)
-// 						{
-// 							highest_occurence = it->second;
-// 							chosen_plate = it->first;
-// 						}
-// 					}
-// 					context->tectonic_plates[chosen_plate]->provinces_in_plate.push_back(new Vector2(x,y));
-// 					context->old_plates_on_province[y][x].push_back(chosen_plate);
-// 					provinces_without_plate--;
-// 				}
-// 				else
-// 				{
-// 					provinces_without_plate_neighbors.push_back(context->provinces[y][x]);
-// 				}
-// 			}
-// 		}
-// 	}
-// 	for (int y = 0; y < context->world_height; y++)
-// 	{
-// 		for (int x = 0; x < context->world_width; x++)
-// 		{
-// 			context->asthenosphere_heat_map[y][x] += context->provinces[y][x]->altitude;
-// 			context->asthenosphere_heat_map[y][x] += context->provinces[y][x]->water_depth;
-// 		}
-// 	}
-
-// 	std::cout<<"Tectonic plates created."<<endl;
-// };
-
-// void TectonicHandler::PlateContiguitySearch(Vector2 myCoordinate, std::vector<Vector2*>* plate_coordinates, std::vector<Vector2>* myConnected)
-// {
-// 	vector<Vector2>& connected_reference = *myConnected;
-// 	vector<Vector2*>& plate_reference = *plate_coordinates;
-
-// 	Vector2 north (myCoordinate.x,myCoordinate.y-1);
-
-// 	Vector2 east (myCoordinate.x+1,myCoordinate.y);
-// 	TectonicHandler::context->WrapCoordinates(&east);
-
-// 	Vector2 south (myCoordinate.x,  myCoordinate.y+1);
-
-// 	Vector2 west (myCoordinate.x-1,myCoordinate.y);
-// 	TectonicHandler::context->WrapCoordinates(&west);
-
-// 	//Go through every province in the plate and see if its a neihgbor of this province
-// 	for (int i = plate_reference.size()-1; i >= 0; i--)
-// 	{
-// 		if(plate_reference[i]->x == north.x && plate_reference[i]->y == north.y)
-// 		{
-// 			//Check if we already ahve it
-// 			bool already_have_it = false;
-// 			for (int c = 0; c < myConnected->size(); c++)
-// 			{
-// 				if(north.x == connected_reference[c].x && north.y == connected_reference[c].y)
-// 				{
-// 					already_have_it=true;
-// 				}
-// 			}
-// 			if(!already_have_it)
-// 			{
-// 				myConnected->push_back((Vector2)(north));
-// 				PlateContiguitySearch(north,&plate_reference,myConnected);
-// 			}
-// 		}
-// 		if(plate_reference[i]->x == east.x && plate_reference[i]->y == east.y)
-// 		{
-// 			//Check if we already ahve it
-// 			bool already_have_it = false;
-// 			for (int c = 0; c < myConnected->size(); c++)
-// 			{
-// 				if(east.x == connected_reference[c].x && east.y == connected_reference[c].y)
-// 				{
-// 					already_have_it=true;
-// 				}
-// 			}
-// 			if(!already_have_it)
-// 			{
-// 				myConnected->push_back((Vector2)(east));
-// 				PlateContiguitySearch(east,&plate_reference,myConnected);
-// 			}
-// 		}
-// 		if(plate_reference[i]->x == south.x && plate_reference[i]->y == south.y)
-// 		{
-// 			//Check if we already ahve it
-// 			bool already_have_it = false;
-// 			for (int c = 0; c < myConnected->size(); c++)
-// 			{
-// 				if(south.x == connected_reference[c].x && south.y == connected_reference[c].y)
-// 				{
-// 					already_have_it=true;
-// 				}
-// 			}
-// 			if(!already_have_it)
-// 			{
-// 				myConnected->push_back((Vector2)(south));
-// 				PlateContiguitySearch(south,&plate_reference,myConnected);
-// 			}
-// 		}
-// 		if(plate_reference[i]->x == west.x && plate_reference[i]->y == west.y)
-// 		{
-// 			//Check if we already ahve it
-// 			bool already_have_it = false;
-// 			for (int c = 0; c < myConnected->size(); c++)
-// 			{
-// 				if(west.x == connected_reference[c].x && west.y == connected_reference[c].y)
-// 				{
-// 					already_have_it=true;
-// 				}
-// 			}
-// 			if(!already_have_it)
-// 			{
-// 				myConnected->push_back((Vector2)(west));
-// 				PlateContiguitySearch(west,&plate_reference,myConnected);
-// 			}
-// 		}
-// 	}
-
-// };
-
+      ctx.tectonic[z] = chosenPlate.plate;
+      
+      if(z != chosenPlate.oldLocation) 
+      {
+        ctx.height[z] = chosenPlate.height + chosenPlate.heat - ctx.height[z];
+        ctx.height[chosenPlate.oldLocation] -= chosenPlate.height;
+      }
+      //  Move plants here
+      
+      //  THIS IS A COLLISION CREATE A MOUNTAIN using veolicty and heat
+    }
+  }
+};
 
 // void TectonicHandler::AdvanceTectonics()
 // {
