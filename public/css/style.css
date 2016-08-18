@@ -105,6 +105,9 @@ canvas {
 .rule {
     margin-bottom:0.75em;
 }
+.rule-header {
+  text-align: center;
+}
 
 .parameter-description {
     font-style: italic;
@@ -159,10 +162,10 @@ canvas {
   overflow-y: scroll;
 }
 
-
-.input-group-addon {
+.disable-field {
   background: none;
 }
+
 .odd {
   background:#FAFAFA;
 }

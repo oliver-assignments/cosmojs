@@ -95,7 +95,7 @@ function($scope,$cookies, rulesService,creationService,utility)
   {
     for (var i in $scope.formData) 
     {
-        if ($scope.formData[i] === null ||
+        if ($scope.formData[i] === null||
           $scope.formData[i] === "" || 
           $scope.formData[i] === undefined || 
           $scope.formData[i] === false) 
@@ -105,28 +105,21 @@ function($scope,$cookies, rulesService,creationService,utility)
     }
 
     //  Radio rules
-    for( var r = 0 ; r < rulesService.radios.length ; r++ )
+    for( var r = 0 ; r < rulesService.rules.length ; r++ )
     {
       $cookies.put(
-        'cosmo-' + rulesService.radios[r].variable, 
-        $scope.formData[rulesService.radios[r].variable]);
+        'cosmo-' + rulesService.rules[r].variable, 
+        $scope.formData[rulesService.rules[r].variable]);
+      // $cookies.put(
+      //   'cosmo-' + rulesService.rules[r].variable, 
+      //   $scope.formData.rules[rulesService.rules[r].variable]);
+
+      // $cookies.put(
+      //   'cosmo-' + rulesService.rules[r].variable, 
+      //   $scope.formData.rules[rulesService.rules[r].variable]);
     }
 
-    //  Boolean rules
-    for( var b = 0 ; b < rulesService.booleans.length ; b++ )
-    {
-      $cookies.put(
-        'cosmo-' + rulesService.booleans[b].variable, 
-        $scope.formData.rules[rulesService.booleans[b].variable]);
-    }
-
-    //  Input rules
-    for( var i = 0 ; i < rulesService.fields.length ; i++ )
-    {
-      $cookies.put(
-        'cosmo-' + rulesService.fields[i].variable, 
-        $scope.formData.rules[rulesService.fields[i].variable]);
-    }
+   
 
     creationService.createSim($scope.formData,
       function(err)
@@ -162,34 +155,33 @@ function($scope,$cookies, rulesService,creationService,utility)
     $scope.randomizeName();
 
     //  Radio rules
-    for( var r = 0 ; r < rulesService.radios.length ; r++ )
+    for( var r = 0 ; r < rulesService.rules.length ; r++ )
     {
-      var radio = $cookies.get('cosmo-' + rulesService.radios[r].variable);
-      if(radio) 
-      { 
-        if(rulesService.radios[r].type == "number")
-          radio = Number(radio);
-        $scope.formData[rulesService.radios[r].variable] = radio;
+      if(rulesService.rules[r].ruleType == "radio")
+      {
+        var radio = $cookies.get('cosmo-' + rulesService.rules[r].variable);
+        if(radio) 
+        { 
+          if(rulesService.rules[r].type == "number")
+            radio = Number(radio);
+          $scope.formData[rulesService.rules[r].variable] = radio;
+        }
       }
-    }
-
-    //  Boolean rules
-    for( var b = 0 ; b < rulesService.booleans.length ; b++ )
-    {
-      var boolean = $cookies.get('cosmo-' + rulesService.booleans[b].variable);
-      if(boolean){
-        $scope.formData.rules[rulesService.booleans[b].variable] = boolean =="true";
+      else if (rulesService.rules[r].ruleType == "boolean")
+      {    
+        var boolean = $cookies.get('cosmo-' + rulesService.rules[r].variable);
+        if(boolean) {
+          $scope.formData.rules[rulesService.rules[r].variable] = boolean =="true";
+        }
       }
-    }
-
-    //  Input rules
-    for( var i = 0 ; i < rulesService.fields.length ; i++ )
-    {
-      var input = $cookies.get('cosmo-' + rulesService.fields[i].variable);
-      if(input){
-        if(rulesService.fields[i].input.type == "number")
-          input = Number(input);
-        $scope.formData.rules[rulesService.fields[i].variable] = input;
+      else if (rulesService.rules[r].ruleType == "field")
+      {
+        var input = $cookies.get('cosmo-' + rulesService.rules[r].variable);
+        if(input){
+          if(rulesService.rules[r].input.type == "number")
+            input = Number(input);
+          $scope.formData.rules[rulesService.rules[r].variable] = input;
+        }
       }
     }
   };

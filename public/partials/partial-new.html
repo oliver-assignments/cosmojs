@@ -12,58 +12,62 @@
       </div>
     </div>
   </div>
-  {{formData}}
+  <!-- {{formData}} -->
   <div class="row setting-section">
     <div class="col-xs-12 col-md-9">
       
-      <!-- Radio Rules -->
+      
       <ul>
-        <li ng-repeat="radio in rules.radios" class="rule">
-          <h4>{{ radio.title }}</h4>
-          <p class="parameter-description">{{ radio.description }}</p>
-          <div class="btn-group">
-            <label ng-repeat="option in radio.options" 
-              class="btn btn-default" 
-              ng-model="formData[radio.variable]"
-              uib-btn-radio="{{ option.value | wrapInQuotes }}">
-              {{ option.name }}
-            </label>
+        <li class="rule" ng-repeat="rule in rules.rules track by $index">
+
+          <h4 class="rule-header" ng-show="rule.ruleType == 'header'">{{ rule.text }}</h4>
+
+          <!-- IF Radio Rule -->
+          <div ng-show="rule.ruleType == 'radio'">
+            <h4>{{ rule.title }}</h4>
+            <p class="parameter-description">{{ rule.description }}</p>
+            <div class="btn-group">
+              <label ng-repeat="option in rule.options" 
+                class="btn btn-default" 
+                ng-model="formData[rule.variable]"
+                uib-btn-radio="{{ option.value | wrapInQuotes }}">
+                {{ option.name }}
+              </label>
+            </div>
+          </div>
+          
+          <!-- IF Boolean Rule -->
+          <button 
+            ng-show="rule.ruleType=='boolean'"
+            type="button" class="btn btn-default" 
+            btn-checkbox-true="true" btn-checkbox-false="false" 
+            uib-btn-checkbox
+            ng-model="formData.rules[rule.variable]"
+            uib-popover="{{ rule.tooltip }}" popover-trigger="mouseenter">
+            <b>{{ rule.character }}</b> {{ rule.title }}
+          </button>
+
+          <!-- IF Field Rule -->
+          <!-- ng-class="{'disable-field' : formData.rules[rule.variable] == null}" -->
+          <div 
+            ng-show="rule.ruleType=='field'" 
+            class="input-group">
+            <span  
+              class="input-group-addon"
+              
+              uib-popover="{{ rule.tooltip }} {{ rule.input | inputPlaceholder }}" 
+              popover-trigger="mouseenter">
+              <b> {{ rule.character }} </b> 
+              {{ rule.title }}
+            </span>
+            <input type="{{ rule.input.type }}" 
+              ng-model="formData.rules[rule.variable]"
+              ng-value="formData.rules[rule.variable]" 
+              class="form-control" 
+              placeholder="{{ rule.input | inputPlaceholder }}"/>
           </div>
         </li>
       </ul>
-
-      <!-- Boolean Rules -->
-      <h4>Simulation Rules</h4>
-      <div class="btn-group rule">
-        <button 
-        ng-repeat="rule in rules.booleans" 
-        type="button" class="btn btn-default" 
-        btn-checkbox-true="true" btn-checkbox-false="false" 
-        uib-btn-checkbox
-        ng-model="formData.rules[rule.variable]"
-        uib-popover="{{rule.tooltip}}" popover-trigger="mouseenter">
-        <b>{{rule.character}}</b> {{rule.title}}</button>
-      </div>
-
-      <!-- Field Rules -->
-
-      <div ng-repeat="field in rules.fields" class="input-group rule">
-        <span class="input-group-addon" 
-          uib-popover="{{ field.tooltip }} {{ field.input | inputPlaceholder }}" 
-          popover-trigger="mouseenter">
-          <b> {{ field.character }} </b> 
-          {{ field.title }}
-        </span>
-
-        <input type="{{ field.input.type }}" 
-          ng-model="formData.rules[field.variable]"
-          ng-value="formData.rules[field.variable]" 
-          class="form-control" 
-          placeholder="{{ field.input | inputPlaceholder }}"/>
-
-      </div>
-    </div>
-
   </div>
 
   <div class="row">

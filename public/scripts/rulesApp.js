@@ -10,67 +10,75 @@ angular.module('rulesApp',[])
 .filter('inputPlaceholder', function() {
   return function(input) {
     var string = "";
-  if(input.type)
-  {
-    string+= input.type + " ";
-  }
-  if(input.left !=null)
-  {
-    if(input.left.inclusive == null || input.left.inclusive)
-    {
-      string += "[";
-    }
-    else
-    {
-      //  It's inclusive by default
-      string += "(";
-    }
-    string += input.left.value + ", ";
-  }
-  else
-  {
-    //  left is infinity
-    string += "(-∞, "
-  }
 
-  if(input.right !=null)
-  {
-    
-    string += input.right.value;
-    if(input.right.inclusive == null || input.right.inclusive)
+    if(!input)
+      return string;
+
+    if(input.type)
     {
-      string += "]";
+      string+= input.type + " ";
+    }
+    if(input.left !=null)
+    {
+      if(input.left.inclusive == null || input.left.inclusive)
+      {
+        string += "[";
+      }
+      else
+      {
+        //  It's inclusive by default
+        string += "(";
+      }
+      string += input.left.value + ", ";
     }
     else
     {
-      //  It's inclusive by default
-      string += ")";
+      //  left is infinity
+      string += "(-∞, "
     }
-  }
-  else
-  {
-    //  left is infinity
-    string += "∞)"
-  }
-  return string;
+
+    if(input.right !=null)
+    {
+      
+      string += input.right.value;
+      if(input.right.inclusive == null || input.right.inclusive)
+      {
+        string += "]";
+      }
+      else
+      {
+        //  It's inclusive by default
+        string += ")";
+      }
+    }
+    else
+    {
+      //  left is infinity
+      string += "∞)"
+    }
+    return string;
   };
 })
 .factory('rulesService', [
 function()
 {
-  var rules = {};
-  rules.options = {};
+  var rulesService = {};
+  rulesService.options = {};
 
-  rules.radios =
+  rulesService.rules =
   [
     {
+      ruleType: "header"
+      , text: "Planet"
+    }
+    ,{
       title: "Size"
+      , ruleType: "radio"
       , description: "Planet size dictates the size and resolution of the simulation. Larger plant and animal populations and more complex continental shapes are possible with a bigger map."
       , options: [
         { name: "Small", value: '{"columns":50,"rows":40}' }
         , { name: "Medium", value: '{"columns":100,"rows":80}' }
         , { name: "Large", value: '{"columns":150,"rows":120}' }
-        // , { name: "Large", value: '{"columns":200,"rows":160}' }
       ]
       , variable: "size"
       , type: "string"
@@ -78,6 +86,7 @@ function()
     }
     ,{
       title: "Tilt"
+      , ruleType: "radio"
       , description: "Planet tilt dictates which hemisphere recieves the most sun. For instance the Earth's 23.5 degree tilt means that the sourthern hemisphere recieves the most sunlight annually. Sunlight allows for dense foliage and heavy rainfall."
       , options: [
         { name: "Northern Hemisphere", value: 0.25 }
@@ -90,6 +99,7 @@ function()
     }
     ,{
       title: "Rotation Direction"
+      , ruleType: "radio"
       , description: "Planet rotation dictates which direction the rainfall flows. For instance, Earth's west to east rotation means that its greater wind currents flow east to west. Continental geography in the East cuts off warm currents from reaching the West."
       , options: [
         { name: "East to West", value: -1 }
@@ -99,34 +109,28 @@ function()
       , type: "number"
       , init: -1
     }
+    , {
+      ruleType: "header"
+      , text: "Plants"
+    }
     ,{
       title: "Plants per Province"
+      , ruleType: "radio"
       , description: "The more plants share a plot the more they have to compete for shared soil nutrients."
       , options: [
         { name: "Four", value: 4 }
         , { name: "Nine", value: 9 }
         , { name: "Sixteen", value: 16 }
-        // , { name: "Twenty Five", value: 25 }
       ]
       , variable: "plantsPer"
       , type: "number"
       , init: 9
     }
-  ];
-  rules.booleans = 
-  [
-    // {
-    //  character: "C"
-    //  , title: "Consumption"
-    //  , tooltip: "Plants consume nutrients from the soil equal to their metabolism."
-    //  , variable: "consumption"
-    //  , init: false
-    // }
-    //,
-    {
+    ,{
       character: "M"
       , required: "S"
       , title: "Maturity"
+      , ruleType: "boolean"
       , tooltip: "Plants must mature before they can reproduce. Requires seeding."
       , variable: "maturity"
       , init: false
@@ -134,6 +138,7 @@ function()
     ,{
       character: "H"
       , title: "Heliophilia"
+      , ruleType: "boolean"
       , tooltip: "Plants love the sun."
       , variable: "heliophilia"
       , init: false
@@ -141,47 +146,39 @@ function()
     ,{
       character: "T"
       , title: "Thirst"
+      , ruleType: "boolean"
       , tooltip: "Plants love the rain."
       , variable: "thirst"
       , init: false
     }
     ,{
-      character: "D"
-      , title: "Disease"
-      , tooltip: "Disease infects and kills plants."
-      , variable: "disease"
-      , init: false
-    }
-  ];
-  rules.fields = 
-  [
-    {
       character: "R"
       , title: "Root Competition"
+      , ruleType: "field"
       , tooltip: "Plants die if they have too many neighbors n."
       , input: {
-        type:"number",
-        left: {value:1, inclusive: true},
-        right: {value:9, inclusive: false}
+        type:"number"
+        , left: {value:1, inclusive: true}
+        , right: {value:9, inclusive: false}
       }
       , variable: "roots"
       , init: 8
     },
     {
-      character: "S",
-      title: "Gene Mutation Rate",
-      tooltip: "Plants reproduce if they have stored their nutrient endowment. Each of the parent's chromosomes is passed on with m chance of mutating.",
-      input:  {
-        type: "number",
-        left: {value:0, inclusive:true},
-        right: {value:1, inclusive: true}
+      character: "S"
+      , title: "Gene Mutation Rate"
+      , ruleType: "field"
+      , tooltip: "Plants reproduce if they have stored their nutrient endowment. Each of the parent's chromosomes is passed on with m chance of mutating."
+      , input:  {
+        type: "number"
+        , left: {value:0, inclusive:true}
+        , right: {value:1, inclusive: true}
       }
       , variable: "mutation"
       , init: 0.999
 
     }
-    
   ];
-  return rules;
+  return rulesService;
 }]);
 

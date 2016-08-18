@@ -143,7 +143,7 @@ function fracture(ctx)
       hottestIndex = z;
     }
   }
-  console.log(hottest);
+  // console.log(hottest);
   var stressIndex = hottestIndex;
   var plate = ctx.tectonic[stressIndex];
   while(true)
