@@ -332,6 +332,9 @@ exports.render = function(req,res)
       }
       else
       {
+        if(!ctx.youngest)
+          ctx.youngest = 1;
+        
         if(ctx.hasPlant[p]) {
           colors.push(cmykToHex(
             colorValueBetween(ctx.generation[p], 0, ctx.youngest, tallestPlant, shortestPlant)));

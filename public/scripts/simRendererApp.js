@@ -8,7 +8,7 @@ function($http,context)
 		  {name:"Flora Stats", 	modes : ["Density","Nutrient Stores", "Nutro Stores", "Nucium Stores", "Water Stores", "Growth", "Generation"]}	
 		, {name:"Flora DNA",    modes : ["Heliophilia", "Thirst"]}	
 		, {name:"Geography",	modes : ["Satellite", "Depth", "Elevation", "Height"]}
-		, {name:"Mantle", 		modes : ["Tectonic", "Asthenosphere", "Stress", "Fractures"]}
+		, {name:"Mantle", 		modes : ["Tectonic", "Asthenosphere", "Stress"]}//  "Fractures"
 		, {name:"Soil",    		modes : ["Nutrients", "Nutro", "Nucium"]}
 		, {name:"Weather", 		modes : ["Sunlight", "Rainfall"]}
 	];
