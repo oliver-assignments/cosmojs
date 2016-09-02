@@ -1,0 +1,3 @@
+[submodule "src/soil-scape"]
+	path = src/soil-scape
+	url = git@github.com:TheNextGuy32/soil-scape.git
