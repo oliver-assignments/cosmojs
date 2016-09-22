@@ -63,7 +63,7 @@ function($http,renderer,timeline,pager,context)
 
 	manager.getSimulationDescriptions = function(res)
 	{
-		$http.get('/apis/worlds/description')
+		$http.get('/worlds/descriptions')
 			.success(function(data){
 				manager.simulations = data;
 				res(null,data);
@@ -77,7 +77,7 @@ function($http,renderer,timeline,pager,context)
 
 	manager.createSim = function(form,res)
 	{
-		$http.post('/apis/worlds', form)
+		$http.post('/worlds', form)
 			.success(function(data) {
 				manager.simulations = data;
 				res(null,data);
@@ -91,7 +91,7 @@ function($http,renderer,timeline,pager,context)
 	{
 		console.log("Attempting to delete " + name);
 
-		$http.delete('/apis/worlds/' + name)
+		$http.delete('/worlds/' + name)
 			.success(function(data)
 			{
 				manager.simulations = data;
@@ -108,7 +108,7 @@ function($http,renderer,timeline,pager,context)
 	{
 		//console.log('Attempting to delete all sims.');
 
-		$http.delete('/apis/worlds/')
+		$http.delete('/worlds/')
 			.success(function(data)
 			{
 				manager.simulations = data;

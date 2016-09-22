@@ -77,12 +77,11 @@ function()
       , description: "Planet size dictates the size and resolution of the simulation. Larger plant and animal populations and more complex continental shapes are possible with a bigger map."
       , options: [
         { name: "Small", value: '{"columns":50,"rows":40}' }
-        , { name: "Medium", value: '{"columns":100,"rows":80}' }
-        , { name: "Large", value: '{"columns":150,"rows":120}' }
+        , { name: "Large", value: '{"columns":100,"rows":80}' }
       ]
       , variable: "size"
       , type: "string"
-      , init: "small"
+      , init: "Small"
     }
     ,{
       title: "Tilt"

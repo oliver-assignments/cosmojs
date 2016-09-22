@@ -46,7 +46,7 @@ function($http,context)
 			date = req.days;
 		}
 
-		$http.get('/apis/worlds/' + req.name + "/" + date + "/" + req.mode)
+		$http.get('/render/' + req.name + "/" + date + "/" + req.mode)
 		.success(function(renderInstructions) 
 		{
 			renderer.mode = req.mode;

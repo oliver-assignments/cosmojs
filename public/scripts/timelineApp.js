@@ -21,7 +21,7 @@ function($http,context,renderer)
         }
         else
         {
-          $http.get('/apis/worlds/' + context.name + '/timeline')
+          $http.get('/worlds/' + context.name + '/timeline')
             .success(function(data)
             {
               timeline.dates = data;

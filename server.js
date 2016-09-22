@@ -1,27 +1,18 @@
 var express = require('express');
+var enrouten = require('express-enrouten');
 var favicon = require('serve-favicon');
+var bodyParser = require('body-parser')
 
 var app = express();
 
-var bodyParser = require('body-parser')
+app.use( express.static(__dirname + '/public') );
+app.use( favicon(__dirname + '/public/images/none.ico') );
+app.get('/', function(req,res) { res.sendFile(path.join(__dirname + '/public/index.html')); });
+
 app.use( bodyParser.json() );
-app.use( bodyParser.urlencoded({extended: true})); 
+app.use( bodyParser.urlencoded({extended: false})); 
 
-app.use(express.static(__dirname + '/public'));
-app.use(favicon(__dirname + '/public/images/none.ico'));
-
-app.get('/', function(req,res)
-{
-  res.sendFile(path.join(__dirname + '/public/index.html'));
-});
-
-var cosmo = require('src/soil-scape/index.js');
-
-//  Routes
-require('src/requestRoutes.js')(app,cosmo);
-require('src/managementRoutes.js')(app,cosmo);
-require('src/renderRoutes.js')(app,cosmo);
-require('src/utilityRoutes.js')(app,cosmo);
+app.use( enrouten({ directory: 'routes' }) );
 
 var port = Number(process.env.PORT || 3000);
 app.listen(port);

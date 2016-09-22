@@ -6,7 +6,7 @@ function($http,simManager,timeline,context)
 	service.requests = [];
 	service.getSimulationRequests = function(res)
 	{
-		$http.get('/apis/requests')
+		$http.get('/requests')
 			.success(function(data){
 				service.requests=data;
 				res(null,data);
@@ -27,7 +27,7 @@ function($http,simManager,timeline,context)
 			}
 			else
 			{
-				$http.post('/apis/requests', req)
+				$http.post('/requests', req)
 					.success(function(data){
 						service.requests=data;
 						res(null,data);
@@ -42,7 +42,7 @@ function($http,simManager,timeline,context)
 	};
 	service.clearSimulationRequests = function(res)
 	{
-		$http.delete('/apis/requests')
+		$http.delete('/requests')
 			.success(function(data){
 				service.requests=data;
 				res(null,data);
@@ -53,7 +53,7 @@ function($http,simManager,timeline,context)
 	};
 	service.deleteSimulationsRequests = function(req,res)
 	{
-		$http.delete('/apis/requests/' + req)
+		$http.delete('/requests/' + req)
 			.success(function(data){
 				service.requests=data;
 				res(null,data);
@@ -64,7 +64,7 @@ function($http,simManager,timeline,context)
 	};
 	service.processSimulationRequests = function(res)
 	{
-		$http.post('/apis/requests/process')
+		$http.post('/requests/process')
 		.success(function(requests) {
 			service.requests=requests;
 

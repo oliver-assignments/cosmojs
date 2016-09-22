@@ -63,7 +63,7 @@ angular.module('utilityApp',[])
 
   utility.getRandomName = function(res)
   {
-    $http.get('/apis/utility/name/generate')
+    $http.get('/utility/name/generate')
       .success(function(data)
       {       
         res(null,data);
