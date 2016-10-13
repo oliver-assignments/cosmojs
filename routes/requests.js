@@ -1,75 +1,64 @@
-'use strict';
-var requests = require('../src/request.js');
+const requestsManager = require('../src/request.js');
 
-module.exports = function(app) {
+module.exports = (app) => {
     //  Get all simulation requests
-  app.get('/',function(req,res)
-  {
-    requests.getSimulationRequests(function(err,requests)
-      {
-        if(err){
+  app.get('/', (req, res) => {
+    requestsManager.getSimulationRequests(
+      (err, requests) => {
+        if (err) {
           res.status = (err.status || 500);
           res.json(err);
-        }
-        else
+        } else {
           res.json(requests);
+        }
       });
   });
   //  Post new simulation request
-  app.post('/',function(req,res)
-  {
-    requests.queueSimulationRequest(req.body,
-      function(err,requests)
-      {
-        if(err){
+  app.post('/', (req, res) => {
+    requestsManager.queueSimulationRequest(req.body,
+      (err, requests) => {
+        if (err) {
           res.status = (err.status || 500);
           res.json(err);
-        }
-        else
+        } else {
           res.json(requests);
+        }
       });
   });
   //  Clear simulation requests
-  app.delete('/',function(req,res)
-  {
-    requests.clearSimulationRequests(
-      function(err,requests)
-      {
-        if(err){
+  app.delete('/', (req, res) => {
+    requestsManager.clearSimulationRequests(
+      (err, requests) => {
+        if (err) {
           res.status = (err.status || 500);
           res.json(err);
-        }
-        else
+        } else {
           res.json(requests);
+        }
       });
   });
   //  Delete all simulation requests of worldname
-  app.delete('/:name',function(req,res)
-  {
-    requests.deleteSimulationRequestsForWorld(req.params,
-      function(err,requests)
-      {
-        if(err){
+  app.delete('/:name', (req, res) => {
+    requestsManager.deleteSimulationRequestsForWorld(req.params,
+      (err, requests) => {
+        if (err) {
           res.status = (err.status || 500);
           res.json(err);
-        }
-        else
+        } else {
           res.json(requests);
+        }
       });
   });
-  app.post('/process',function(req,res)
-  {
-    requests.processSimulationRequests(
-      function(err,requests)
-      {
-        if(err){
+  app.post('/process', (req, res) => {
+    requestsManager.processSimulationRequests(
+      (err, requests) => {
+        if (err) {
           res.status = (err.status || 500);
           res.json(err);
-        }
-        else
+        } else {
           res.json(requests);
+        }
       });
   });
 };
-
 

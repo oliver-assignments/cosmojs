@@ -1,138 +1,115 @@
-'use strict';
+const manager = require('../src/manager.js');
 
-var manager = require("../src/manager.js");
-
-module.exports = function(app) {
+module.exports = (app) => {
   //  Add a new simulation
-  app.post('/', function(req,res)
-  {
-    manager.createSimulation(req.body, 
-      function(err,sims)
-      {
-        if(err) {
+  app.post('/', (req, res) => {
+    manager.createSimulation(req.body,
+      (err, sims) => {
+        if (err) {
           // res.send(err);
           res.status = (err.status || 500);
           res.json(err);
+        } else {
+          res.json(sims);
         }
-        else {
-          res.json(sims);     
-        }
-      }); 
+      });
   });
 
   //  Get all the simulation descriptions
-  app.get('/descriptions', function(req,res)
-  {
+  app.get('/descriptions', (req, res) => {
     manager.getSimulationDescriptions(
-      function(err,packages)
-      {
-        if(err){
+      (err, packages) => {
+        if (err) {
           // res.send(err);
           // return;
           res.status = (err.status || 500);
           res.json(err);
+        } else {
+          res.json(packages);
         }
-        else 
-          res.json(packages);           
-      }); 
-  });
-
-  app.delete('/', function(req,res)
-  {
-    manager.clearSimulations(
-      function(err,sims)
-      {
-        if(err)
-        {
-          res.status = (err.status || 500);
-          res.json(err);
-        }
-        else
-          res.json(sims);     
-    });
-  });
-
-  //  Deletse a simulation
-  app.delete('/:name', function(req,res)
-  {
-    manager.deleteSimulation(req.params.name,
-      function(err,sims)
-      {
-        if(err){
-          res.status = (err.status || 500);
-          res.json(err);
-        }
-        else
-          res.json(sims);     
       });
   });
 
-  
-
-  //  Get the basic pacakge of world
-  app.get('/:name/decription', function(req,res)
-  {
-    //  Return name, dimensions 
-    manager.getSimulationPackage(
-      req.params.name,
-      function(err,glimpse)
-      {
-        if(err){
+  app.delete('/', (req, res) => {
+    manager.clearSimulations(
+      (err, sims) => {
+        if (err) {
           res.status = (err.status || 500);
           res.json(err);
-      }
-      else
-        wres.json(glimpse);     
-    });
+        } else {
+          res.json(sims);
+        }
+      });
   });
 
-  app.get('/:name/latest', function(req,res)
-  {
-    manager.getSimulationContext(
-      {
-        name:req.params.name
-      },
-      function(err,sim) {
-        if(err) {
+  //  Deletse a simulation
+  app.delete('/:name', (req, res) => {
+    manager.deleteSimulation(req.params.name,
+      (err, sims) => {
+        if (err) {
           res.status = (err.status || 500);
           res.json(err);
+        } else {
+          res.json(sims);
         }
-        else
+      });
+  });
+
+
+  //  Get the basic pacakge of world
+  app.get('/:name/decription', (req, res) => {
+    //  Return name, dimensions
+    manager.getSimulationPackage(
+      req.params.name,
+      (err, glimpse) => {
+        if (err) {
+          res.status = (err.status || 500);
+          res.json(err);
+        } else {
+          res.json(glimpse);
+        }
+      });
+  });
+
+  app.get('/:name/latest', (req, res) => {
+    manager.getSimulationContext(
+      {
+        name: req.params.name,
+      },
+      (err, sim) => {
+        if (err) {
+          res.status = (err.status || 500);
+          res.json(err);
+        } else {
           res.json(sim);
+        }
       });
   });
 
   //  Get all the saved date names
-  app.get('/:name/timeline', function(req,res)
-  {
+  app.get('/:name/timeline', (req, res) => {
     manager.getSimulationTimeline(req.params.name,
-      function(err,timeline) {
-        if(err)
-        {
+      (err, timeline) => {
+        if (err) {
           res.status = (err.status || 500);
           res.json(err);
-        }
-        else
-        {
+        } else {
           res.json(timeline);
         }
       });
   });
 
-  app.get('/:name/:days', function(req,res)
-  {
+  app.get('/:name/:days', (req, res) => {
     manager.getSimulationContext(
       {
-        name: req.params.name
-        ,days: req.params.days
+        name: req.params.name,
+        days: req.params.days,
       },
-      function(err,sim) {
-        if(err) {
+      (err, sim) => {
+        if (err) {
           res.status = (err.status || 500);
           res.json(err);
-        }
-        else
-        {
+        } else {
           res.json(sim);
         }
       });
