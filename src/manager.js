@@ -16,7 +16,7 @@ exports.createSimulation = function (req, res) {
 };
 
 exports.deleteSimulation = function (req, res) {
-  for (let i = simulations.length - 1; i >= 0; i-=1) {
+  for (let i = simulations.length - 1; i >= 0; i -= 1) {
     const item = simulations[i];
 
     if (item.name === req) {

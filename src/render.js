@@ -203,7 +203,7 @@ exports.render = (req, res) => {
     rows = ctx.plantRows;
 
     for (let p = 0; p < ctx.plantArea; p += 1) {
-      const z = ctx.ConvertPToZ(p);
+      const z = ctx.convertPToZ(p);
 
       if (ctx.depth[z] > 0) {
         colors.push(cmykToHex(colorizeWater(ctx.depth[z], ctx)));
@@ -267,7 +267,7 @@ exports.render = (req, res) => {
       if (ctx.depth[z] > 0) {
         colors.push(cmykToHex(colorizeWater(ctx.depth[z], ctx)));
       } else {
-        const plots = ctx.GetPlotsOfZ(z);
+        const plots = ctx.getPlotsOfZ(z);
         let numberPlants = 0;
 
         for (let p = 0; p < plots.length; p += 1) {
@@ -286,7 +286,7 @@ exports.render = (req, res) => {
     rows = ctx.plantRows;
 
     for (let p = 0; p < ctx.plantArea; p += 1) {
-      const z = ctx.ConvertPToZ(p);
+      const z = ctx.convertPToZ(p);
 
       if (ctx.depth[z] > 0) {
         colors.push(cmykToHex(colorizeWater(ctx.depth[z], ctx)));
@@ -302,7 +302,7 @@ exports.render = (req, res) => {
     rows = ctx.plantRows;
 
     for (let p = 0; p < ctx.plantArea; p += 1) {
-      const z = ctx.ConvertPToZ(p);
+      const z = ctx.convertPToZ(p);
 
       if (ctx.depth[z] > 0) {
         colors.push(cmykToHex(colorizeWater(ctx.depth[z], ctx)));
@@ -318,7 +318,7 @@ exports.render = (req, res) => {
     rows = ctx.plantRows;
 
     for (let p = 0; p < ctx.plantArea; p += 1) {
-      const z = ctx.ConvertPToZ(p);
+      const z = ctx.convertPToZ(p);
 
       if (ctx.depth[z] > 0) {
         colors.push(cmykToHex(colorizeWater(ctx.depth[z], ctx)));
@@ -333,7 +333,7 @@ exports.render = (req, res) => {
     rows = ctx.plantRows;
 
     for (let p = 0; p < ctx.plantArea; p += 1) {
-      const z = ctx.ConvertPToZ(p);
+      const z = ctx.convertPToZ(p);
 
       if (ctx.depth[z] > 0) {
         colors.push(cmykToHex(colorizeWater(ctx.depth[z], ctx)));
@@ -355,7 +355,7 @@ exports.render = (req, res) => {
     rows = ctx.plantRows;
 
     for (let p = 0; p < ctx.plantArea; p += 1) {
-      const z = ctx.ConvertPToZ(p);
+      const z = ctx.convertPToZ(p);
 
       if (ctx.depth[z] > 0) {
         colors.push(cmykToHex(colorizeWater(ctx.depth[z], ctx)));
@@ -371,7 +371,7 @@ exports.render = (req, res) => {
     rows = ctx.plantRows;
 
     for (let p = 0; p < ctx.plantArea; p += 1) {
-      const z = ctx.ConvertPToZ(p);
+      const z = ctx.convertPToZ(p);
 
       if (ctx.depth[z] > 0) {
         colors.push(cmykToHex(colorizeWater(ctx.depth[z], ctx)));
@@ -388,7 +388,7 @@ exports.render = (req, res) => {
     rows = ctx.plantRows;
 
     for (let p = 0; p < ctx.plantArea; p += 1) {
-      const z = ctx.ConvertPToZ(p);
+      const z = ctx.convertPToZ(p);
 
       if (ctx.depth[z] > 0) {
         colors.push(cmykToHex(colorizeWater(ctx.depth[z], ctx)));

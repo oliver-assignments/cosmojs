@@ -27,7 +27,7 @@
   },
   "scripts": {
     "test": "echo \"Tests Complete\"",
-    "pretest": "eslint ./routes --fix",
+    "pretest": "eslint ./src --fix",
     "start": "echo \"Test complete\""
   },
   "repository": {
