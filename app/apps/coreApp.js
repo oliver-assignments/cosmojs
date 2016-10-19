@@ -1,3 +1,8 @@
+require('angular');
+require('angular-animate');
+require('angular-bootstrap-npm');
+require('angular-cookies');
+
 angular.module('cosmoApp', [
   'contextApp'
   ,'simulationRequestsApp' 
@@ -9,6 +14,7 @@ angular.module('cosmoApp', [
   ,'updateApp'
   ,'rulesApp'
   ,'utilityApp'
-  ,'ngAnimate'
-  ,'ui.bootstrap'
+  ,'angular-animate'
+  ,'angular-bootstrap-npm'
+  ,'angular-cookies'
 ]);
