@@ -1,3 +1,4 @@
+"use strict"
 const requestsManager = require('../src/request.js');
 
 module.exports = (app) => {

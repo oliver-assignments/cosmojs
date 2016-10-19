@@ -1,4 +1,4 @@
-
+"use strict"
 
 const renderer = require('../src/render.js');
 

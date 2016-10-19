@@ -1,3 +1,4 @@
+"use strict"
 const manager = require('./manager.js');
 const randomColor = require('randomcolor');
 // var nameColor = require('name-that-color');

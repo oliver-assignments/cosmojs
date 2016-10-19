@@ -1,3 +1,4 @@
+"use strict"
 const soil = require('soil-scape');
 
 module.exports = (app) => {

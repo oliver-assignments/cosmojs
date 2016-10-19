@@ -1,13 +1,18 @@
 var express = require('express');
 var enrouten = require('express-enrouten');
 var favicon = require('serve-favicon');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+var minify = require('express-minify');
 
 var app = express();
 
+app.use(minify());
+
 app.use( express.static(__dirname + '/public') );
 app.use( favicon(__dirname + '/public/images/none.ico') );
-app.get('/', function(req,res) { res.sendFile(path.join(__dirname + '/public/index.html')); });
+app.get('/', (req,res) => { 
+	res.sendFile(path.join(__dirname + '/public/index.html')); 
+});
 
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded({extended: false})); 

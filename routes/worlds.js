@@ -1,3 +1,4 @@
+"use strict"
 const manager = require('../src/manager.js');
 
 module.exports = (app) => {

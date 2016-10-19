@@ -1,3 +1,4 @@
+"use strict"
 const soilScape = require('../../soil-scape/index.js');
 
 let simulations = [];
