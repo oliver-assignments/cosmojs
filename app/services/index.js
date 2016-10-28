@@ -1,0 +1,9 @@
+require('./contextService.js');
+require('./requestService.js');
+require('./managerService.js');
+require('./renderService.js');
+require('./creationService.js');
+require('./pageService.js');
+require('./timelineService.js');
+require('./rulesService.js');
+require('./utilityService.js');

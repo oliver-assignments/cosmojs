@@ -46,5 +46,5 @@ angular.module('rulesApp')
       }
       return string;
     };
-  }]);
+  });
 

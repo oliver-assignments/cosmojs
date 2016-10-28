@@ -18,11 +18,11 @@ angular.module('simulationManagerApp')
         if(err) {
           console.log(err);
         } else {
-          simulationManager.pickRandom((err) => {
-            if(err) {
-              console.log(err);
-            }
-          });
+          // simulationManager.pickRandom((err) => {
+          //   if(err) {
+          //     console.log(err);
+          //   }
+          // });
         }
       });
     };

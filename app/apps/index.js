@@ -1,0 +1,11 @@
+require('./contextApp.js');
+require('./creationApp.js');
+require('./managerApp.js');
+require('./pageApp.js');
+require('./renderApp.js');
+require('./requestApp.js');
+require('./rulesApp.js');
+require('./timelineApp.js');
+require('./updateApp.js');
+require('./updateApp.js');
+require('./utilityApp.js');

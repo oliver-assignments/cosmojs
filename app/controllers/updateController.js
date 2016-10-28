@@ -21,7 +21,7 @@ angular.module("updateApp")
           }
         });
     };
-    $scope.updateInt = $interval($scope.every,5000);
+    //$scope.updateInt = $interval($scope.every,5000);
     
     $scope.$on('$destroy', () => {
         $interval.cancel($scope.updateInt);

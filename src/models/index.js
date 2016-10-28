@@ -1,0 +1,1 @@
+module.exports.World = require('./worldModel.js');
