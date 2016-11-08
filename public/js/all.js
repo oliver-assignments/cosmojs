@@ -1,6 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
-
 require('angular');
 require('angular-animate');
 require('angular-bootstrap-npm');
@@ -11,25 +9,27 @@ require('./services');
 require('./filters');
 require('./controllers');
 
-angular.module('cosmoApp', ['contextApp', 'simulationRequestsApp', 'simulationManagerApp', 'simulationRendererApp', 'creationApp', 'pageApp', 'timelineApp', 'updateApp', 'rulesApp', 'utilityApp'
-//,'angular-animate'
-//,'angular-bootstrap-npm'
-//,'angular-cookies'
+angular.module('cosmoApp', [
+  'contextApp'
+  ,'simulationRequestsApp' 
+  ,'simulationManagerApp'
+  ,'simulationRendererApp'
+  ,'creationApp'
+  ,'pageApp'
+  ,'timelineApp'
+  ,'updateApp'
+  ,'rulesApp'
+  ,'utilityApp'
+  //,'angular-animate'
+  //,'angular-bootstrap-npm'
+  //,'angular-cookies'
 ]);
 
 },{"./apps":4,"./controllers":14,"./filters":21,"./services":27,"angular":41,"angular-animate":36,"angular-bootstrap-npm":37,"angular-cookies":39}],2:[function(require,module,exports){
-'use strict';
-
-angular.module('contextApp', []);
-
+angular.module('contextApp',[]);
 },{}],3:[function(require,module,exports){
-'use strict';
-
-angular.module('creationApp', ['ngCookies']);
-
+angular.module('creationApp',['ngCookies'])
 },{}],4:[function(require,module,exports){
-'use strict';
-
 require('./contextApp.js');
 require('./creationApp.js');
 require('./managerApp.js');
@@ -41,151 +41,131 @@ require('./timelineApp.js');
 require('./updateApp.js');
 require('./updateApp.js');
 require('./utilityApp.js');
-
 },{"./contextApp.js":2,"./creationApp.js":3,"./managerApp.js":5,"./pageApp.js":6,"./renderApp.js":7,"./requestApp.js":8,"./rulesApp.js":9,"./timelineApp.js":10,"./updateApp.js":11,"./utilityApp.js":12}],5:[function(require,module,exports){
-'use strict';
-
-angular.module('simulationManagerApp', []);
-
+angular.module('simulationManagerApp',[]);
 },{}],6:[function(require,module,exports){
-'use strict';
-
 angular.module('pageApp', ['ngAnimate']);
-
 },{}],7:[function(require,module,exports){
-'use strict';
-
 angular.module('simulationRendererApp', []);
-
 },{}],8:[function(require,module,exports){
-'use strict';
-
-angular.module('simulationRequestsApp', []);
-
+angular.module('simulationRequestsApp',[]);
 },{}],9:[function(require,module,exports){
-'use strict';
-
-angular.module('rulesApp', []);
-
+angular.module('rulesApp',[]);
 },{}],10:[function(require,module,exports){
-"use strict";
-
-angular.module("timelineApp", []);
-
+angular.module("timelineApp",[]);
 },{}],11:[function(require,module,exports){
-"use strict";
-
-angular.module("updateApp", []);
-
+angular.module("updateApp",[]);
 },{}],12:[function(require,module,exports){
-'use strict';
-
-angular.module('utilityApp', []);
-
+angular.module('utilityApp',[]);
 },{}],13:[function(require,module,exports){
-'use strict';
+angular.module('creationApp')
+  .controller('creationController', ['$scope','$cookies','rulesService','creationService','utilityService',
+  ($scope,$cookies, rulesService,creationService,utility) => {
+    $scope.rules = rulesService;
 
-angular.module('creationApp').controller('creationController', ['$scope', '$cookies', 'rulesService', 'creationService', 'utilityService', function ($scope, $cookies, rulesService, creationService, utility) {
-  $scope.rules = rulesService;
+    $scope.formData = {
+       name: ""
+      , rotation: 1
+      , tilt: 0.75
+      , size: '{"columns":50,"rows":40}'
+      , plantsPer: 9
 
-  $scope.formData = {
-    name: "",
-    rotation: 1,
-    tilt: 0.75,
-    size: '{"columns":50,"rows":40}',
-    plantsPer: 9,
-
-    rules: {
-      maturity: true,
-      disease: false,
-      heliophilia: true,
-      thirst: true,
-      mutation: 0.999,
-      roots: 8
-    }
-  };
-  $scope.isValidNumber = function (n) {
-    return n != null && n != "" && !isNaN(n);
-  };
-  $scope.createSim = function () {
-    for (var i in $scope.formData) {
-      if ($scope.formData[i] === null || $scope.formData[i] === "" || $scope.formData[i] === undefined || $scope.formData[i] === false) {
-        delete $scope.formData[i];
+      , rules: {
+        maturity: true
+        , disease: false
+        , heliophilia: true
+        , thirst: true
+        , mutation: 0.999
+        , roots: 8
       }
-    }
-
-    //  Radio rules
-    for (var r = 0; r < rulesService.rules.length; r++) {
-      $cookies.put('cosmo-' + rulesService.rules[r].variable, $scope.formData[rulesService.rules[r].variable]);
-      // $cookies.put(
-      //   'cosmo-' + rulesService.rules[r].variable, 
-      //   $scope.formData.rules[rulesService.rules[r].variable]);
-
-      // $cookies.put(
-      //   'cosmo-' + rulesService.rules[r].variable, 
-      //   $scope.formData.rules[rulesService.rules[r].variable]);
-    }
-
-    creationService.createSim($scope.formData, function (err) {
-      if (err) {
-        alert(err);
-      } else {
-        creationService.navigateToSim($scope.formData.name);
+    };
+    $scope.isValidNumber = (n) => {
+      return n != null && n != "" && !isNaN(n);
+    };
+    $scope.createSim = () => {
+      for (var i in $scope.formData) {
+        if ($scope.formData[i] === null||
+          $scope.formData[i] === "" || 
+          $scope.formData[i] === undefined || 
+          $scope.formData[i] === false) {
+            delete $scope.formData[i];
+        }
       }
-    });
-  };
 
-  $scope.randomizeName = function () {
-    utility.getRandomName(function (err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        $scope.formData.name = data;
+      //  Radio rules
+      for( var r = 0 ; r < rulesService.rules.length ; r++ ) {
+        $cookies.put(
+          'cosmo-' + rulesService.rules[r].variable, 
+          $scope.formData[rulesService.rules[r].variable]);
+        // $cookies.put(
+        //   'cosmo-' + rulesService.rules[r].variable, 
+        //   $scope.formData.rules[rulesService.rules[r].variable]);
+
+        // $cookies.put(
+        //   'cosmo-' + rulesService.rules[r].variable, 
+        //   $scope.formData.rules[rulesService.rules[r].variable]);
       }
-    });
-  };
 
-  $scope.startApp = function () {
-    $scope.randomizeName();
+      creationService.createSim($scope.formData, (err) => {
+        if(err) {
+          alert(err);
+        } else {
+          creationService.navigateToSim($scope.formData.name);
+        }
+      });
 
-    //  Radio rules
-    for (var r = 0; r < rulesService.rules.length; r++) {
-      if (rulesService.rules[r].ruleType == "radio") {
-        var radio = $cookies.get('cosmo-' + rulesService.rules[r].variable);
-        if (radio) {
-          if (rulesService.rules[r].type == "number") {
-            radio = Number(radio);
+    };
+
+    $scope.randomizeName = () => {
+      utility.getRandomName((err,data) => {
+        if(err) {
+          console.log(err);
+        } else {
+          $scope.formData.name = data;
+        }
+      });
+    };
+
+    $scope.startApp = () => {
+      $scope.randomizeName();
+
+      //  Radio rules
+      for( var r = 0 ; r < rulesService.rules.length ; r++ ) {
+        if(rulesService.rules[r].ruleType == "radio") {
+          var radio = $cookies.get('cosmo-' + rulesService.rules[r].variable);
+          if(radio) { 
+            if(rulesService.rules[r].type == "number") {
+              radio = Number(radio);
+            }
+            $scope.formData[rulesService.rules[r].variable] = radio;
           }
-          $scope.formData[rulesService.rules[r].variable] = radio;
-        }
-      } else if (rulesService.rules[r].ruleType == "boolean") {
-        var boolean = $cookies.get('cosmo-' + rulesService.rules[r].variable);
-        if (boolean) {
-          $scope.formData.rules[rulesService.rules[r].variable] = boolean == "true";
-        }
-      } else if (rulesService.rules[r].ruleType == "field") {
-        var input = $cookies.get('cosmo-' + rulesService.rules[r].variable);
-        if (input) {
-          if (rulesService.rules[r].input.type == "number") {
-            input = Number(input);
+        } else if (rulesService.rules[r].ruleType == "boolean") {    
+          var boolean = $cookies.get('cosmo-' + rulesService.rules[r].variable);
+          if(boolean) {
+            $scope.formData.rules[rulesService.rules[r].variable] = boolean =="true";
           }
-          $scope.formData.rules[rulesService.rules[r].variable] = input;
+        } else if (rulesService.rules[r].ruleType == "field") {
+          var input = $cookies.get('cosmo-' + rulesService.rules[r].variable);
+          if(input) {
+            if(rulesService.rules[r].input.type == "number") {
+              input = Number(input);
+            }
+            $scope.formData.rules[rulesService.rules[r].variable] = input;
+          }
         }
       }
-    }
-  };
-  $scope.camelize = function (str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (letter, index) {
-      return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
-    }).replace(/\s+/g, '');
-  };
+    };
+    $scope.camelize = (str) => {
+      return str.replace(/(?:^\w|[A-Z]|\b\w)/g, (letter, index) => {
+        return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+      }).replace(/\s+/g, '');
+    };
+        
+    $scope.startApp();
+  }]);
 
-  $scope.startApp();
-}]);
 
 },{}],14:[function(require,module,exports){
-'use strict';
-
 require('./requestController.js');
 require('./managerController.js');
 require('./renderController.js');
@@ -193,371 +173,383 @@ require('./creationController.js');
 require('./pageController.js');
 require('./timelineController.js');
 require('./updateController.js');
-
 },{"./creationController.js":13,"./managerController.js":15,"./pageController.js":16,"./renderController.js":17,"./requestController.js":18,"./timelineController.js":19,"./updateController.js":20}],15:[function(require,module,exports){
-'use strict';
+angular.module('simulationManagerApp')
+  .controller('simulationManagerController',['$scope','simulationManagerService','contextService','utilityService',
+  ($scope,simulationManager,context,utility) => {
+    $scope.simulationManager = simulationManager;
+    $scope.context = context;
+    $scope.utility = utility;
 
-angular.module('simulationManagerApp').controller('simulationManagerController', ['$scope', 'simulationManagerService', 'contextService', 'utilityService', function ($scope, simulationManager, context, utility) {
-  $scope.simulationManager = simulationManager;
-  $scope.context = context;
-  $scope.utility = utility;
-
-  $scope.deleteSim = function (name) {
-    simulationManager.deleteSim(name, function (err, data) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  };
-
-  $scope.startController = function () {
-    simulationManager.getSimulationDescriptions(function (err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        // simulationManager.pickRandom((err) => {
-        //   if(err) {
-        //     console.log(err);
-        //   }
-        // });
-      }
-    });
-  };
-
-  $scope.pickSim = function (name) {
-    simulationManager.pickSim(name, function (err) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  };
-  $scope.startController();
-}]);
-
-},{}],16:[function(require,module,exports){
-'use strict';
-
-angular.module('pageApp').controller('pageController', ['$scope', 'pageService', function ($scope, pageService) {
-  $scope.pager = pageService;
-  $scope.empty = function (err) {};
-
-  $scope.changePage = function (name, res) {
-    pageService.changePage(name, $scope.empty);
-  };
-}]);
-
-},{}],17:[function(require,module,exports){
-'use strict';
-
-angular.module('simulationRendererApp').controller('simulationRendererController', ['$scope', 'utilityService', 'simulationRendererService', 'contextService', 'simulationRequestsService', function ($scope, utility, renderer, context, requester) {
-  $scope.renderer = renderer;
-  $scope.utility = utility;
-  $scope.context = context;
-
-  $scope.changeMapMode = function (mode) {
-    renderer.changeMapMode(mode, function (err, data) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  };
-
-  $scope.createSimulationRequest = function (namo, dayo) {
-    //  Check for no simulation
-    if (namo != "No Simulation") {
-      requester.createSimulationRequest({ name: namo, days: dayo }, function (err, data) {});
-    }
-  };
-}]);
-
-},{}],18:[function(require,module,exports){
-'use strict';
-
-angular.module('simulationRequestsApp').controller('simulationRequestsController', ['$scope', 'simulationRequestsService', function ($scope, simulationRequestsService) {
-  $scope.requestManager = simulationRequestsService;
-
-  $scope.deleteSimulationsRequests = function (name) {
-    simulationRequestsService.getSimulationRequests(name, function (err, data) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  };
-
-  $scope.startController = function () {
-    simulationRequestsService.getSimulationRequests(function (err, data) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  };
-
-  $scope.createRequest = function (name, days) {
-    simulationRequestsService.createSimulationRequest({ name: name, days: days }, function (err, data) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  };
-
-  $scope.processSimulationRequests = function () {
-    simulationRequestsService.processSimulationRequests(function (err, data) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  };
-  $scope.startController();
-}]);
-
-},{}],19:[function(require,module,exports){
-'use strict';
-
-angular.module("timelineApp").controller('timelineController', ['$scope', '$interval', 'timelineService', 'contextService', "utilityService", function ($scope, $interval, timelineService, context, utility) {
-  $scope.timelineService = timelineService;
-  $scope.context = context;
-
-  $scope.pickDate = function (time) {
-    timelineService.pickDate(time, function (err, data) {
-      if (err) console.log(err);
-    });
-  };
-  $scope.getTime = function () {
-    timelineService.getDates();
-  };
-
-  $scope.start = function () {
-    window.addEventListener('keydown', function (e) {
-      var direction = 0;
-      var code = e.keyCode;
-      switch (code) {
-        case 37:
-          direction = -1;break; //Up key
-        case 38:
-          direction = -1;break; //Up key
-        case 40:
-          direction = 1;break; //Down key
-        case 39:
-          direction = 1;break; //Down key
-        default:
-      }
-      if (!direction) {
-        return;
-      }
-
-      timelineService.jumpToNextDate(direction, function (err, data) {
-        if (err) {
+    $scope.deleteSim = (name) => {
+      simulationManager.deleteSim(name, (err,data) => {
+        if(err) {
           console.log(err);
         }
       });
-    }, false);
-  };
-  $scope.start();
-}]);
+    }
 
+    $scope.startController = () => {
+      simulationManager.getSimulationDescriptions((err,data) => {
+        if(err) {
+          console.log(err);
+        } else {
+          // simulationManager.pickRandom((err) => {
+          //   if(err) {
+          //     console.log(err);
+          //   }
+          // });
+        }
+      });
+    };
+
+    $scope.pickSim = (name) => {
+      simulationManager.pickSim(name, (err) => {
+        if(err) {
+          console.log(err);
+        }
+      });
+    };
+    $scope.startController();
+  }]);
+},{}],16:[function(require,module,exports){
+angular.module('pageApp')
+  .controller('pageController',['$scope', 'pageService', ($scope, pageService) => {
+    $scope.pager = pageService;
+    $scope.empty = (err) => {};
+
+    $scope.changePage = (name,res) => {
+      pageService.changePage(name,$scope.empty);
+    }
+  }]);
+},{}],17:[function(require,module,exports){
+angular.module('simulationRendererApp')
+  .controller('simulationRendererController',['$scope','utilityService','simulationRendererService','contextService','simulationRequestsService',
+  ($scope, utility, renderer, context, requester) => {
+    $scope.renderer = renderer;
+    $scope.utility = utility;
+    $scope.context = context;
+
+    $scope.changeMapMode = (mode) => {
+      renderer.changeMapMode(mode, (err,data) => {
+        if(err) {
+          console.log(err);
+        }
+      });
+    };
+
+    $scope.createSimulationRequest = (namo,dayo) => {
+      //  Check for no simulation
+      if(namo!= "No Simulation") {
+        requester.createSimulationRequest({name:namo,days:dayo}, (err,data) => {
+
+        });
+      }
+    };
+  }]);
+
+
+},{}],18:[function(require,module,exports){
+angular.module('simulationRequestsApp')
+  .controller('simulationRequestsController',['$scope','simulationRequestsService',
+  ($scope,simulationRequestsService) => {
+    $scope.requestManager = simulationRequestsService;
+
+    $scope.deleteSimulationsRequests = (name) => {
+      simulationRequestsService.getSimulationRequests(name, (err,data) => {
+        if(err) {
+          console.log(err);
+        }
+      });
+    };
+
+    $scope.startController = () => {
+      simulationRequestsService.getSimulationRequests((err,data) => {
+        if(err) {
+          console.log(err);
+        }
+      });
+    };
+
+    $scope.createRequest = (name,days) => {
+      simulationRequestsService.createSimulationRequest({name: name, days: days}, (err,data) =>  {
+        if(err) {
+          console.log(err);
+        }
+      });
+    };
+
+    $scope.processSimulationRequests = () => {
+      simulationRequestsService.processSimulationRequests((err,data) => {
+        if(err) {
+          console.log(err);
+        }
+      });
+    };
+    $scope.startController();
+  }]);
+
+},{}],19:[function(require,module,exports){
+angular.module("timelineApp")
+  .controller('timelineController',['$scope','$interval','timelineService','contextService',"utilityService", 
+    ($scope,$interval,timelineService,context,utility) => {
+      $scope.timelineService = timelineService;
+      $scope.context = context;
+      
+      $scope.pickDate = (time) => {
+        timelineService.pickDate(time,function(err,data){if(err)console.log(err);});
+      };
+      $scope.getTime = () => {
+        timelineService.getDates()
+      };
+      
+      $scope.start = () => {
+        window.addEventListener('keydown', 
+          (e) => {
+            var direction = 0;
+            var code = e.keyCode;
+              switch (code) {
+                case 37: direction = -1; break; //Up key
+                case 38: direction = -1; break; //Up key
+                case 40: direction = 1; break; //Down key
+                case 39: direction = 1; break; //Down key
+                default:
+              }
+              if(!direction) {
+                return;
+              }
+
+              timelineService.jumpToNextDate(direction, (err,data) => {
+                if(err) { 
+                  console.log(err);
+                }
+              });
+          }
+        ,false);
+        
+      };
+      $scope.start();
+  }]);
 },{}],20:[function(require,module,exports){
-'use strict';
+angular.module("updateApp")
+  .controller('updateController',['$scope','$interval','timelineService','simulationManagerService','simulationRequestsService',
+  ($scope,$interval,timeline,manager,requests) => {
+    $scope.every = () => {
+      manager.getSimulationDescriptions((err,data) => {
+        if(err) {
+          console.log(err);
+        }
+      });
 
-angular.module("updateApp").controller('updateController', ['$scope', '$interval', 'timelineService', 'simulationManagerService', 'simulationRequestsService', function ($scope, $interval, timeline, manager, requests) {
-  $scope.every = function () {
-    manager.getSimulationDescriptions(function (err, data) {
-      if (err) {
-        console.log(err);
-      }
+      timeline.getDates((err,data) => {
+        if(err) {
+          console.log(err);
+        }
+      });
+
+      requests.getSimulationRequests(
+        function(err,data) {
+          if(err) {
+            console.log(err);
+          }
+        });
+    };
+    //$scope.updateInt = $interval($scope.every,5000);
+    
+    $scope.$on('$destroy', () => {
+        $interval.cancel($scope.updateInt);
     });
-
-    timeline.getDates(function (err, data) {
-      if (err) {
-        console.log(err);
-      }
-    });
-
-    requests.getSimulationRequests(function (err, data) {
-      if (err) {
-        console.log(err);
-      }
-    });
-  };
-  //$scope.updateInt = $interval($scope.every,5000);
-
-  $scope.$on('$destroy', function () {
-    $interval.cancel($scope.updateInt);
-  });
-}]);
-
+  }]);
 },{}],21:[function(require,module,exports){
-'use strict';
-
 require('./utilityFilters.js');
 require('./timelineFilters.js');
 require('./rulesFilters.js');
 
+
 },{"./rulesFilters.js":22,"./timelineFilters.js":23,"./utilityFilters.js":24}],22:[function(require,module,exports){
-'use strict';
+angular.module('rulesApp')
+  .filter('wrapInQuotes', () => {
+    return (input) => {
+      if (typeof input === 'string' || input instanceof String)
+        return "'" + input + "'";
+    else
+        return input;
+    };
+  })
+  .filter('inputPlaceholder', () => {
+    return (input) => {
+      var string = "";
 
-angular.module('rulesApp').filter('wrapInQuotes', function () {
-  return function (input) {
-    if (typeof input === 'string' || input instanceof String) return "'" + input + "'";else return input;
-  };
-}).filter('inputPlaceholder', function () {
-  return function (input) {
-    var string = "";
+      if(!input) {
+        return string;
+      }
 
-    if (!input) {
+      if(input.type) {
+        string+= input.type + " ";
+      }
+      if(input.left !=null) {
+        if(input.left.inclusive == null || input.left.inclusive) {
+          string += "[";
+        } else {
+          //  It's inclusive by default
+          string += "(";
+        }
+        string += input.left.value + ", ";
+      } else {
+        //  left is infinity
+        string += "(-∞, "
+      }
+
+      if(input.right !=null) {
+        
+        string += input.right.value;
+        if(input.right.inclusive == null || input.right.inclusive) {
+          string += "]";
+        } else {
+          //  It's inclusive by default
+          string += ")";
+        }
+      } else {
+        //  left is infinity
+        string += "∞)"
+      }
       return string;
-    }
+    };
+  });
 
-    if (input.type) {
-      string += input.type + " ";
-    }
-    if (input.left != null) {
-      if (input.left.inclusive == null || input.left.inclusive) {
-        string += "[";
-      } else {
-        //  It's inclusive by default
-        string += "(";
-      }
-      string += input.left.value + ", ";
-    } else {
-      //  left is infinity
-      string += "(-∞, ";
-    }
-
-    if (input.right != null) {
-
-      string += input.right.value;
-      if (input.right.inclusive == null || input.right.inclusive) {
-        string += "]";
-      } else {
-        //  It's inclusive by default
-        string += ")";
-      }
-    } else {
-      //  left is infinity
-      string += "∞)";
-    }
-    return string;
-  };
-});
 
 },{}],23:[function(require,module,exports){
-"use strict";
-
-angular.module("timelineApp").filter('reverse', function () {
-  return function (items) {
-    return items; //.slice().reverse();
-  };
-});
-
+angular.module("timelineApp")
+  .filter('reverse', () => {
+    return (items) => {
+      return items;//.slice().reverse();
+    };
+  });
 },{}],24:[function(require,module,exports){
-'use strict';
+angular.module('utilityApp')
+  .filter('reverse', () => {
+    return (items) => {
+      return items.slice().reverse();
+    };
+  })
+  .filter('daysToDate', () => {
+    return (days, shortened) => {
+      var months = [
+        "January", "February", "March", "April",
+        "May", "June", "July", "August", 
+        "September", "October","November","December"
+        ];
+      var shortenedMonths = [
+          "Jan", "Feb", "Mar", "Apr",
+          "May", "Jun", "Jul", "Aug", 
+          "Sep", "Oct","Nov","Dec"
+          ];
+      var daysOfWeek = [
+          "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+          "Saturday", "Sunday",
+          "Arlsday", "Farsday", "Shorsday"
+        ];
+      
+      var shortenedDaysOfWeek = [
+        "Mon", "Tues", "Wed", "Thurs", "Fri",
+        "Sat", "Sun",
+        "Arls", "Fars", "Shors"
+       ];
+      
+      var weekday = daysOfWeek[days % 10];
+      var day = ((days % 360) % 30) + 1;
+      var month = shortenedMonths[Math.floor((days % 360) / 30)];
+      var year = Math.floor(days / 360) + 1;
+      
+      return (shortened ? "" : weekday + ", ") + month + " " + day + ", " + " Year " + year;
+    };
+  })
+  .filter('duration', () => {
+    return (days) => {
+      var years = Math.floor(days / 360);
+      days = days % 360;
+      
+      var months = Math.floor(days / 30);
+      days = days % 30
 
-angular.module('utilityApp').filter('reverse', function () {
-  return function (items) {
-    return items.slice().reverse();
-  };
-}).filter('daysToDate', function () {
-  return function (days, shortened) {
-    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    var shortenedMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Arlsday", "Farsday", "Shorsday"];
-
-    var shortenedDaysOfWeek = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun", "Arls", "Fars", "Shors"];
-
-    var weekday = daysOfWeek[days % 10];
-    var day = days % 360 % 30 + 1;
-    var month = shortenedMonths[Math.floor(days % 360 / 30)];
-    var year = Math.floor(days / 360) + 1;
-
-    return (shortened ? "" : weekday + ", ") + month + " " + day + ", " + " Year " + year;
-  };
-}).filter('duration', function () {
-  return function (days) {
-    var years = Math.floor(days / 360);
-    days = days % 360;
-
-    var months = Math.floor(days / 30);
-    days = days % 30;
-
-    if (years == 0 && months == 0 && days == 0) {
-      return "0 days";
-    }
-
-    return (years != 0 ? years + (years == 1 ? " year" : " years") : "") + (years != 0 && months != 0 && days != 0 ? ", " : years != 0 && months != 0 ? " and " : "") // List commo and and
-    + (months != 0 ? months + (months == 1 ? " month" : " months") : "") + (years != 0 && months != 0 && days != 0 ? ", and " : days != 0 && (years != 0 || months != 0) ? " and " : "") // List commo and and
-    + (days != 0 ? days + (days == 1 ? " day" : " days") : "");
-  };
-});
-
-},{}],25:[function(require,module,exports){
-'use strict';
-
-angular.module('contextApp').factory('contextService', [function () {
-  var context = {
-    name: 'No Simulation',
-    days: 0,
-    mode: 'Satellite'
-  };
-
-  context.getSim = function (res) {
-    if (context.name == "No Simulation") {
-      res("Simulation hasn't been picked yet.");
-    } else {
-      res(null, context);
-    }
-  };
-  return context;
-}]);
-
-},{}],26:[function(require,module,exports){
-'use strict';
-
-angular.module('creationApp').factory('creationService', ['rulesService', 'simulationManagerService', 'simulationRendererService', 'pageService', 'contextService', function (rulesService, simulationManagerService, renderer, page, context) {
-  var creationService = {};
-
-  creationService.createSim = function (formData, res) {
-    simulationManagerService.createSim(formData, function (err, data) {
-      if (err) {
-        res(err);
-      } else {
-        res(null);
+      if(years == 0 && months == 0 && days == 0) {
+        return "0 days";
       }
-    });
-  };
-  creationService.navigateToSim = function (name) {
-    simulationManagerService.pickSim(name, function (err) {
-      if (err) {
-        console.log(err);
+
+      return (years!=0 ? years + (years==1 ? " year" : " years") : "")  
+        + (years!=0 && months!=0 && days!=0 ? ", " : (years!=0 && months!=0 ? " and ": "")) // List commo and and
+        + (months!=0 ? months + (months==1 ? " month" : " months") : "") 
+        + (years!=0 && months!=0 && days!=0 ? ", and " : (days!=0 && (years!=0 || months!=0) ? " and ": "")) // List commo and and
+        + (days!=0 ? days + (days==1 ? " day" : " days") : ""); 
+    };
+  });
+},{}],25:[function(require,module,exports){
+angular.module('contextApp')
+  .factory('contextService', [() => {
+    var context = {
+      name : 'No Simulation'
+      ,days : 0
+      ,mode: 'Satellite'
+    };
+
+    context.getSim = (res) => {
+      if(context.name == "No Simulation") {
+        res("Simulation hasn't been picked yet.");
       } else {
-        renderer.renderWorldAtDateWithMode({
-          name: context.name,
-          days: context.days
-        }, function (err, data) {
-          if (err) {
-            console.log(err);
-          } else {
-            page.changePage("Home", function (err) {
-              if (err) {
+        res(null,context);
+      }
+    };
+    return context;
+  }]);
+},{}],26:[function(require,module,exports){
+angular.module('creationApp')
+  .factory('creationService',['rulesService','simulationManagerService','simulationRendererService','pageService','contextService',
+  (rulesService,simulationManagerService,renderer,page,context) => {
+    var creationService = {};
+
+    creationService.createSim = (formData,res) => {
+      simulationManagerService.createSim(formData, (err,data) => {
+        if(err) {
+          res(err);
+        } else {
+          res(null);
+        }
+      });
+    };
+    creationService.navigateToSim = (name) => {
+      simulationManagerService.pickSim(name, (err) => {
+        if(err) {
+          console.log(err)
+        } else {
+          renderer.renderWorldAtDateWithMode(
+            { 
+              name:context.name
+              ,days:context.days
+            },
+            (err,data) => {
+              if(err) {
                 console.log(err);
+              } else {
+                page.changePage("Home", (err) => {
+                  if(err) {
+                    console.log(err);
+                  }
+                });
               }
             });
-          }
-        });
 
-        simulationManagerService.getSimulationDescriptions(function (err, data) {
-          if (err) {
-            console.log(err);
-          }
-        });
-      }
-    });
-  };
-  return creationService;
-}]);
+          simulationManagerService.getSimulationDescriptions((err,data) => {
+            if(err) {
+              console.log(err);
+            }
+          })
+        }
+      });
+    }
+    return creationService;
 
+  }]);
 },{}],27:[function(require,module,exports){
-'use strict';
-
 require('./contextService.js');
 require('./requestService.js');
 require('./managerService.js');
@@ -567,431 +559,491 @@ require('./pageService.js');
 require('./timelineService.js');
 require('./rulesService.js');
 require('./utilityService.js');
-
 },{"./contextService.js":25,"./creationService.js":26,"./managerService.js":28,"./pageService.js":29,"./renderService.js":30,"./requestService.js":31,"./rulesService.js":32,"./timelineService.js":33,"./utilityService.js":34}],28:[function(require,module,exports){
-'use strict';
+angular.module('simulationManagerApp')
+  .factory('simulationManagerService', ['$http', 'simulationRendererService', 'timelineService','pageService','contextService',
+  ($http,renderer,timeline,pager,context) => {
+    var manager = {};
+    manager.simulations = [];
 
-angular.module('simulationManagerApp').factory('simulationManagerService', ['$http', 'simulationRendererService', 'timelineService', 'pageService', 'contextService', function ($http, renderer, timeline, pager, context) {
-  var manager = {};
-  manager.simulations = [];
+    manager.pickRandom = (res) => {
+      if(manager.simulations.length>0) {
+        var index = Math.floor(Math.random() * manager.simulations.length);
+        manager.pickSim(manager.simulations[index].name,res); 
+        res(null);
+      } else {
+        res("Cannot pick random if there are no simulations.")
+      }
+    };
 
-  manager.pickRandom = function (res) {
-    if (manager.simulations.length > 0) {
-      var index = Math.floor(Math.random() * manager.simulations.length);
-      manager.pickSim(manager.simulations[index].name, res);
+    manager.pickSim = (name,res) => {
+      for(var s = 0 ; s < manager.simulations.length;s++) {
+        if(manager.simulations[s].name == name) {
+          context.name = name;
+          pager.changePage('Home',function(err){});
+
+          //update dates
+          timeline.getDates((err,data) => {
+            if(err) {
+              res(err);
+            } else {
+              //  pick latest date
+              timeline.pickLatestDate((err,data) => {
+                if(err) {
+                  console.log(err);
+                }
+              });
+            }
+          });
+        }
+      }
       res(null);
-    } else {
-      res("Cannot pick random if there are no simulations.");
-    }
-  };
+    };
 
-  manager.pickSim = function (name, res) {
-    for (var s = 0; s < manager.simulations.length; s++) {
-      if (manager.simulations[s].name == name) {
-        context.name = name;
-        pager.changePage('Home', function (err) {});
+    manager.pickSimIndex = (i) => {
+      if(manager.simulations.length>0) {
+        if(i < manager.simulations.length) {
+          manager.pickSim(manager.simulations[i].name);
+        }
+      }
+    };
 
-        //update dates
-        timeline.getDates(function (err, data) {
-          if (err) {
-            res(err);
+    manager.getSimulationDescriptions = (res) => {
+      $http.get('/worlds/descriptions')
+        .success((data) => {
+          manager.simulations = data;
+          res(null,data);
+        })
+        .error((data) => {
+          res('Cannot find simulations. ' + data);
+        });
+    };
+    
+    manager.createSim = (form,res) => {
+      $http.post('/worlds', form)
+        .success((data) => {
+          manager.simulations = data;
+          res(null,data);
+        })
+        .error((data) => {
+          res('Create sim error: ' + data);
+        });
+    };
+    manager.deleteSim = (name,res) => {
+      console.log("Attempting to delete " + name);
+
+      $http.delete('/worlds/' + name)
+        .success((data) => {
+          manager.simulations = data;
+          res(null,data);
+        })  
+        .error((data) => {
+          res('Delete sim error: ' + data);
+        });   
+    };
+
+    manager.clearSims = (res) => {
+      //console.log('Attempting to delete all sims.');
+
+      $http.delete('/worlds/')
+        .success((data) => {
+          manager.simulations = data;
+          res(null,data);
+        })  
+        .error((data) => {
+          res('Delete sim error: ' + data);
+        
+        }); 
+    };
+    
+    return manager;
+  }]);
+},{}],29:[function(require,module,exports){
+angular.module('pageApp')
+  .factory('pageService',['contextService','simulationRendererService', (context,renderer) => {
+    var service = {};
+    service.pages = [
+      {name:"Home", url:"partials/partial-home.html"}
+      ,{name:"New", url:"partials/partial-new.html"}
+      ,{name:"About", url:"partials/partial-about.html"}
+    ];
+    service.page = service.pages[1];
+
+    service.changePage = (name,res) => {
+      for(var p = 0 ; p < service.pages.length; p++) {
+        if(service.pages[p].name == name) {
+          service.page = service.pages[p];
+
+          if(name == "Home") {
+            renderer.renderWorldAtDateWithMode(
+              {
+                name:context.name
+                ,mode:context.mode
+                ,days:context.days
+              }, (err,data) => {
+                (err ? res(err) : res(null));
+              });
+            return;
+          }
+        }
+      }
+      res("Cannot find page named " + name + ".");
+    };
+    return service;
+  }]);
+},{}],30:[function(require,module,exports){
+angular.module('simulationRendererApp')
+  .factory('simulationRendererService',['$http','contextService', ($http,context) => {
+    var renderer = {};
+
+    renderer.modeSections = [
+        {name:"Flora Stats",  modes : ["Density","Nutrient Stores", "Nutro Stores", "Nucium Stores", "Water Stores", "Growth", "Generation"]} 
+      , {name:"Flora DNA",    modes : ["Heliophilia", "Thirst"]}  
+      , {name:"Geography",  modes : ["Satellite", "Depth", "Elevation", "Height"]}
+      , {name:"Mantle",     modes : ["Tectonic", "Asthenosphere", "Stress"]}//  "Fractures"
+      , {name:"Soil",       modes : ["Nutrients", "Nutro", "Nucium"]}
+      , {name:"Weather",    modes : ["Sunlight", "Rainfall"]}
+    ];
+
+    renderer.changeMapMode = (req,res) => {
+      if(req != context.mapMode) {
+        renderer.renderWorldAtDateWithMode(
+          { 
+            name:context.name
+            ,mode:req
+            ,days:context.days
+          },
+          (err,data) => {
+            if(err) {
+              res(err);
+            } else {
+              context.mode = req;
+              res(null);
+            }
+          });
+      }
+    };
+
+    renderer.renderWorldAtDateWithMode = (req,res) => {
+      var date = "latest";
+      if(req.days !=null) {
+        date = req.days;
+      }
+
+      $http.get('/render/' + req.name + "/" + date + "/" + req.mode)
+        .success((renderInstructions) => {
+          renderer.mode = req.mode;
+          
+          var canvas = document.getElementById("canvas");
+          if(!canvas) {
+            return;
+          }
+          var ctx = canvas.getContext("2d");
+
+          var width = canvas.width / renderInstructions.columns;
+          var height = canvas.height / renderInstructions.rows;
+
+          for(var x = 0 ; x < renderInstructions.columns; x++) {
+            for(var y = 0 ; y < renderInstructions.rows; y++) {
+              var z = (y * renderInstructions.columns)+x;
+              ctx.save();
+              ctx.fillStyle = renderInstructions.colors[z];
+
+              ctx.fillRect(
+                width*x,
+                height*y,
+                width+1,
+                height+1);
+
+              ctx.restore();
+            }
+          } 
+
+          res(null,renderInstructions)
+        })
+        .error((err) => {
+          res("Error updating colors: " + err);
+        }); 
+      };
+    
+    return renderer;
+  }]);
+},{}],31:[function(require,module,exports){
+angular.module('simulationRequestsApp')
+  .factory('simulationRequestsService',['$http','simulationManagerService','timelineService','contextService',
+  ($http,simManager,timeline,context) => {
+    var service = {};
+    service.requests = [];
+    service.getSimulationRequests = (res) => {
+      $http.get('/requests')
+        .success((data) => {
+          service.requests = data;
+          res(null,data);
+        })
+        .error((data) => {
+          res('Get simulation requests error: ' + data);
+        });
+    };
+    service.createSimulationRequest = (req,res) => {
+      context.getSim((err,picked) => {
+        if(err) {
+          console.log(err);
+        } else {
+          $http.post('/requests', req)
+            .success((data) => {
+              service.requests=data;
+              res(null,data);
+            })
+            .error((data) => {
+              res('Create simulation requests error: ' + data);
+            });
+            
+        }
+      }); 
+    };
+    service.clearSimulationRequests = (res) => {
+      $http.delete('/requests')
+        .success((data) => {
+          service.requests = data;
+          res(null,data);
+        })
+        .error((data) => {
+          res('Clear simulation requests error: ' + data);
+        });
+    };
+    service.deleteSimulationsRequests = (req,res) => {
+      $http.delete('/requests/' + req)
+        .success((data) => {
+          service.requests=data;
+          res(null,data);
+        })
+        .error((data) => {
+          res('Delete ' + name +' simulation request error: ' + data);
+        });
+    };
+    service.processSimulationRequests = (res) =>  {
+      $http.post('/requests/process')
+      .success((requests) => {
+        service.requests = requests;
+
+        simManager.getSimulationDescriptions((err,data) => {
+          if(err) {
+            console.log(err);
           } else {
-            //  pick latest date
-            timeline.pickLatestDate(function (err, data) {
-              if (err) {
+            timeline.getDates((err,data) => {
+              if(err) {
                 console.log(err);
               }
             });
           }
         });
-      }
-    }
-    res(null);
-  };
-
-  manager.pickSimIndex = function (i) {
-    if (manager.simulations.length > 0) {
-      if (i < manager.simulations.length) {
-        manager.pickSim(manager.simulations[i].name);
-      }
-    }
-  };
-
-  manager.getSimulationDescriptions = function (res) {
-    $http.get('/worlds/descriptions').success(function (data) {
-      manager.simulations = data;
-      res(null, data);
-    }).error(function (data) {
-      res('Cannot find simulations. ' + data);
-    });
-  };
-
-  manager.createSim = function (form, res) {
-    $http.post('/worlds', form).success(function (data) {
-      manager.simulations = data;
-      res(null, data);
-    }).error(function (data) {
-      res('Create sim error: ' + data);
-    });
-  };
-  manager.deleteSim = function (name, res) {
-    console.log("Attempting to delete " + name);
-
-    $http.delete('/worlds/' + name).success(function (data) {
-      manager.simulations = data;
-      res(null, data);
-    }).error(function (data) {
-      res('Delete sim error: ' + data);
-    });
-  };
-
-  manager.clearSims = function (res) {
-    //console.log('Attempting to delete all sims.');
-
-    $http.delete('/worlds/').success(function (data) {
-      manager.simulations = data;
-      res(null, data);
-    }).error(function (data) {
-      res('Delete sim error: ' + data);
-    });
-  };
-
-  return manager;
-}]);
-
-},{}],29:[function(require,module,exports){
-'use strict';
-
-angular.module('pageApp').factory('pageService', ['contextService', 'simulationRendererService', function (context, renderer) {
-  var service = {};
-  service.pages = [{ name: "Home", url: "partials/partial-home.html" }, { name: "New", url: "partials/partial-new.html" }, { name: "About", url: "partials/partial-about.html" }];
-  service.page = service.pages[1];
-
-  service.changePage = function (name, res) {
-    for (var p = 0; p < service.pages.length; p++) {
-      if (service.pages[p].name == name) {
-        service.page = service.pages[p];
-
-        if (name == "Home") {
-          renderer.renderWorldAtDateWithMode({
-            name: context.name,
-            mode: context.mode,
-            days: context.days
-          }, function (err, data) {
-            err ? res(err) : res(null);
-          });
-          return;
-        }
-      }
-    }
-    res("Cannot find page named " + name + ".");
-  };
-  return service;
-}]);
-
-},{}],30:[function(require,module,exports){
-'use strict';
-
-angular.module('simulationRendererApp').factory('simulationRendererService', ['$http', 'contextService', function ($http, context) {
-  var renderer = {};
-
-  renderer.modeSections = [{ name: "Flora Stats", modes: ["Density", "Nutrient Stores", "Nutro Stores", "Nucium Stores", "Water Stores", "Growth", "Generation"] }, { name: "Flora DNA", modes: ["Heliophilia", "Thirst"] }, { name: "Geography", modes: ["Satellite", "Depth", "Elevation", "Height"] }, { name: "Mantle", modes: ["Tectonic", "Asthenosphere", "Stress"] } //  "Fractures"
-  , { name: "Soil", modes: ["Nutrients", "Nutro", "Nucium"] }, { name: "Weather", modes: ["Sunlight", "Rainfall"] }];
-
-  renderer.changeMapMode = function (req, res) {
-    if (req != context.mapMode) {
-      renderer.renderWorldAtDateWithMode({
-        name: context.name,
-        mode: req,
-        days: context.days
-      }, function (err, data) {
-        if (err) {
-          res(err);
-        } else {
-          context.mode = req;
-          res(null);
-        }
-      });
-    }
-  };
-
-  renderer.renderWorldAtDateWithMode = function (req, res) {
-    var date = "latest";
-    if (req.days != null) {
-      date = req.days;
-    }
-
-    $http.get('/render/' + req.name + "/" + date + "/" + req.mode).success(function (renderInstructions) {
-      renderer.mode = req.mode;
-
-      var canvas = document.getElementById("canvas");
-      if (!canvas) {
-        return;
-      }
-      var ctx = canvas.getContext("2d");
-
-      var width = canvas.width / renderInstructions.columns;
-      var height = canvas.height / renderInstructions.rows;
-
-      for (var x = 0; x < renderInstructions.columns; x++) {
-        for (var y = 0; y < renderInstructions.rows; y++) {
-          var z = y * renderInstructions.columns + x;
-          ctx.save();
-          ctx.fillStyle = renderInstructions.colors[z];
-
-          ctx.fillRect(width * x, height * y, width + 1, height + 1);
-
-          ctx.restore();
-        }
-      }
-
-      res(null, renderInstructions);
-    }).error(function (err) {
-      res("Error updating colors: " + err);
-    });
-  };
-
-  return renderer;
-}]);
-
-},{}],31:[function(require,module,exports){
-'use strict';
-
-angular.module('simulationRequestsApp').factory('simulationRequestsService', ['$http', 'simulationManagerService', 'timelineService', 'contextService', function ($http, simManager, timeline, context) {
-  var service = {};
-  service.requests = [];
-  service.getSimulationRequests = function (res) {
-    $http.get('/requests').success(function (data) {
-      service.requests = data;
-      res(null, data);
-    }).error(function (data) {
-      res('Get simulation requests error: ' + data);
-    });
-  };
-  service.createSimulationRequest = function (req, res) {
-    context.getSim(function (err, picked) {
-      if (err) {
-        console.log(err);
-      } else {
-        $http.post('/requests', req).success(function (data) {
-          service.requests = data;
-          res(null, data);
-        }).error(function (data) {
-          res('Create simulation requests error: ' + data);
-        });
-      }
-    });
-  };
-  service.clearSimulationRequests = function (res) {
-    $http.delete('/requests').success(function (data) {
-      service.requests = data;
-      res(null, data);
-    }).error(function (data) {
-      res('Clear simulation requests error: ' + data);
-    });
-  };
-  service.deleteSimulationsRequests = function (req, res) {
-    $http.delete('/requests/' + req).success(function (data) {
-      service.requests = data;
-      res(null, data);
-    }).error(function (data) {
-      res('Delete ' + name + ' simulation request error: ' + data);
-    });
-  };
-  service.processSimulationRequests = function (res) {
-    $http.post('/requests/process').success(function (requests) {
-      service.requests = requests;
-
-      simManager.getSimulationDescriptions(function (err, data) {
-        if (err) {
-          console.log(err);
-        } else {
-          timeline.getDates(function (err, data) {
-            if (err) {
-              console.log(err);
-            }
-          });
-        }
-      });
-    }).error(function (data) {
-      res('Process simulation requests error: ' + data);
-    });
-  };
-  return service;
-}]);
-
+      })
+      .error((data) => {
+        res('Process simulation requests error: ' + data);
+      }); 
+    };
+    return service;
+  }]);
 },{}],32:[function(require,module,exports){
-'use strict';
+angular.module('rulesApp')
+  .factory('rulesService', [ () => {
+    var rulesService = {};
+    rulesService.options = {};
 
-angular.module('rulesApp').factory('rulesService', [function () {
-  var rulesService = {};
-  rulesService.options = {};
+    rulesService.rules = [
+      {
+        ruleType: "header"
+        , text: "Planet"
+      }
+      ,{
+        title: "Size"
+        , ruleType: "radio"
+        , description: "Planet size dictates the size and resolution of the simulation. Larger plant and animal populations and more complex continental shapes are possible with a bigger map."
+        , options: [
+          { name: "Small", value: '{"columns":50,"rows":40}' }
+          , { name: "Large", value: '{"columns":100,"rows":80}' }
+        ]
+        , variable: "size"
+        , type: "string"
+        , init: "Small"
+      }
+      ,{
+        title: "Tilt"
+        , ruleType: "radio"
+        , description: "Planet tilt dictates which hemisphere recieves the most sun. For instance the Earth's 23.5 degree tilt means that the sourthern hemisphere recieves the most sunlight annually. Sunlight allows for dense foliage and heavy rainfall."
+        , options: [
+          { name: "Northern Hemisphere", value: 0.25 }
+          , { name: "Equator", value: 0.5 }
+          , { name: "Southern Hemisphere", value: 0.75 }
+        ]
+        , variable: "tilt"
+        , type: "number"
+        , init: 0.75
+      }
+      ,{
+        title: "Rotation Direction"
+        , ruleType: "radio"
+        , description: "Planet rotation dictates which direction the rainfall flows. For instance, Earth's west to east rotation means that its greater wind currents flow east to west. Continental geography in the East cuts off warm currents from reaching the West."
+        , options: [
+          { name: "East to West", value: -1 }
+          , { name: "West to East", value: 1 }
+        ]
+        , variable: "rotation"
+        , type: "number"
+        , init: -1
+      }
+      , {
+        ruleType: "header"
+        , text: "Plants"
+      }
+      ,{
+        title: "Plants per Province"
+        , ruleType: "radio"
+        , description: "The more plants share a plot the more they have to compete for shared soil nutrients."
+        , options: [
+          { name: "Four", value: 4 }
+          , { name: "Nine", value: 9 }
+          , { name: "Sixteen", value: 16 }
+        ]
+        , variable: "plantsPer"
+        , type: "number"
+        , init: 9
+      }
+      ,{
+        character: "M"
+        , required: "S"
+        , title: "Maturity"
+        , ruleType: "boolean"
+        , tooltip: "Plants must mature before they can reproduce. Requires seeding."
+        , variable: "maturity"
+        , init: false
+      }
+      ,{
+        character: "H"
+        , title: "Heliophilia"
+        , ruleType: "boolean"
+        , tooltip: "Plants love the sun."
+        , variable: "heliophilia"
+        , init: false
+      }
+      ,{
+        character: "T"
+        , title: "Thirst"
+        , ruleType: "boolean"
+        , tooltip: "Plants love the rain."
+        , variable: "thirst"
+        , init: false
+      }
+      ,{
+        character: "R"
+        , title: "Root Competition"
+        , ruleType: "field"
+        , tooltip: "Plants die if they have too many neighbors n."
+        , input: {
+          type:"number"
+          , left: {value:1, inclusive: true}
+          , right: {value:9, inclusive: false}
+        }
+        , variable: "roots"
+        , init: 8
+      },
+      {
+        character: "S"
+        , title: "Gene Mutation Rate"
+        , ruleType: "field"
+        , tooltip: "Plants reproduce if they have stored their nutrient endowment. Each of the parent's chromosomes is passed on with m chance of mutating."
+        , input:  {
+          type: "number"
+          , left: {value:0, inclusive:true}
+          , right: {value:1, inclusive: true}
+        }
+        , variable: "mutation"
+        , init: 0.999
 
-  rulesService.rules = [{
-    ruleType: "header",
-    text: "Planet"
-  }, {
-    title: "Size",
-    ruleType: "radio",
-    description: "Planet size dictates the size and resolution of the simulation. Larger plant and animal populations and more complex continental shapes are possible with a bigger map.",
-    options: [{ name: "Small", value: '{"columns":50,"rows":40}' }, { name: "Large", value: '{"columns":100,"rows":80}' }],
-    variable: "size",
-    type: "string",
-    init: "Small"
-  }, {
-    title: "Tilt",
-    ruleType: "radio",
-    description: "Planet tilt dictates which hemisphere recieves the most sun. For instance the Earth's 23.5 degree tilt means that the sourthern hemisphere recieves the most sunlight annually. Sunlight allows for dense foliage and heavy rainfall.",
-    options: [{ name: "Northern Hemisphere", value: 0.25 }, { name: "Equator", value: 0.5 }, { name: "Southern Hemisphere", value: 0.75 }],
-    variable: "tilt",
-    type: "number",
-    init: 0.75
-  }, {
-    title: "Rotation Direction",
-    ruleType: "radio",
-    description: "Planet rotation dictates which direction the rainfall flows. For instance, Earth's west to east rotation means that its greater wind currents flow east to west. Continental geography in the East cuts off warm currents from reaching the West.",
-    options: [{ name: "East to West", value: -1 }, { name: "West to East", value: 1 }],
-    variable: "rotation",
-    type: "number",
-    init: -1
-  }, {
-    ruleType: "header",
-    text: "Plants"
-  }, {
-    title: "Plants per Province",
-    ruleType: "radio",
-    description: "The more plants share a plot the more they have to compete for shared soil nutrients.",
-    options: [{ name: "Four", value: 4 }, { name: "Nine", value: 9 }, { name: "Sixteen", value: 16 }],
-    variable: "plantsPer",
-    type: "number",
-    init: 9
-  }, {
-    character: "M",
-    required: "S",
-    title: "Maturity",
-    ruleType: "boolean",
-    tooltip: "Plants must mature before they can reproduce. Requires seeding.",
-    variable: "maturity",
-    init: false
-  }, {
-    character: "H",
-    title: "Heliophilia",
-    ruleType: "boolean",
-    tooltip: "Plants love the sun.",
-    variable: "heliophilia",
-    init: false
-  }, {
-    character: "T",
-    title: "Thirst",
-    ruleType: "boolean",
-    tooltip: "Plants love the rain.",
-    variable: "thirst",
-    init: false
-  }, {
-    character: "R",
-    title: "Root Competition",
-    ruleType: "field",
-    tooltip: "Plants die if they have too many neighbors n.",
-    input: {
-      type: "number",
-      left: { value: 1, inclusive: true },
-      right: { value: 9, inclusive: false }
-    },
-    variable: "roots",
-    init: 8
-  }, {
-    character: "S",
-    title: "Gene Mutation Rate",
-    ruleType: "field",
-    tooltip: "Plants reproduce if they have stored their nutrient endowment. Each of the parent's chromosomes is passed on with m chance of mutating.",
-    input: {
-      type: "number",
-      left: { value: 0, inclusive: true },
-      right: { value: 1, inclusive: true }
-    },
-    variable: "mutation",
-    init: 0.999
+      }
+    ];
+    return rulesService;
+  }]);
 
-  }];
-  return rulesService;
-}]);
 
 },{}],33:[function(require,module,exports){
-'use strict';
+angular.module("timelineApp")
+  .factory('timelineService',['$http','contextService','simulationRendererService', ($http, context, renderer) => {
+    var timeline = {};
+    
+    timeline.dates = [];
 
-angular.module("timelineApp").factory('timelineService', ['$http', 'contextService', 'simulationRendererService', function ($http, context, renderer) {
-  var timeline = {};
+    timeline.getDates = (res) => {
+      context.getSim((err,picked) => {
+        if(err) {
+          res(err);
+        } else {
+          $http.get('/worlds/' + context.name + '/timeline')
+            .success((data) => {
+              timeline.dates = data;
+              res(null,data);
+            })
+            .error((data) => {
+              res('Get simulation requests error: ' + data);
+            });
+        }
+      });
+    };
+    timeline.pickLatestDate = (res) => {
+      timeline.pickDate( timeline.dates[timeline.dates.length-1], res );
+    }
 
-  timeline.dates = [];
-
-  timeline.getDates = function (res) {
-    context.getSim(function (err, picked) {
-      if (err) {
-        res(err);
-      } else {
-        $http.get('/worlds/' + context.name + '/timeline').success(function (data) {
-          timeline.dates = data;
-          res(null, data);
-        }).error(function (data) {
-          res('Get simulation requests error: ' + data);
-        });
-      }
-    });
-  };
-  timeline.pickLatestDate = function (res) {
-    timeline.pickDate(timeline.dates[timeline.dates.length - 1], res);
-  };
-
-  timeline.jumpToNextDate = function (direction, res) {
-    for (var d = 0; d < timeline.dates.length; d++) {
-      if (context.days == timeline.dates[d]) {
-        if (direction == -1) {
-          if (d - 1 >= 0) {
-            timeline.pickDate(timeline.dates[d - 1], res);
-          }
-        } else if (direction == 1) {
-          if (d + 1 < timeline.dates.length) {
-            timeline.pickDate(timeline.dates[d + 1], res);
+    timeline.jumpToNextDate = (direction,res) => {
+      for(var d = 0 ; d < timeline.dates.length; d++) {
+        if(context.days == timeline.dates[d]) {
+          if(direction == -1) {
+            if(d-1 >= 0) {
+              timeline.pickDate(timeline.dates[d-1],res);
+            }
+          } else if(direction == 1) {
+            if(d+1 < timeline.dates.length) {
+              timeline.pickDate(timeline.dates[d+1],res);
+            }
           }
         }
       }
-    }
-  };
+    };
 
-  timeline.pickDate = function (time, res) {
-    renderer.renderWorldAtDateWithMode({
-      name: context.name,
-      days: time,
-      mode: context.mode
-
-    }, function (err, data) {
-      if (err) {
-        res(err);
-      } else {
-        context.days = time;
-        res(null, data);
-      }
-    });
-  };
-  return timeline;
-}]);
-
+    timeline.pickDate = (time,res) => {
+      renderer.renderWorldAtDateWithMode(
+        {
+          name:context.name
+          ,days:time
+          ,mode:context.mode
+          
+        }
+        ,(err,data) => {
+          if(err) {
+            res(err);
+          } else {
+            context.days = time;
+            res(null,data);
+          }
+        });
+    };
+    return timeline;
+  }]);
 },{}],34:[function(require,module,exports){
-'use strict';
+angular.module('utilityApp')
+  .factory('utilityService',['$http', ($http) => {
+    var utility = {};
 
-angular.module('utilityApp').factory('utilityService', ['$http', function ($http) {
-  var utility = {};
-
-  utility.getRandomName = function (res) {
-    $http.get('/utility/name/generate').success(function (data) {
-      res(null, data);
-    }).error(function (data) {
-      res('Generate name error: ' + data);
-    });
-  };
-  return utility;
-}]);
-
+    utility.getRandomName = (res) => {
+      $http.get('/utility/name/generate')
+        .success((data) => {       
+          res(null,data);
+        })  
+        .error((data) => {
+          res('Generate name error: ' + data);
+        }); 
+    };
+    return utility;
+  }]);
 },{}],35:[function(require,module,exports){
 /**
  * @license AngularJS v1.5.8
