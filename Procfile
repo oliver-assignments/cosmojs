@@ -1,1 +1,1 @@
-web: node --use-strict server.js
+web: node --use-strict ./src/server.js

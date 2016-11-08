@@ -4,7 +4,7 @@ var rename = require('gulp-rename');
 var babelify = require('babelify');
 var uglify = require('gulp-uglify');
 var browserify = require('browserify');
-var source     = require('vinyl-source-stream');
+var source = require('vinyl-source-stream');
 
 gulp.task('bundle', ()=> {
   return browserify('app/app.js')
