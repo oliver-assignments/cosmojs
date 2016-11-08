@@ -1,4 +1,4 @@
-const soilScape = require('../../../soil-scape/index.js');
+const soilScape = require('soil-scape');
 
 const models = require('../models');
 const World = models.World.WorldModel;
