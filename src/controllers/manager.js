@@ -3,8 +3,18 @@ const soilScape = require('soil-scape');
 const models = require('../models');
 const World = models.World.WorldModel;
 
+module.exports.makerPage = (req, res) => {
+  World.WorldModel.findByOwner(req.session.account._id, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
 
-exports.createSimulation = function (req, res) {
+    //res.render('worlds', { csrfToken: req.csrfToken(), worlds: docs });
+  });
+};
+
+module.exports.createSimulation = function (req, res) {
   
   if (!req.body.name || 
       !req.body.rows || 
@@ -15,27 +25,28 @@ exports.createSimulation = function (req, res) {
       'Name, rows, columns, and plant plos per province are all required' });
   }
 
-  const newWorld = new World(soilScape.createSimulation(req));
+  const worldData = soilScape.createSimulation(req);
+  const newWorld = new World.WorldModel(worldData);
 
   return newWorld.save((err) => {
     if (err) {
-      return res.json({ err });
+      return res.status(400).json({ error: 'An error occured.' });
     }
 
-    return res.json({ name }); //  send simulations
+    return res.json({ name }); //  send simulations// redirect /worlds
   });
 
   res.status(500).send("Wow ok"); //World.);
 };
 
-exports.deleteSimulation = function (req, res) {
+module.exports.deleteSimulation = function (req, res) {
   res.status(501).send("Not implemented.");
 };
-exports.clearSimulations = function (req, res) {
+module.exports.clearSimulations = function (req, res) {
   res.status(501).send("Not implemented.");
 };
 
-exports.getSimulationDescriptions = function (req, res) {
+module.exports.getSimulationDescriptions = function (req, res) {
   const descriptions = [];
   // for (let i = 0; i < simulations.length; i += 1) {
   //   descriptions.push(
@@ -49,7 +60,7 @@ exports.getSimulationDescriptions = function (req, res) {
   res.status(501).send("Not implemented.");
 };
 
-exports.getSimulation = function (req, res) {
+module.exports.getSimulation = function (req, res) {
   // for (let s = 0; s < simulations.length; s += 1) {
   //   // console.log(simulations[s].name + " equals " + req + "?");
   //   if (simulations[s].name === req) {
@@ -60,7 +71,7 @@ exports.getSimulation = function (req, res) {
   res.status(404).send(`Cannot find simulation named ${req}.`);
 };
 
-exports.getSimulationContext = function (req, res) {
+module.exports.getSimulationContext = function (req, res) {
   // exports.getSimulation(req.name, (err, simulation) => {
   //   if (err) {
   //     res(err);
@@ -86,7 +97,7 @@ exports.getSimulationContext = function (req, res) {
   res.status(404).send(`Cannot find simulation named ${req}.`);
 };
 
-exports.getSimulationTimeline = function (req, res) {
+module.exports.getSimulationTimeline = function (req, res) {
   // exports.getSimulation(req, (err, simulation) => {
   //   if (err) {
   //     return res(err);
@@ -100,7 +111,7 @@ exports.getSimulationTimeline = function (req, res) {
   res.status(501).send("Not implemented.");
 };
 
-exports.getSimulationDescription = function (req, res) {
+module.exports.getSimulationDescription = function (req, res) {
   // exports.getSimulation(req, (err, simulation) => {
   //   if (err) {
   //     res(err);

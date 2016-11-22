@@ -9,3 +9,4 @@ require('./timelineApp.js');
 require('./updateApp.js');
 require('./updateApp.js');
 require('./utilityApp.js');
+require('./accountApp.js');

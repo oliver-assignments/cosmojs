@@ -7,3 +7,4 @@ require('./pageService.js');
 require('./timelineService.js');
 require('./rulesService.js');
 require('./utilityService.js');
+require('./accountService.js')

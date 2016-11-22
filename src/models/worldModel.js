@@ -1,58 +1,16 @@
 const mongoose = require('mongoose');
+const snapshotModel = require('./snapshotModel.js');
 mongoose.Promise = global.Promise;
 
-const RuleSchema = new mongoose.Schema({
-  name: String,
-  type: {},
-  value: {}
-});
-const DatasetSchema = new mongoose.Schema({
-  name: String,
-  minValue: Number,
-  maxValue: Number,
-  value: [Number]
-});
+let WorldModel = {};
 
-const ShapshotSchema = new mongoose.Schema({
-  day: {
-    type: Number,
-    min: 0,
-    unique: true,
-    default: 0
-  },
-  tilt: {
-    type: Number,
-    min:0,
-    max:1,
-    required: true,
-    default: 0.6
-  },
-  rotation: {
-    type: Number,
-    min:0,
-    max:3,
-    required: true, 
-    default: 1
-  },
-  rules: [mongoose.Schema.ObjectId],
-  datasets: [mongoose.Schema.ObjectId],
-  createdDate: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-ShapshotSchema.statics.getData = (snapshot, name, res) => {
-  return snapshot.data.findOne({name: name}, res);
-};
-ShapshotSchema.statics.getRule = (snapshot, variable, res) => {
-  return snapshot.rows * snapshot.columns * snapshot.plotsPer;
-};
+const convertId = mongoose.Types.ObjectId;
 
 const WorldSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    trim:true,
     default: "Nameless Expanse"
   },
   rows: {
@@ -73,37 +31,42 @@ const WorldSchema = new mongoose.Schema({
     required: true,
     defaut: 3
   },
-  snapshots: [mongoose.Schema.ObjectId],
+
+  owner: {
+    type: mongoose.Schema.ObjectId,
+    required: true,
+    ref: 'Account',
+  },
+
+  //snapshots: [mongoose.Schema.ObjectId],
   createdDate: {
     type: Date,
     default: Date.now,
   }
 });
+
+WorldSchema.statics.toAPI = doc => ({
+  // _id is built into your mongo document and is guaranteed to be unique
+  name: doc.name,
+  rows: doc.rows,
+  columns: doc.columns,
+  plotsPer: doc.plotsPer,
+  //snapshots: doc.snapshots,
+});
+
 WorldSchema.statics.findByName = (name, res) => {
   const search = {
     name,
   };
- return SnapshotModel.findOne(search, res);
+ return WorldModel.findOne(search, res);
 };
-WorldSchema.statics.findSnapshotByDay = (world, day, res) => {
+WorldSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
-    day,
+    owner: convertId(ownerId),
   };
- return world.findOne(search, res);
-};
-WorldSchema.statics.area = (snapshot, name, res) => {
-  return snapshot.rows * snapshot.name;
-};
-WorldSchema.statics.plantArea = (snapshot, variable, res) => {
-  return snapshot.rows * snapshot.columns * snapshot.plotsPer;
-};
-WorldSchema.statics.decription = (world, res) => {
-  return res.json({
-    name: world.name
-  });
+  return WorldModel.find(search).select('name rows columns plotsPer').exec(callback);
 };
  
-
 let WorldModel = mongoose.model('Worlds', WorldSchema);
 
 module.exports.WorldModel = WorldModel;

@@ -5,3 +5,5 @@ require('./creationController.js');
 require('./pageController.js');
 require('./timelineController.js');
 require('./updateController.js');
+require('./loginController.js');
+require('./signupController.js');
