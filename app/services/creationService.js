@@ -1,4 +1,4 @@
-angular.module('creationApp')
+    angular.module('creationApp')
   .factory('creationService',['rulesService','simulationManagerService','simulationRendererService','pageService','contextService',
   (rulesService,simulationManagerService,renderer,page,context) => {
     var creationService = {};

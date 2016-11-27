@@ -5,5 +5,5 @@ angular.module('pageApp')
 
     $scope.changePage = (name,res) => {
       pageService.changePage(name,$scope.empty);
-    }
+    };
   }]);

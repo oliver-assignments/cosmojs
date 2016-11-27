@@ -172,3 +172,19 @@ canvas {
 .darker-odd {
   background:#EFEFEF;
 }
+
+#login {
+  background:#EFEFEF;
+  text-align: center;
+  padding:3em;
+  margin-top:3em;
+  border-radius:18px;
+}
+.login-item {
+  margin-top:1em;
+}
+#login-logo {
+  margin-top:1em;
+  height:8em;
+  width:8em;
+}

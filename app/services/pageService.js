@@ -2,7 +2,7 @@ angular.module('pageApp')
   .factory('pageService',['contextService','simulationRendererService', (context,renderer) => {
     var service = {};
     service.pages = [
-      {name:"Home", url:"partials/partial-home.html"}
+      {name:"Worlds", url:"partials/partial-home.html"}
       ,{name:"New", url:"partials/partial-new.html"}
       ,{name:"About", url:"partials/partial-about.html"}
     ];

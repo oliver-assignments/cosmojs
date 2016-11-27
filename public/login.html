@@ -1,0 +1,38 @@
+<!-- <!DOCTYPE html> -->
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Cosmopolitos</title>
+  <meta author="Oliver Barnum">
+  <meta description="A Global Plantlife Simulation">
+
+  <script src="./js/all.js"></script>
+
+  <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body ng-app="cosmoApp">
+  <div class="container-fluid" ng-controller="loginController">
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1  col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4">
+        <form id="login" ng-submit="login()">
+          <img id="login-logo" src="images/cosmo-logo.png">
+          <div class="form-group login-item" style="margin-top:3em">
+            <label>Username</label>
+            <input type="text" name="username" class="form-control" ng-model="loginForm.username" required>
+          </div>
+
+          <div class="form-group login-item">
+            <label>Password</label>
+            <input type="password" name="password" class="form-control" ng-model="loginForm.password" required>
+          </div>
+
+          <button type="submit" ng-disabled="disabled" type="button" class="btn btn-lg btn-default login-item">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

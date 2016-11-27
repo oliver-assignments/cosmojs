@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const snapshotModel = require('./snapshotModel.js');
+const snapshotModel = require('./snapshot.js');
 mongoose.Promise = global.Promise;
 
 let WorldModel = {};
@@ -67,7 +67,7 @@ WorldSchema.statics.findByOwner = (ownerId, callback) => {
   return WorldModel.find(search).select('name rows columns plotsPer').exec(callback);
 };
  
-let WorldModel = mongoose.model('Worlds', WorldSchema);
+WorldModel = mongoose.model('Worlds', WorldSchema);
 
 module.exports.WorldModel = WorldModel;
 module.exports.WorldSchema = WorldSchema;

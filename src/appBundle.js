@@ -25,11 +25,13 @@ angular.module('cosmoApp', [
   //,'angular-cookies'
 ]);
 
-},{"./apps":4,"./controllers":14,"./filters":21,"./services":27,"angular":41,"angular-animate":36,"angular-bootstrap-npm":37,"angular-cookies":39}],2:[function(require,module,exports){
-angular.module('contextApp',[]);
+},{"./apps":5,"./controllers":15,"./filters":24,"./services":31,"angular":45,"angular-animate":40,"angular-bootstrap-npm":41,"angular-cookies":43}],2:[function(require,module,exports){
+angular.module('accountApp',['ngCookies'])
 },{}],3:[function(require,module,exports){
-angular.module('creationApp',['ngCookies'])
+angular.module('contextApp',[]);
 },{}],4:[function(require,module,exports){
+angular.module('creationApp',['ngCookies'])
+},{}],5:[function(require,module,exports){
 require('./contextApp.js');
 require('./creationApp.js');
 require('./managerApp.js');
@@ -41,23 +43,24 @@ require('./timelineApp.js');
 require('./updateApp.js');
 require('./updateApp.js');
 require('./utilityApp.js');
-},{"./contextApp.js":2,"./creationApp.js":3,"./managerApp.js":5,"./pageApp.js":6,"./renderApp.js":7,"./requestApp.js":8,"./rulesApp.js":9,"./timelineApp.js":10,"./updateApp.js":11,"./utilityApp.js":12}],5:[function(require,module,exports){
+require('./accountApp.js');
+},{"./accountApp.js":2,"./contextApp.js":3,"./creationApp.js":4,"./managerApp.js":6,"./pageApp.js":7,"./renderApp.js":8,"./requestApp.js":9,"./rulesApp.js":10,"./timelineApp.js":11,"./updateApp.js":12,"./utilityApp.js":13}],6:[function(require,module,exports){
 angular.module('simulationManagerApp',[]);
-},{}],6:[function(require,module,exports){
-angular.module('pageApp', ['ngAnimate']);
 },{}],7:[function(require,module,exports){
-angular.module('simulationRendererApp', []);
+angular.module('pageApp', ['ngAnimate']);
 },{}],8:[function(require,module,exports){
-angular.module('simulationRequestsApp',[]);
+angular.module('simulationRendererApp', []);
 },{}],9:[function(require,module,exports){
-angular.module('rulesApp',[]);
+angular.module('simulationRequestsApp',[]);
 },{}],10:[function(require,module,exports){
-angular.module("timelineApp",[]);
+angular.module('rulesApp',[]);
 },{}],11:[function(require,module,exports){
-angular.module("updateApp",[]);
+angular.module("timelineApp",[]);
 },{}],12:[function(require,module,exports){
-angular.module('utilityApp',[]);
+angular.module("updateApp",[]);
 },{}],13:[function(require,module,exports){
+angular.module('utilityApp',[]);
+},{}],14:[function(require,module,exports){
 angular.module('creationApp')
   .controller('creationController', ['$scope','$cookies','rulesService','creationService','utilityService',
   ($scope,$cookies, rulesService,creationService,utility) => {
@@ -165,7 +168,7 @@ angular.module('creationApp')
   }]);
 
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 require('./requestController.js');
 require('./managerController.js');
 require('./renderController.js');
@@ -173,7 +176,15 @@ require('./creationController.js');
 require('./pageController.js');
 require('./timelineController.js');
 require('./updateController.js');
-},{"./creationController.js":13,"./managerController.js":15,"./pageController.js":16,"./renderController.js":17,"./requestController.js":18,"./timelineController.js":19,"./updateController.js":20}],15:[function(require,module,exports){
+require('./loginController.js');
+require('./signupController.js');
+
+},{"./creationController.js":14,"./loginController.js":16,"./managerController.js":17,"./pageController.js":18,"./renderController.js":19,"./requestController.js":20,"./signupController.js":21,"./timelineController.js":22,"./updateController.js":23}],16:[function(require,module,exports){
+angular.module('accountApp')
+  .controller('signupController', ['$scope', ($scope) => {
+    
+  }]);
+},{}],17:[function(require,module,exports){
 angular.module('simulationManagerApp')
   .controller('simulationManagerController',['$scope','simulationManagerService','contextService','utilityService',
   ($scope,simulationManager,context,utility) => {
@@ -212,7 +223,7 @@ angular.module('simulationManagerApp')
     };
     $scope.startController();
   }]);
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 angular.module('pageApp')
   .controller('pageController',['$scope', 'pageService', ($scope, pageService) => {
     $scope.pager = pageService;
@@ -222,7 +233,7 @@ angular.module('pageApp')
       pageService.changePage(name,$scope.empty);
     }
   }]);
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 angular.module('simulationRendererApp')
   .controller('simulationRendererController',['$scope','utilityService','simulationRendererService','contextService','simulationRequestsService',
   ($scope, utility, renderer, context, requester) => {
@@ -249,7 +260,7 @@ angular.module('simulationRendererApp')
   }]);
 
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 angular.module('simulationRequestsApp')
   .controller('simulationRequestsController',['$scope','simulationRequestsService',
   ($scope,simulationRequestsService) => {
@@ -289,7 +300,9 @@ angular.module('simulationRequestsApp')
     $scope.startController();
   }]);
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
+arguments[4][16][0].apply(exports,arguments)
+},{"dup":16}],22:[function(require,module,exports){
 angular.module("timelineApp")
   .controller('timelineController',['$scope','$interval','timelineService','contextService',"utilityService", 
     ($scope,$interval,timelineService,context,utility) => {
@@ -330,7 +343,7 @@ angular.module("timelineApp")
       };
       $scope.start();
   }]);
-},{}],20:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 angular.module("updateApp")
   .controller('updateController',['$scope','$interval','timelineService','simulationManagerService','simulationRequestsService',
   ($scope,$interval,timeline,manager,requests) => {
@@ -360,13 +373,13 @@ angular.module("updateApp")
         $interval.cancel($scope.updateInt);
     });
   }]);
-},{}],21:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 require('./utilityFilters.js');
 require('./timelineFilters.js');
 require('./rulesFilters.js');
 
 
-},{"./rulesFilters.js":22,"./timelineFilters.js":23,"./utilityFilters.js":24}],22:[function(require,module,exports){
+},{"./rulesFilters.js":25,"./timelineFilters.js":26,"./utilityFilters.js":27}],25:[function(require,module,exports){
 angular.module('rulesApp')
   .filter('wrapInQuotes', () => {
     return (input) => {
@@ -418,14 +431,14 @@ angular.module('rulesApp')
   });
 
 
-},{}],23:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 angular.module("timelineApp")
   .filter('reverse', () => {
     return (items) => {
       return items;//.slice().reverse();
     };
   });
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 angular.module('utilityApp')
   .filter('reverse', () => {
     return (items) => {
@@ -483,7 +496,14 @@ angular.module('utilityApp')
         + (days!=0 ? days + (days==1 ? " day" : " days") : ""); 
     };
   });
-},{}],25:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
+angular.module('accountApp')
+  .factory('accountService', [() => {
+    let accountService = {};
+
+    return accountService;
+  }]);
+},{}],29:[function(require,module,exports){
 angular.module('contextApp')
   .factory('contextService', [() => {
     var context = {
@@ -501,7 +521,7 @@ angular.module('contextApp')
     };
     return context;
   }]);
-},{}],26:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 angular.module('creationApp')
   .factory('creationService',['rulesService','simulationManagerService','simulationRendererService','pageService','contextService',
   (rulesService,simulationManagerService,renderer,page,context) => {
@@ -549,7 +569,7 @@ angular.module('creationApp')
     return creationService;
 
   }]);
-},{}],27:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 require('./contextService.js');
 require('./requestService.js');
 require('./managerService.js');
@@ -559,7 +579,8 @@ require('./pageService.js');
 require('./timelineService.js');
 require('./rulesService.js');
 require('./utilityService.js');
-},{"./contextService.js":25,"./creationService.js":26,"./managerService.js":28,"./pageService.js":29,"./renderService.js":30,"./requestService.js":31,"./rulesService.js":32,"./timelineService.js":33,"./utilityService.js":34}],28:[function(require,module,exports){
+require('./accountService.js')
+},{"./accountService.js":28,"./contextService.js":29,"./creationService.js":30,"./managerService.js":32,"./pageService.js":33,"./renderService.js":34,"./requestService.js":35,"./rulesService.js":36,"./timelineService.js":37,"./utilityService.js":38}],32:[function(require,module,exports){
 angular.module('simulationManagerApp')
   .factory('simulationManagerService', ['$http', 'simulationRendererService', 'timelineService','pageService','contextService',
   ($http,renderer,timeline,pager,context) => {
@@ -658,12 +679,12 @@ angular.module('simulationManagerApp')
     
     return manager;
   }]);
-},{}],29:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 angular.module('pageApp')
   .factory('pageService',['contextService','simulationRendererService', (context,renderer) => {
     var service = {};
     service.pages = [
-      {name:"Home", url:"partials/partial-home.html"}
+      {name:"Worlds", url:"partials/partial-home.html"}
       ,{name:"New", url:"partials/partial-new.html"}
       ,{name:"About", url:"partials/partial-about.html"}
     ];
@@ -691,7 +712,7 @@ angular.module('pageApp')
     };
     return service;
   }]);
-},{}],30:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 angular.module('simulationRendererApp')
   .factory('simulationRendererService',['$http','contextService', ($http,context) => {
     var renderer = {};
@@ -768,7 +789,7 @@ angular.module('simulationRendererApp')
     
     return renderer;
   }]);
-},{}],31:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 angular.module('simulationRequestsApp')
   .factory('simulationRequestsService',['$http','simulationManagerService','timelineService','contextService',
   ($http,simManager,timeline,context) => {
@@ -844,7 +865,7 @@ angular.module('simulationRequestsApp')
     };
     return service;
   }]);
-},{}],32:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 angular.module('rulesApp')
   .factory('rulesService', [ () => {
     var rulesService = {};
@@ -966,7 +987,7 @@ angular.module('rulesApp')
   }]);
 
 
-},{}],33:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 angular.module("timelineApp")
   .factory('timelineService',['$http','contextService','simulationRendererService', ($http, context, renderer) => {
     var timeline = {};
@@ -1028,7 +1049,7 @@ angular.module("timelineApp")
     };
     return timeline;
   }]);
-},{}],34:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 angular.module('utilityApp')
   .factory('utilityService',['$http', ($http) => {
     var utility = {};
@@ -1044,7 +1065,7 @@ angular.module('utilityApp')
     };
     return utility;
   }]);
-},{}],35:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 /**
  * @license AngularJS v1.5.8
  * (c) 2010-2016 Google, Inc. http://angularjs.org
@@ -5185,11 +5206,11 @@ angular.module('ngAnimate', [], function initAngularHelpers() {
 
 })(window, window.angular);
 
-},{}],36:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 require('./angular-animate');
 module.exports = 'ngAnimate';
 
-},{"./angular-animate":35}],37:[function(require,module,exports){
+},{"./angular-animate":39}],41:[function(require,module,exports){
 /*
  * angular-ui-bootstrap
  * http://angular-ui.github.io/bootstrap/
@@ -13693,7 +13714,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     "");
 }]);
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">.ng-animate.item:not(.left):not(.right){-webkit-transition:0s ease-in-out left;transition:0s ease-in-out left}</style>');if(typeof module!=='undefined')module.exports='ui.bootstrap';
-},{}],38:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 /**
  * @license AngularJS v1.5.8
  * (c) 2010-2016 Google, Inc. http://angularjs.org
@@ -14017,11 +14038,11 @@ angular.module('ngCookies').provider('$$cookieWriter', function $$CookieWriterPr
 
 })(window, window.angular);
 
-},{}],39:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 require('./angular-cookies');
 module.exports = 'ngCookies';
 
-},{"./angular-cookies":38}],40:[function(require,module,exports){
+},{"./angular-cookies":42}],44:[function(require,module,exports){
 /**
  * @license AngularJS v1.5.8
  * (c) 2010-2016 Google, Inc. http://angularjs.org
@@ -45790,8 +45811,8 @@ $provide.value("$locale", {
 })(window);
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
-},{}],41:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 require('./angular');
 module.exports = angular;
 
-},{"./angular":40}]},{},[1]);
+},{"./angular":44}]},{},[1]);

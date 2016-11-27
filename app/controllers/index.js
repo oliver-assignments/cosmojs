@@ -7,3 +7,4 @@ require('./timelineController.js');
 require('./updateController.js');
 require('./loginController.js');
 require('./signupController.js');
+require('./logoutController.js');
