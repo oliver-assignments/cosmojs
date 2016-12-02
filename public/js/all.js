@@ -10,23 +10,61 @@ require('./filters');
 require('./controllers');
 
 angular.module('cosmoApp', [
-  'contextApp'
-  ,'simulationRequestsApp' 
-  ,'simulationManagerApp'
-  ,'simulationRendererApp'
-  ,'creationApp'
-  ,'pageApp'
-  ,'timelineApp'
-  ,'updateApp'
-  ,'rulesApp'
-  ,'utilityApp'
-  //,'angular-animate'
-  //,'angular-bootstrap-npm'
-  //,'angular-cookies'
+  'ngAnimate',
+  'ui.bootstrap',
+  'ngCookies',
+  'utilityApp',
+  'contextApp',
+  'accountApp',
+  'simulationRequestsApp',
+  'simulationManagerApp',
+  'simulationRendererApp',
+  'creationApp',
+  'pageApp',
+  'timelineApp',
+  'updateApp',
+  'rulesApp',
 ]);
 
-},{"./apps":5,"./controllers":15,"./filters":24,"./services":31,"angular":45,"angular-animate":40,"angular-bootstrap-npm":41,"angular-cookies":43}],2:[function(require,module,exports){
-angular.module('accountApp',['ngCookies'])
+// .config(($routeProvider) => {
+//   $routeProvider
+//     .when('/', {
+//       templateUrl: 'index.html',
+//       access: {restricted: true}
+//     })
+//     .when('/login', {
+//       templateUrl: 'partials/login.html',
+//       access: {restricted: false}
+//       //controller: 'loginController'
+//     })
+//     .when('/logout', {
+//       // controller: 'logoutController',
+//       access: {restricted: true}
+//     })
+//     .when('/signup', {
+//       templateUrl: '/signup.html',
+//       access: {restricted: false}
+//     })
+//     .otherwise({
+//       redirectTo: '/'
+//     })
+//     ;
+// })
+// .run(($rootScope, $location, $route, accountService) => {
+//   $rootScope.$on('$routeChangeStart',
+//     (event, next, current) => {
+//       accountService.getUserStatus()
+//       .then(() => {
+//         if (next.access.restricted && accountService.isLoggedIn() === false) {
+//           $location.path('/login');
+//           $route.reload();
+//         }
+//       });
+//   });
+// });
+
+},{"./apps":5,"./controllers":15,"./filters":25,"./services":32,"angular":46,"angular-animate":41,"angular-bootstrap-npm":42,"angular-cookies":44}],2:[function(require,module,exports){
+angular.module('accountApp',[])
 },{}],3:[function(require,module,exports){
 angular.module('contextApp',[]);
 },{}],4:[function(require,module,exports){
@@ -178,13 +216,43 @@ require('./timelineController.js');
 require('./updateController.js');
 require('./loginController.js');
 require('./signupController.js');
-
-},{"./creationController.js":14,"./loginController.js":16,"./managerController.js":17,"./pageController.js":18,"./renderController.js":19,"./requestController.js":20,"./signupController.js":21,"./timelineController.js":22,"./updateController.js":23}],16:[function(require,module,exports){
+require('./logoutController.js');
+},{"./creationController.js":14,"./loginController.js":16,"./logoutController.js":17,"./managerController.js":18,"./pageController.js":19,"./renderController.js":20,"./requestController.js":21,"./signupController.js":22,"./timelineController.js":23,"./updateController.js":24}],16:[function(require,module,exports){
 angular.module('accountApp')
-  .controller('signupController', ['$scope', ($scope) => {
-    
+  .controller('loginController', ['$scope', '$location','accountService', ($scope, $location, accountService) => {
+      $scope.login = () => {
+        $scope.error = false;
+        $scope.disabled = true;
+
+        if($scope.loginForm.username === "" || $scope.loginForm.password === "") {
+          return;
+        }
+
+        accountService.login($scope.loginForm.username, $scope.loginForm.password);
+        // .then(() => {
+        //   // $location.path('/');
+        //   $scope.disabled = false;
+        //   $scope.loginForm = {};
+        // })
+        // .catch(() => {
+        //   // $scope.error = true;
+        //   $scope.errorMessage = "Invalid username and/or password.";
+        //   $scope.disabled = false;
+        //   $scope.loginForm = {};
+        // });
+      };
   }]);
 },{}],17:[function(require,module,exports){
+angular.module('accountApp')
+  .controller('logoutController', ['$scope', '$location', 'accountService', ($scope, $location, accountService) => {
+    $scope.logout = () => {
+    accountService.logout()
+      .then(() => {
+      $location.path('/login');
+      });
+    };
+  }]);
+},{}],18:[function(require,module,exports){
 angular.module('simulationManagerApp')
   .controller('simulationManagerController',['$scope','simulationManagerService','contextService','utilityService',
   ($scope,simulationManager,context,utility) => {
@@ -223,7 +291,7 @@ angular.module('simulationManagerApp')
     };
     $scope.startController();
   }]);
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 angular.module('pageApp')
   .controller('pageController',['$scope', 'pageService', ($scope, pageService) => {
     $scope.pager = pageService;
@@ -231,9 +299,9 @@ angular.module('pageApp')
 
     $scope.changePage = (name,res) => {
       pageService.changePage(name,$scope.empty);
-    }
+    };
   }]);
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 angular.module('simulationRendererApp')
   .controller('simulationRendererController',['$scope','utilityService','simulationRendererService','contextService','simulationRequestsService',
   ($scope, utility, renderer, context, requester) => {
@@ -260,7 +328,7 @@ angular.module('simulationRendererApp')
   }]);
 
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 angular.module('simulationRequestsApp')
   .controller('simulationRequestsController',['$scope','simulationRequestsService',
   ($scope,simulationRequestsService) => {
@@ -300,9 +368,35 @@ angular.module('simulationRequestsApp')
     $scope.startController();
   }]);
 
-},{}],21:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],22:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
+angular.module('accountApp')
+  .controller('signupController', ['$scope', '$location','accountService', ($scope, $location, accountService) => {
+      $scope.signup = () => {
+        $scope.error = false;
+        $scope.disabled = true;
+
+        if($scope.signupForm.username === "" || $scope.signupForm.password === "" || $scope.signupForm.retypePassword === "") {
+          return;
+        }
+        if($scope.signupForm.password !== $scope.signupForm.retypePassword) {
+          return;
+        }
+
+        accountService.signup($scope.signupForm.username, $scope.signupForm.password);
+        // .then(()=>{
+        //   $location.path('/login');
+        //   $scope.disabled = false;
+        //   $scope.signupForm = {};
+        // })
+        // .catch(()=>{
+        //   $scope.error = true;
+        //   $scope.errorMessage = "Invalid username and/or password(s).";
+        //   $scope.disabled = false;
+        //   $scope.signupForm = {};
+        // });
+      };
+  }]);
+},{}],23:[function(require,module,exports){
 angular.module("timelineApp")
   .controller('timelineController',['$scope','$interval','timelineService','contextService',"utilityService", 
     ($scope,$interval,timelineService,context,utility) => {
@@ -343,8 +437,8 @@ angular.module("timelineApp")
       };
       $scope.start();
   }]);
-},{}],23:[function(require,module,exports){
-angular.module("updateApp")
+},{}],24:[function(require,module,exports){
+angular.module('updateApp')
   .controller('updateController',['$scope','$interval','timelineService','simulationManagerService','simulationRequestsService',
   ($scope,$interval,timeline,manager,requests) => {
     $scope.every = () => {
@@ -373,13 +467,13 @@ angular.module("updateApp")
         $interval.cancel($scope.updateInt);
     });
   }]);
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 require('./utilityFilters.js');
 require('./timelineFilters.js');
 require('./rulesFilters.js');
 
 
-},{"./rulesFilters.js":25,"./timelineFilters.js":26,"./utilityFilters.js":27}],25:[function(require,module,exports){
+},{"./rulesFilters.js":26,"./timelineFilters.js":27,"./utilityFilters.js":28}],26:[function(require,module,exports){
 angular.module('rulesApp')
   .filter('wrapInQuotes', () => {
     return (input) => {
@@ -431,14 +525,14 @@ angular.module('rulesApp')
   });
 
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 angular.module("timelineApp")
   .filter('reverse', () => {
     return (items) => {
       return items;//.slice().reverse();
     };
   });
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 angular.module('utilityApp')
   .filter('reverse', () => {
     return (items) => {
@@ -496,14 +590,102 @@ angular.module('utilityApp')
         + (days!=0 ? days + (days==1 ? " day" : " days") : ""); 
     };
   });
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 angular.module('accountApp')
-  .factory('accountService', [() => {
+  .factory('accountService', ['$q', '$timeout', '$http', ($q, $timeout, $http) => {
+    
     let accountService = {};
+
+    let account = null;
+
+    accountService.isLoggedIn = () => {
+      if(account) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    accountService.getUserStatus = () => {
+      return $http.get('/status')
+      .success((data) => {
+        if(data.status) {
+          account = true;
+        } else {
+          account = false;
+        }
+      })
+      .error((data) => {
+        account = false;
+      });
+    };
+
+    accountService.login = (username, password) => {
+
+      var deferred = $q.defer();
+      console.log(username);
+
+      $http.post('/login', {username: username, password: password})
+        .success(function (data, status) {
+          if(status === 200 && data.status){
+            account = true;
+            deferred.resolve();
+          } else {
+            account = false;
+            deferred.reject();
+          }
+        })
+        .error(function (data) {
+          account = false;
+          deferred.reject();
+        });
+
+      // return promise object
+      return deferred.promise;
+    };
+
+    accountService.logout = () => {
+      // create a new instance of deferred
+      var deferred = $q.defer();
+
+      // send a get request to the server
+      $http.get('/logout')
+        // handle success
+        .success(function (data) {
+          account = false;
+          deferred.resolve();
+        })
+        // handle error
+        .error(function (data) {
+          account = false;
+          deferred.reject();
+        });
+
+      // return promise object
+      return deferred.promise;
+
+    };
+    accountService.signup = (username, password) => {
+      let deferred = $q.defer();
+
+      $http.post('/signup', { username:username, password: password})
+      .success((data, status) => {
+        if(status===200 && data.status) {
+          deferred.resolve();
+        } else {
+          deferred.reject();
+        }
+      })
+      .error((data) => {
+        deferred.reject();
+      });
+      
+      return deferred.promise;
+    };
 
     return accountService;
   }]);
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 angular.module('contextApp')
   .factory('contextService', [() => {
     var context = {
@@ -521,8 +703,8 @@ angular.module('contextApp')
     };
     return context;
   }]);
-},{}],30:[function(require,module,exports){
-angular.module('creationApp')
+},{}],31:[function(require,module,exports){
+    angular.module('creationApp')
   .factory('creationService',['rulesService','simulationManagerService','simulationRendererService','pageService','contextService',
   (rulesService,simulationManagerService,renderer,page,context) => {
     var creationService = {};
@@ -569,7 +751,7 @@ angular.module('creationApp')
     return creationService;
 
   }]);
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 require('./contextService.js');
 require('./requestService.js');
 require('./managerService.js');
@@ -580,7 +762,7 @@ require('./timelineService.js');
 require('./rulesService.js');
 require('./utilityService.js');
 require('./accountService.js')
-},{"./accountService.js":28,"./contextService.js":29,"./creationService.js":30,"./managerService.js":32,"./pageService.js":33,"./renderService.js":34,"./requestService.js":35,"./rulesService.js":36,"./timelineService.js":37,"./utilityService.js":38}],32:[function(require,module,exports){
+},{"./accountService.js":29,"./contextService.js":30,"./creationService.js":31,"./managerService.js":33,"./pageService.js":34,"./renderService.js":35,"./requestService.js":36,"./rulesService.js":37,"./timelineService.js":38,"./utilityService.js":39}],33:[function(require,module,exports){
 angular.module('simulationManagerApp')
   .factory('simulationManagerService', ['$http', 'simulationRendererService', 'timelineService','pageService','contextService',
   ($http,renderer,timeline,pager,context) => {
@@ -679,40 +861,42 @@ angular.module('simulationManagerApp')
     
     return manager;
   }]);
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 angular.module('pageApp')
   .factory('pageService',['contextService','simulationRendererService', (context,renderer) => {
-    var service = {};
-    service.pages = [
-      {name:"Worlds", url:"partials/partial-home.html"}
-      ,{name:"New", url:"partials/partial-new.html"}
-      ,{name:"About", url:"partials/partial-about.html"}
-    ];
-    service.page = service.pages[1];
+    let service = {};
 
-    service.changePage = (name,res) => {
+    service.pages = [
+      { name:"Create", url: "partials/partial-new.html" }
+      ,{ name:"About", url: "partials/partial-about.html" }
+      ,{ name:"Blog", url: "https://oliverbarnum.wordpress.com/category/cosmopolitos/" }
+    ];
+    // ook
+    service.page = service.pages[0];
+
+    service.changePage = (name, res) => {
       for(var p = 0 ; p < service.pages.length; p++) {
         if(service.pages[p].name == name) {
           service.page = service.pages[p];
 
-          if(name == "Home") {
-            renderer.renderWorldAtDateWithMode(
-              {
-                name:context.name
-                ,mode:context.mode
-                ,days:context.days
-              }, (err,data) => {
-                (err ? res(err) : res(null));
-              });
-            return;
-          }
+          // if(name == "Home") {
+          //   renderer.renderWorldAtDateWithMode(
+          //     {
+          //       name:context.name
+          //       ,mode:context.mode
+          //       ,days:context.days
+          //     }, (err,data) => {
+          //       (err ? res(err) : res(null));
+          //     });
+          //   return;
+          // }
         }
       }
       res("Cannot find page named " + name + ".");
     };
     return service;
   }]);
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 angular.module('simulationRendererApp')
   .factory('simulationRendererService',['$http','contextService', ($http,context) => {
     var renderer = {};
@@ -789,7 +973,7 @@ angular.module('simulationRendererApp')
     
     return renderer;
   }]);
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 angular.module('simulationRequestsApp')
   .factory('simulationRequestsService',['$http','simulationManagerService','timelineService','contextService',
   ($http,simManager,timeline,context) => {
@@ -865,7 +1049,7 @@ angular.module('simulationRequestsApp')
     };
     return service;
   }]);
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 angular.module('rulesApp')
   .factory('rulesService', [ () => {
     var rulesService = {};
@@ -987,7 +1171,7 @@ angular.module('rulesApp')
   }]);
 
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 angular.module("timelineApp")
   .factory('timelineService',['$http','contextService','simulationRendererService', ($http, context, renderer) => {
     var timeline = {};
@@ -1049,7 +1233,7 @@ angular.module("timelineApp")
     };
     return timeline;
   }]);
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 angular.module('utilityApp')
   .factory('utilityService',['$http', ($http) => {
     var utility = {};
@@ -1065,7 +1249,7 @@ angular.module('utilityApp')
     };
     return utility;
   }]);
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /**
  * @license AngularJS v1.5.8
  * (c) 2010-2016 Google, Inc. http://angularjs.org
@@ -5206,11 +5390,11 @@ angular.module('ngAnimate', [], function initAngularHelpers() {
 
 })(window, window.angular);
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 require('./angular-animate');
 module.exports = 'ngAnimate';
 
-},{"./angular-animate":39}],41:[function(require,module,exports){
+},{"./angular-animate":40}],42:[function(require,module,exports){
 /*
  * angular-ui-bootstrap
  * http://angular-ui.github.io/bootstrap/
@@ -13714,7 +13898,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     "");
 }]);
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">.ng-animate.item:not(.left):not(.right){-webkit-transition:0s ease-in-out left;transition:0s ease-in-out left}</style>');if(typeof module!=='undefined')module.exports='ui.bootstrap';
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 /**
  * @license AngularJS v1.5.8
  * (c) 2010-2016 Google, Inc. http://angularjs.org
@@ -14038,11 +14222,11 @@ angular.module('ngCookies').provider('$$cookieWriter', function $$CookieWriterPr
 
 })(window, window.angular);
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 require('./angular-cookies');
 module.exports = 'ngCookies';
 
-},{"./angular-cookies":42}],44:[function(require,module,exports){
+},{"./angular-cookies":43}],45:[function(require,module,exports){
 /**
  * @license AngularJS v1.5.8
  * (c) 2010-2016 Google, Inc. http://angularjs.org
@@ -45811,8 +45995,8 @@ $provide.value("$locale", {
 })(window);
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 require('./angular');
 module.exports = angular;
 
-},{"./angular":44}]},{},[1]);
+},{"./angular":45}]},{},[1]);

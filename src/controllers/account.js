@@ -1,3 +1,4 @@
+const passport = require('passport');
 const models = require('../models');
 const Account = require('../models/account.js');
 const path = require('path')
@@ -7,15 +8,14 @@ module.exports.loginPage = (req, res) => {
 };
 
 module.exports.login = (req,res,next) => {
-
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local', (err, account, info) => {
     if (err) {
       return next(err);
     }
-    if (!user) {
+    if (!account) {
       return res.status(401).json({ err: info });
     }
-    req.logIn(user, (err) => {
+    req.logIn(account, (err) => {
       if (err) {
         return res.status(500);
       }
@@ -29,14 +29,16 @@ module.exports.signupPage = (req, res) => {
 };
 
 module.exports.signup = (req,res) => {
-  Account.register(new Account({username: req.body.username}), req.body.password, (err,account) => {
-      if (err) {
-        return res.status(500).json({ err: err });
-      }
-      passport.authenticate('local')(req, res, () => {
-        return res.status(200);
-      });
+  Account.register(new Account({username: req.body.username}), req.body.password, (err, account) => {
+    console.log(err);
+    console.log(account);
+    if (err) {
+      return res.status(500).json({ err: err });
+    }
+    passport.authenticate('local')(req, res, () => {
+      return res.status(200);
     });
+  });
 };
 
 module.exports.logout = (req, res) => {

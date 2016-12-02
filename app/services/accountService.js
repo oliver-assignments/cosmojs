@@ -3,10 +3,10 @@ angular.module('accountApp')
     
     let accountService = {};
 
-    let user = null;
+    let account = null;
 
     accountService.isLoggedIn = () => {
-      if(user) {
+      if(account) {
         return true;
       } else {
         return false;
@@ -14,39 +14,36 @@ angular.module('accountApp')
     };
 
     accountService.getUserStatus = () => {
-      return $http.get('/account/status')
+      return $http.get('/status')
       .success((data) => {
         if(data.status) {
-          user = true;
+          account = true;
         } else {
-          user = false;
+          account = false;
         }
       })
       .error((data) => {
-        user = false;
+        account = false;
       });
     };
 
     accountService.login = (username, password) => {
-      // create a new instance of deferred
-      var deferred = $q.defer();
 
-      // send a post request to the server
-      $http.post('/user/login',
-        {username: username, password: password})
-        // handle success
+      var deferred = $q.defer();
+      console.log(username);
+
+      $http.post('/login', {username: username, password: password})
         .success(function (data, status) {
           if(status === 200 && data.status){
-            user = true;
+            account = true;
             deferred.resolve();
           } else {
-            user = false;
+            account = false;
             deferred.reject();
           }
         })
-        // handle error
         .error(function (data) {
-          user = false;
+          account = false;
           deferred.reject();
         });
 
@@ -59,15 +56,15 @@ angular.module('accountApp')
       var deferred = $q.defer();
 
       // send a get request to the server
-      $http.get('/user/logout')
+      $http.get('/logout')
         // handle success
         .success(function (data) {
-          user = false;
+          account = false;
           deferred.resolve();
         })
         // handle error
         .error(function (data) {
-          user = false;
+          account = false;
           deferred.reject();
         });
 
@@ -75,10 +72,10 @@ angular.module('accountApp')
       return deferred.promise;
 
     };
-    accountService.register = (username, password) => {
+    accountService.signup = (username, password) => {
       let deferred = $q.defer();
 
-      $http.post('/account/signup' { username:username, password: password})
+      $http.post('/signup', { username:username, password: password})
       .success((data, status) => {
         if(status===200 && data.status) {
           deferred.resolve();

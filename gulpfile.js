@@ -6,22 +6,15 @@ var uglify = require('gulp-uglify');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 
-gulp.task('bundle', ()=> {
-  return browserify('app/app.js')
+gulp.task('bundle', [], () => {
+  const fast =  
+    browserify('./app/app.js')
     .bundle()
-    .pipe(source('appBundle.js'))
-    .pipe(gulp.dest('src'));
+    .pipe(source('all.js'))
+    .pipe(gulp.dest('public/js'));
+  return fast;
 });
 
-gulp.task('scripts', ['bundle'], () => {
-	return gulp.src('src/appBundle.js')
-		.pipe(concat('all.js'))
-		.pipe(gulp.dest('public/js'))
+gulp.task('default', ['bundle'], () => {
+  gulp.watch('./app/**/*.js', ['bundle']); 
 });
-
-
-gulp.task('watch', () => {
-	gulp.watch('./app/**/*.js', ['scripts']);
-});
-
-gulp.task('default', ['scripts', 'watch']);

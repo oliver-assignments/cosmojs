@@ -1,1 +1,1 @@
-angular.module('accountApp',['ngCookies'])
+angular.module('accountApp',[])

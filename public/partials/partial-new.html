@@ -16,7 +16,6 @@
   <div class="row setting-section">
     <div class="col-xs-12 col-md-9">
       
-      
       <ul>
         <li class="rule" ng-repeat="rule in rules.rules track by $index">
 
@@ -47,8 +46,6 @@
             <b>{{ rule.character }}</b> {{ rule.title }}
           </button>
 
-          <!-- IF Field Rule -->
-          <!-- ng-class="{'disable-field' : formData.rules[rule.variable] == null}" -->
           <div 
             ng-show="rule.ruleType=='field'" 
             class="input-group">

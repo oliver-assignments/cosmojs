@@ -1,4 +1,4 @@
-angular.module("updateApp")
+angular.module('updateApp')
   .controller('updateController',['$scope','$interval','timelineService','simulationManagerService','simulationRequestsService',
   ($scope,$interval,timeline,manager,requests) => {
     $scope.every = () => {
