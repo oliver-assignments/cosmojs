@@ -219,27 +219,34 @@ require('./signupController.js');
 require('./logoutController.js');
 },{"./creationController.js":14,"./loginController.js":16,"./logoutController.js":17,"./managerController.js":18,"./pageController.js":19,"./renderController.js":20,"./requestController.js":21,"./signupController.js":22,"./timelineController.js":23,"./updateController.js":24}],16:[function(require,module,exports){
 angular.module('accountApp')
-  .controller('loginController', ['$scope', '$location','accountService', ($scope, $location, accountService) => {
+  .controller('loginController', ['$scope', '$location','$window','accountService', ($scope, $location,$window,accountService) => {
       $scope.login = () => {
         $scope.error = false;
         $scope.disabled = true;
 
-        if($scope.loginForm.username === "" || $scope.loginForm.password === "") {
+        if(!$scope.loginForm.username ||
+          !$scope.loginForm.password ||
+          $scope.loginForm.username === "" || 
+          $scope.loginForm.password === ""
+          ) {
+          $scope.error = true;
+          $scope.errorMessage = "All fields are required.";
           return;
         }
 
-        accountService.login($scope.loginForm.username, $scope.loginForm.password);
-        // .then(() => {
-        //   // $location.path('/');
-        //   $scope.disabled = false;
-        //   $scope.loginForm = {};
-        // })
-        // .catch(() => {
-        //   // $scope.error = true;
-        //   $scope.errorMessage = "Invalid username and/or password.";
-        //   $scope.disabled = false;
-        //   $scope.loginForm = {};
-        // });
+        accountService.login($scope.loginForm.username, $scope.loginForm.password)
+        .then(() => {
+          $scope.disabled = false;
+          $scope.loginForm = {};
+          $window.location.href = "/";
+        })
+        .catch(() => {
+          console.log("Invalid username and/or password.");
+          $scope.error = true;
+          $scope.errorMessage = "Invalid username and/or password.";
+          $scope.disabled = false;
+          $scope.loginForm.password = "";
+        });
       };
   }]);
 },{}],17:[function(require,module,exports){
@@ -370,30 +377,41 @@ angular.module('simulationRequestsApp')
 
 },{}],22:[function(require,module,exports){
 angular.module('accountApp')
-  .controller('signupController', ['$scope', '$location','accountService', ($scope, $location, accountService) => {
+  .controller('signupController', ['$scope', '$window','accountService', ($scope, $window, accountService) => {
+      $scope.signupForm = {};
       $scope.signup = () => {
         $scope.error = false;
         $scope.disabled = true;
 
-        if($scope.signupForm.username === "" || $scope.signupForm.password === "" || $scope.signupForm.retypePassword === "") {
+        if(
+          !$scope.signupForm.username || 
+          !$scope.signupForm.password || 
+          !$scope.signupForm.retypePassword ||
+          $scope.signupForm.username === "" || 
+          $scope.signupForm.password === "" || 
+          $scope.signupForm.retypePassword === "") {
+          $scope.error = true;
+          $scope.errorMessage = "All fields are required.";
           return;
         }
         if($scope.signupForm.password !== $scope.signupForm.retypePassword) {
+          $scope.error = true;
+          $scope.errorMessage = "Passwords do not match.";
           return;
         }
 
-        accountService.signup($scope.signupForm.username, $scope.signupForm.password);
-        // .then(()=>{
-        //   $location.path('/login');
-        //   $scope.disabled = false;
-        //   $scope.signupForm = {};
-        // })
-        // .catch(()=>{
-        //   $scope.error = true;
-        //   $scope.errorMessage = "Invalid username and/or password(s).";
-        //   $scope.disabled = false;
-        //   $scope.signupForm = {};
-        // });
+        accountService.signup($scope.signupForm.username, $scope.signupForm.password)
+        .then(()=>{
+          $scope.disabled = false;
+          $scope.signupForm = {};
+          $window.location.href = "/";
+        })
+        .catch(()=>{
+          $scope.error = true;
+          $scope.errorMessage = "Invalid username and/or password(s).";
+          $scope.disabled = false;
+          $scope.signupForm = {};
+        });
       };
   }]);
 },{}],23:[function(require,module,exports){
@@ -597,6 +615,7 @@ angular.module('accountApp')
     let accountService = {};
 
     let account = null;
+    // accountService.username = null;
 
     accountService.isLoggedIn = () => {
       if(account) {
@@ -623,12 +642,13 @@ angular.module('accountApp')
     accountService.login = (username, password) => {
 
       var deferred = $q.defer();
-      console.log(username);
 
       $http.post('/login', {username: username, password: password})
         .success(function (data, status) {
           if(status === 200 && data.status){
+            console.log(data);
             account = true;
+            accountService.username;
             deferred.resolve();
           } else {
             account = false;
@@ -671,6 +691,7 @@ angular.module('accountApp')
       $http.post('/signup', { username:username, password: password})
       .success((data, status) => {
         if(status===200 && data.status) {
+          console.log("Signup");
           deferred.resolve();
         } else {
           deferred.reject();

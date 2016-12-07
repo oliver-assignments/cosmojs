@@ -4,7 +4,7 @@ const Account = require('../models/account.js');
 const path = require('path')
 
 module.exports.loginPage = (req, res) => {
-  res.status(200).sendFile(path.join(__dirname + '/../../public/login.html')); 
+  res.status(200).sendFile(path.join(__dirname + '/../html/login.html')); 
 };
 
 module.exports.login = (req,res,next) => {
@@ -19,43 +19,31 @@ module.exports.login = (req,res,next) => {
       if (err) {
         return res.status(500);
       }
-      res.status(200);
+      res.status(200).json({status:"Logged in."});
     });
   })(req, res, next);
 };
 
 module.exports.signupPage = (req, res) => {
-  res.status(200).sendFile(path.join(__dirname + '/../../public/signup.html')); 
+  res.status(200).sendFile(path.join(__dirname + '/../html/signup.html')); 
 };
 
 module.exports.signup = (req,res) => {
   Account.register(new Account({username: req.body.username}), req.body.password, (err, account) => {
-    console.log(err);
-    console.log(account);
     if (err) {
       return res.status(500).json({ err: err });
     }
     passport.authenticate('local')(req, res, () => {
-      return res.status(200);
+      return res.status(200).json({status:"Registered."});
     });
   });
 };
 
 module.exports.logout = (req, res) => {
   req.session.destroy();
-  res.redirect('/');
+  res.redirect('/login');
 };
 
-module.exports.isAuthenticated = (req,res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(200).json({
-      status: false
-    });
-  }
-  res.status(200).json({
-    status: true
-  });
-};
 
 // module.exports.login = (req, res) => {
 //   const username = `${req.body.username}`;

@@ -1,10 +1,10 @@
 {
   "name": "cosmojs",
   "version": "1.0.0",
+  "description": "",
   "engines": {
     "node": "6.9.1"
   },
-  "description": "Cosmopolitos is a plate tectonics and plant genetics simulation built into an all JS website. Users can create custom simulations and request days to years of simulation time. The simulation rules are customizable, allowing for a variety of environmental pressures on the plant agents. Users can select various map modes to render the simulation data at different dates in aesthically pleasing blended colors.",
   "main": "./src/server.js",
   "scripts": {
     "start": "node ./src/server.js",
@@ -29,6 +29,16 @@
     "randomcolor": "^0.4.4",
     "soil-scape": "^1.2.2"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheNextGuy32/cosmojs.git"
+  },
+  "author": "Oliver",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheNextGuy32/cosmojs/issues"
+  },
+  "homepage": "https://github.com/TheNextGuy32/cosmojs#readme",
   "devDependencies": {
     "angular": "^1.5.8",
     "angular-ui-bootstrap": "^1.3.3",
@@ -52,18 +62,5 @@
     "gulp-uglify": "^2.0.0",
     "jshint": "^2.9.3",
     "vinyl-source-stream": "^1.1.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TheNextGuy32/cosmojs.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/TheNextGuy32/cosmojs/issues"
-  },
-  "homepage": "https://github.com/TheNextGuy32/cosmojs#readme"
+  }
 }

@@ -4,10 +4,11 @@ const controllers =require('../controllers');
 const manager = require('./manager.js');
 const utility = require('./utility.js');
 const account = require('./account.js');
+const middle = require('../middleware');
 
 
 module.exports = (app) => {
-  app.get('/', controllers.homePage);
+  app.get('/', middle.requiresLogin, controllers.homePage);
 
   account(app);
   manager(app);

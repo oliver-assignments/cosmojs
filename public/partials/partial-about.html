@@ -1,20 +1,109 @@
 <div class="row partial">
-	<div class="col-xs-12 col-md-9">
-		<h3>About</h3>
-		<h4>What is Cosmopolitos?</h4>
-	    <p class="parameter-description">
-	    	Cosmopolitos is a series of simulations that simulates a virtual planet.
-	    </p>
+  <div class="col-xs-12 col-md-9">
+    <h2>About</h2>
+    <h4>What is Cosmopolitos?</h4>
+    <p class="parameter-description">
+      Cosmopolitos is a MEAN stack application that serves the SoilScape library, a series of plate tectonics and plant genetics simulations, on the web. Simulations can be created, simulated, stored, and viewed all from the same single page application.
+    </p>
+    <p class="parameter-description">
+      The user will be directed to login and create a new simulation when they enters the website. The user would then be able to select different parameters that affect the starting map of the simulation. After the simulation is created, the user can request for the world to be simulated a number of days. Each user will have a list of their custom simulations, and will be able to share access to their simulation data, charts and world renders with other users.
+    </p>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <h4>Demos</h4>
+        <ul>
+          <li><p><a href="https://www.youtube.com/watch?v=H_zmiBiyn9o">Plant Longevity</a></p></li>
+          <li><p><a href="https://www.youtube.com/watch?v=ZGzChPkfAY0">Plant Proliferation</a></p></li>
+          <li><p><a href="https://www.youtube.com/watch?v=ZsCK0_NqVvI">Plate Fracturing</a></p></li>
+        </ul>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <h4>Inspiration</h4>
+        <ul>
+          <li><p><a href="http://www.bay12games.com/dwarves/">Dwarf Fortress</a></p></li>
+          <li><p><a href="https://mitpress.mit.edu/books/growing-artificial-societies">Growing Artifical Societies</a></p></li>
+          <li><p><a href="http://rimworldgame.com/">Rimworld</a></p></li>
+        </ul>
+      </div>
+    </div>
 
-	    <h4>What does Cosmopolitos mean?</h4>
-	    <p class="parameter-description">
-	    	Cosmopolitos is a combination of the word <b>cosmopolitan</b> meaning global citizen and the Spanish diminutive <b>-ito</b> meaning small or cute. Together they describe the goal for the human portion of the simulation: a population of thousands of human agents who interact with many different virtual cultures on a global scale.
-	    </p>
+    <h4>What does Cosmopolitos mean?</h4>
+    <p class="parameter-description">
+      Cosmopolitos is a combination of the word <b>cosmopolitan</b> meaning global citizen and the Spanish diminutive <b>-ito</b> meaning small or cute. Together they describe the goal for the human portion of the simulation: a population of thousands of human agents who interact with many different virtual cultures on a global scale.
+    </p>
 
-	    <h4>What is Nutro, Nucium?</h4>
-	    <p class="parameter-description">
-	    	Nutro and Nucium are nutrients essential to virtual plantlife. Nutro represents Nitrogen and Nucium represents Potassium.
-	    </p>
+    <h4>What is Nutro, Nucium?</h4>
+    <p class="parameter-description">
+      Nutro and Nucium are nutrients essential to virtual plantlife. Nutro represents Nitrogen and Nucium represents Potassium.
+    </p>
 
-	</div>
+    <h3>The Stack</h3>
+    <h4>Client-Side</h4>
+    <p class="parameter-description">
+      The client platform is written entirely in AngularJS. Long polling of simulation data keeps the lists of simulation dates and requests updated. Each feature of CosmoJS has its own service and associated controllers. Gulp is utilized to reduce the includes required to setup Angular within the all.js file in the public folder.
+    </p>
+    <h4>Server Side</h4>
+    <p class="parameter-description">
+      The server is used to interface between the simulation and simulation data, and to maintain the relation between the user and their simulations. It stores user sessions using Redis but maintains the account information in MongoDB. The simulation files themselves are stored in snapshots files of arrays of data maps on a MongoDB database.</p>
+    <p class="parameter-description">
+      When the user selects a particular world date, the server returns an array of color hexcodes along with a row and column count. These colors are mapped on to a 2D plane to represent the data the map mode is examining. For instance, a plant height map mode would receive a series of greens whose differing shades map to plant height. Sending hex codes instead of plant height values greatly reduces the client side processing necessary to render a date. Faster rendering means the player can quickly move through the dates without pausing for rendering. 
+    </p>
+    <p class="parameter-description">
+      The server will store simulation data keyed to world name and date measured in days. Users will have an account and password and simulations associated with the account. When a user has an open session, the server will track which pending simulation requests the user has open using Redis.
+    </p>
+    <img id="architecture" src="../images/architecture.png" width="600px" height="400px" alt="A high-level design of your architecture, the components of the system and the communication that takes place between them."/>
+    <h4>Libraries Used</h4>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <ul>
+          <li><p><a href="">AngularJS</a> ­ Updating the DOM with simulation data</p></li>
+          <li><p><a href="">Gulp</a> ­ Managing Angular files</p></li>
+          <li><p><a href="">Express</a> ­ The Server itself</p></li>
+          <li><p><a href="">MongoDB</a> ­ Storing simulation files</p></li>
+        </ul>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <ul>
+          <li><p><a href="">PassportJS</a>  Logins and account functionality</p></li>
+          <li><p><a href="">Redis</a> ­ Maintaining user sessions and request data</p></li>
+          <li><p><a href="">SoilScape</a> ­ Simulation</p></li>
+          <li><p><a href="">Heroku</a> ­ Hosting</p></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Post Mortem</h3>
+    <h4>What is the purpose of the app and what features achieve it?</h4>
+    <p class="parameter-description">
+      The purpose of the app is to make accessing the SoilScape simulation and storing its results easy to do. Within a web app, the logic and implications of the simulations are readily apparent and shareable.
+    </p>
+    <p class="parameter-description">
+      A login system was necessary, as tracking which simulations you made through the aether of the internet is silly, and makes tracking your simulations impossible. Then, the actual data of the simulation must be easily graphable. To this end a complex rendering system was implemented to quickly render days of data in mapmodes. Developing the entire app and simulation in JS made combining the components of the application and simulation easy to do. Redis became necessary as tracking the requests the user would queue up, as well as keeping them logged in, became cumbersome.
+    </p>
+
+    <h4>What technical choices, achievements, and failures occured, and how you would suggest others approach the problem in the future?</h4>
+    <p class="parameter-description">
+      I decided to follow the Angular style guide to the T, and it produced a number of problems. The big thing about the style guide is that it suggestions breaking Angular apps, controllers, and services into three different files respectively. At the outset, the project had 30 some odd files, which all needed to be included in the index.html.
+    </p>
+    <p class="parameter-description">
+      The solution to this new problem was to use Gulp to combine the files together, thereby allowing the use of the require and index.js paradigm. The index.html then only included the app.js, which required all the right angular files in order.
+    </p>
+    <p class="parameter-description">
+      I am not sure I would suggest breaking the files up as much as I did, especially given that my app is not some mega application that was hard to dig around.
+    </p>
+    <p class="parameter-description">
+      Another friction point was utilizing ES6 throughout the application. While wonderful to use, the compatability issues that arrize when mixing libraries, while surmountable, can be a huge pain.
+    </p>
+    <p class="parameter-description">
+      I think MongoDB was the perfect database choice for the application. The static nature of the the pages of my simulation plus its direct compatability with Passport made the setup extremely painless.
+    </p>
+    
+    <h4>What part of the project interested you most?</h4>
+    <p class="parameter-description">
+      The most enjoyable part about the process was realizing that the most efficient ways of organizing my code. I had for a while been approaching the MVC concept, with files that took on the shape of models and view-controllers. Having fully grasped the concept, my code feels intuitive, easy to extend, and correct.
+    </p>
+    <p class="parameter-description">
+      Another fun aspect was having all the necessary tools understood and implemented in order to continue to extend my simulation. The problems of storage, manipulation, and user attachment of simulations has been solved. From here I can focus on refining and adding to the simulation.
+    </p>
+  </div>
 </div>

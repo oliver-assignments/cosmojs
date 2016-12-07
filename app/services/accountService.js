@@ -4,6 +4,7 @@ angular.module('accountApp')
     let accountService = {};
 
     let account = null;
+    // accountService.username = null;
 
     accountService.isLoggedIn = () => {
       if(account) {
@@ -30,12 +31,13 @@ angular.module('accountApp')
     accountService.login = (username, password) => {
 
       var deferred = $q.defer();
-      console.log(username);
 
       $http.post('/login', {username: username, password: password})
         .success(function (data, status) {
           if(status === 200 && data.status){
+            console.log(data);
             account = true;
+            accountService.username;
             deferred.resolve();
           } else {
             account = false;
@@ -78,6 +80,7 @@ angular.module('accountApp')
       $http.post('/signup', { username:username, password: password})
       .success((data, status) => {
         if(status===200 && data.status) {
+          console.log("Signup");
           deferred.resolve();
         } else {
           deferred.reject();

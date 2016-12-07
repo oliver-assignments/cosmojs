@@ -188,3 +188,7 @@ canvas {
   height:8em;
   width:8em;
 }
+#architecture {
+  margin:auto;
+  display:block;
+}

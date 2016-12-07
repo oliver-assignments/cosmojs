@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports.homePage = (req,res) => {
-	res.status(200).sendFile(path.join(__dirname + '/../../public/index.html')); 
+  res.status(200).sendFile(path.join(__dirname + '/../html/index.html')); 
 };
 module.exports.utility = require('./utility.js');
 module.exports.manager = require('./manager.js');

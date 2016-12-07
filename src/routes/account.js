@@ -1,13 +1,13 @@
 const account = require('../controllers/account.js');
+const index = require('../controllers');
+const middle = require('../middleware');
 
 module.exports = (app) => {
-  app.get('/signup', account.signupPage);
-  app.post('/signup', account.signup);
+  app.get('/signup', middle.requiresLogout, account.signupPage);
+  app.post('/signup', middle.requiresLogout, account.signup);
 
-  app.get('/login', account.loginPage);
-  app.post('/login', account.login);
+  app.get('/login', middle.requiresLogout, account.loginPage);
+  app.post('/login', middle.requiresLogout, account.login, index.homePage);
 
-  app.get('/logout', account.logout);
-
-  app.get('/status', account.isAuthenticated)
+  app.get('/logout', middle.requiresLogin, account.logout);
 };
