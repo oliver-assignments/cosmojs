@@ -58,13 +58,14 @@ angular.module('simulationManagerApp')
     };
     
     manager.createSim = (form,res) => {
+      console.log(form);
       $http.post('/worlds', form)
         .success((data) => {
           manager.simulations = data;
           res(null,data);
         })
         .error((data) => {
-          res('Create sim error: ' + data);
+          res('Create sim error: ' + data.error);
         });
     };
     manager.deleteSim = (name,res) => {

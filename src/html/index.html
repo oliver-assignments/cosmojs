@@ -32,8 +32,7 @@
 
         </div>
         <div ng-controller="simulationManagerController">
-
-          <h3>Worlds</h3>    
+          <h3 ng-show="simulationManager.simulations.length>0">Worlds</h3>    
           <ul class="list-unstyled">
             <li class="world-listing listing" ng-repeat="sim in simulationManager.simulations" ng-class-even="'darker-odd'">
               <span ng-class="sim.name==context.name ? 'bold-selected' : ''">
@@ -41,17 +40,20 @@
                     ng-click="pickSim(sim.name)">
                   {{sim.name}}
                   
-                  &#8728; 
-                  {{ sim.days | daysToDate:true }}
+                  <!-- &#8728;  -->
+                  <!-- {{ sim.days | daysToDate:true }} -->
                 </span>
               </span>
-              <span class="hidden-xs hidden-sm clickable" ng-click="deleteSim(sim.name)">x</span>
+              <!-- <span class="hidden-xs hidden-sm clickable" ng-click="deleteSim(sim.name)">x</span> -->
             </li>
           </ul>
         </div>
       </div>
 
       <div class="col-xs-12 col-md-9 col-lg-10">
+        <div ng-controller="logoutController">
+          <p class="logout"><a href="/logout">Logout</a></p>
+        </div>
         <div ng-include="pager.page.url"></div>
       </div>
     </div>

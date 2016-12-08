@@ -192,3 +192,7 @@ canvas {
   margin:auto;
   display:block;
 }
+.logout {
+  margin: 1em 1em 0 0;
+  float:right;
+}

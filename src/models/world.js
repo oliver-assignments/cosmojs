@@ -31,14 +31,11 @@ const WorldSchema = new mongoose.Schema({
     required: true,
     defaut: 3
   },
-
   owner: {
     type: mongoose.Schema.ObjectId,
     required: true,
-    ref: 'Account',
+    ref: 'accounts',
   },
-
-  //snapshots: [mongoose.Schema.ObjectId],
   createdDate: {
     type: Date,
     default: Date.now,
