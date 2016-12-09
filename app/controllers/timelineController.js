@@ -5,6 +5,7 @@ angular.module("timelineApp")
       $scope.context = context;
       
       $scope.pickDate = (time) => {
+        alert("Rendering data from the simulation is currently under development.");
         timelineService.pickDate(time,function(err,data){if(err)console.log(err);});
       };
       $scope.getTime = () => {

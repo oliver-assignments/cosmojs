@@ -21,6 +21,9 @@ angular.module("timelineApp")
       });
     };
     timeline.pickLatestDate = (res) => {
+      if(timeline.dates.length == 0)
+        res(null);
+
       timeline.pickDate( timeline.dates[timeline.dates.length-1], res );
     }
 
@@ -40,22 +43,22 @@ angular.module("timelineApp")
       }
     };
 
-    timeline.pickDate = (time,res) => {
-      renderer.renderWorldAtDateWithMode(
-        {
-          name:context.name
-          ,days:time
-          ,mode:context.mode
-          
-        }
-        ,(err,data) => {
-          if(err) {
-            res(err);
-          } else {
-            context.days = time;
-            res(null,data);
-          }
-        });
+    timeline.pickDate = (snapshot,res) => {
+      context.snapshot = snapshot;      
+      // renderer.renderWorldAtDateWithMode(
+      //   {
+      //     name:context.name
+      //     ,days:snapshot.day
+      //     ,mode:context.mode
+      //   }
+      //   ,(err,data) => {
+      //     if(err) {
+      //       res(err);
+      //     } else {
+      //       context.days = time;
+      //       res(null,data);
+      //     }
+      //   });
     };
     return timeline;
   }]);

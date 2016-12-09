@@ -51,17 +51,18 @@ WorldSchema.statics.toAPI = doc => ({
   //snapshots: doc.snapshots,
 });
 
-WorldSchema.statics.findByName = (name, res) => {
+WorldSchema.statics.findByNameAndOwner = (name, ownerId, res) => {
   const search = {
-    name,
+    name:name,
+    owner: convertId(ownerId)
   };
   return WorldModel.findOne(search, res);
 };
-WorldSchema.statics.findByOwner = (ownerId, callback) => {
+WorldSchema.statics.findByOwner = (ownerId, res) => {
   const search = {
     owner: convertId(ownerId),
   };
-  return WorldModel.find(search).select('name rows columns plotsPer').exec(callback);
+  return WorldModel.find(search).select('name rows columns plotsPer').exec(res);
 };
 
 WorldModel = mongoose.model('Worlds', WorldSchema);

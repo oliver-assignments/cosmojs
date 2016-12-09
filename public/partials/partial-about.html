@@ -1,9 +1,9 @@
 <div class="row partial">
   <div class="col-xs-12 col-md-9">
     <h2>About</h2>
-    <h4>What is Cosmopolitos?</h4>
+    <h4>What is Cosmopolitos and CosmoJS?</h4>
     <p class="parameter-description">
-      Cosmopolitos is a MEAN stack application that serves the SoilScape plate tectonics and plant genetics library on the web. Simulations can be created, simulated, stored, and viewed all from the same single page application.
+      CosmoJS is a MEAN stack application that serves the Cosmopolitos plate tectonics and plant genetics library on the web. Simulations can be created, simulated, stored, and viewed all from the same single page application.
     </p>
     <p class="parameter-description">
       The user will be directed to login and create a new simulation when they enter the website. The user is then able to select different parameters that affect the starting map of the simulation. After the simulation is created, the user can request for the world to be simulated a number of days. Each user will have a list of their custom simulations, and will be able to share access to their simulation data, charts and world renders with other users.
@@ -40,11 +40,12 @@
     <h3>The Stack</h3>
     <h4>Client-Side</h4>
     <p class="parameter-description">
-      The client platform is written entirely in AngularJS. Long polling of simulation data keeps the lists of simulation dates and requests updated. Each feature of CosmoJS has its own service and associated controllers. Gulp is utilized to reduce the includes required to setup Angular within the all.js file in the public folder.
+      The client platform is written entirely in AngularJS. Long polling of simulation data keeps the lists of simulation dates and requests updated. Each feature of CosmoJS has its own service and associated controllers. Gulp is utilized to reduce the includes required to setup Angular within an all.js file in the public folder.
     </p>
     <h4>Server Side</h4>
     <p class="parameter-description">
-      The server is used to interface between the simulation and simulation data, and to maintain the relation between the user and their simulations. It stores user sessions using Redis but maintains the account information in MongoDB. The simulation files themselves are stored in snapshots files of arrays of data maps on a MongoDB database.</p>
+      The server is used to interface between the simulation and simulation data, and to maintain the relation between the user and their simulations. It stores user sessions using Redis and maintains the account information in MongoDB. The simulation files themselves are stored in snapshots files of arrays of data maps on a MongoDB database.
+    </p>
     <p class="parameter-description">
       When the user selects a particular world date, the server returns an array of color hexcodes along with a row and column count. These colors are mapped on to a 2D plane to represent the data the map mode is examining. For instance, a plant height map mode would receive a series of greens whose differing shades map to plant height. Sending hex codes instead of plant height values greatly reduces the client side processing necessary to render a date. Faster rendering means the player can quickly move through the dates without pausing for rendering. 
     </p>

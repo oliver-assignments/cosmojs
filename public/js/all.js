@@ -317,6 +317,7 @@ angular.module('simulationRendererApp')
     $scope.context = context;
 
     $scope.changeMapMode = (mode) => {
+      alert(`Rendering a map from mongo document is under development, and is beyond the scope of the assignment.`)
       renderer.changeMapMode(mode, (err,data) => {
         if(err) {
           console.log(err);
@@ -422,6 +423,7 @@ angular.module("timelineApp")
       $scope.context = context;
       
       $scope.pickDate = (time) => {
+        alert("Rendering data from the simulation is currently under development.");
         timelineService.pickDate(time,function(err,data){if(err)console.log(err);});
       };
       $scope.getTime = () => {
@@ -710,9 +712,12 @@ angular.module('accountApp')
 angular.module('contextApp')
   .factory('contextService', [() => {
     var context = {
-      name : 'No Simulation'
-      ,days : 0
+      name: 'No Simulation'
+      ,days: 0
+      ,columns: 0
+      ,rows: 0
       ,mode: 'Satellite'
+      ,snapshot: {}
     };
 
     context.getSim = (res) => {
@@ -804,6 +809,8 @@ angular.module('simulationManagerApp')
       for(var s = 0 ; s < manager.simulations.length;s++) {
         if(manager.simulations[s].name == name) {
           context.name = name;
+          context.rows = manager.simulations[s].rows;
+          context.columns = manager.simulations[s].columns;
           pager.changePage('Home', (err) => {});
 
           //update dates
@@ -854,13 +861,23 @@ angular.module('simulationManagerApp')
           res('Create sim error: ' + data.error);
         });
     };
-    manager.deleteSim = (name,res) => {
-      console.log("Attempting to delete " + name);
+    manager.deleteSim = (name, res) => {
+      let doRandom = name == context.name;
 
       $http.delete('/worlds/' + name)
         .success((data) => {
           manager.simulations = data;
-          res(null,data);
+
+          //  Only pick random if you dleted the one you were on.
+          if(manager.simulations.length > 0){
+            if(doRandom){
+              manager.pickRandom(()=>{});
+            } else {
+              res(null, data);
+            }
+          } else {
+            pager.changePage('Create', ()=>{});
+          }
         })  
         .error((data) => {
           res('Delete sim error: ' + data);
@@ -924,22 +941,22 @@ angular.module('simulationRendererApp')
     ];
 
     renderer.changeMapMode = (req,res) => {
-      if(req != context.mapMode) {
-        renderer.renderWorldAtDateWithMode(
-          { 
-            name:context.name
-            ,mode:req
-            ,days:context.days
-          },
-          (err,data) => {
-            if(err) {
-              res(err);
-            } else {
-              context.mode = req;
-              res(null);
-            }
-          });
-      }
+      // if(req != context.mapMode) {
+      //   renderer.renderWorldAtDateWithMode(
+      //     { 
+      //       name:context.name
+      //       ,mode:req
+      //       ,days:context.days
+      //     },
+      //     (err,data) => {
+      //       if(err) {
+      //         res(err);
+      //       } else {
+      //         context.mode = req;
+      //         res(null);
+      //       }
+      //     });
+      // }
     };
 
     renderer.renderWorldAtDateWithMode = (req,res) => {
@@ -1208,6 +1225,9 @@ angular.module("timelineApp")
       });
     };
     timeline.pickLatestDate = (res) => {
+      if(timeline.dates.length == 0)
+        res(null);
+
       timeline.pickDate( timeline.dates[timeline.dates.length-1], res );
     }
 
@@ -1227,22 +1247,22 @@ angular.module("timelineApp")
       }
     };
 
-    timeline.pickDate = (time,res) => {
-      renderer.renderWorldAtDateWithMode(
-        {
-          name:context.name
-          ,days:time
-          ,mode:context.mode
-          
-        }
-        ,(err,data) => {
-          if(err) {
-            res(err);
-          } else {
-            context.days = time;
-            res(null,data);
-          }
-        });
+    timeline.pickDate = (snapshot,res) => {
+      context.snapshot = snapshot;      
+      // renderer.renderWorldAtDateWithMode(
+      //   {
+      //     name:context.name
+      //     ,days:snapshot.day
+      //     ,mode:context.mode
+      //   }
+      //   ,(err,data) => {
+      //     if(err) {
+      //       res(err);
+      //     } else {
+      //       context.days = time;
+      //       res(null,data);
+      //     }
+      //   });
     };
     return timeline;
   }]);

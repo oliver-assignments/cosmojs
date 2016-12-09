@@ -6,6 +6,7 @@ angular.module('simulationRendererApp')
     $scope.context = context;
 
     $scope.changeMapMode = (mode) => {
+      alert(`Rendering a map from mongo document is under development, and is beyond the scope of the assignment.`)
       renderer.changeMapMode(mode, (err,data) => {
         if(err) {
           console.log(err);

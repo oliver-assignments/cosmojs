@@ -9,12 +9,15 @@
             {{ context.days | daysToDate: true }}
             &#8728; 
             {{ context.mode }}
+            &#8728; 
+            {{ context.rows}}x{{ context.columns}} provinces
           </span>
         </h3>
       </div>
     </div>
     <div class="row">
       <div class="col-xs-12 col-md-10 col-md-offset-1">
+        Simulation rendering with mongo is indev.
         <canvas id="canvas" width="960px" height="600px"></canvas>
       </div>
     </div>
@@ -40,7 +43,7 @@
   <div class="col-xs-12 col-md-3">
     <div class="row" ng-controller="timelineController">
       <div class="col-xs-12">
-        <div class="hidden-xs hidden-sm" ng-controller="simulationRequestsController">
+        <!-- <div class="hidden-xs hidden-sm" ng-controller="simulationRequestsController">
           <h4>Requests</h4>
           <p>
           <span class="clickable" ng-click="createRequest(context.name,1)">day</span>,
@@ -55,7 +58,7 @@
               <span class="clickable" ng-click="deleteSimulationsRequests(request.name)">X</span></li>
           </ul>
           <button style="float:right;" class="btn btn-sm btn-default" ng-click="processSimulationRequests()">Process</button>
-        </div>
+        </div> -->
 
         <div class="row">
           <div class="col-xs-12">
@@ -64,7 +67,7 @@
               <div class="listing" ng-repeat="time in timelineService.dates track by $index" key-navigation ng-class-even="'odd'">
                 <span 
                 ng-class="time == context.days ? 'bold-selected' : '' "
-                class="clickable" ng-click="pickDate(time)"> {{ time | daysToDate:true }}</span>
+                class="clickable" ng-click="pickDate(time)"> {{ time.day | daysToDate:true }}</span>
               </div> 
             </div>
           </div>

@@ -18,6 +18,8 @@ angular.module('simulationManagerApp')
       for(var s = 0 ; s < manager.simulations.length;s++) {
         if(manager.simulations[s].name == name) {
           context.name = name;
+          context.rows = manager.simulations[s].rows;
+          context.columns = manager.simulations[s].columns;
           pager.changePage('Home', (err) => {});
 
           //update dates
@@ -68,13 +70,23 @@ angular.module('simulationManagerApp')
           res('Create sim error: ' + data.error);
         });
     };
-    manager.deleteSim = (name,res) => {
-      console.log("Attempting to delete " + name);
+    manager.deleteSim = (name, res) => {
+      let doRandom = name == context.name;
 
       $http.delete('/worlds/' + name)
         .success((data) => {
           manager.simulations = data;
-          res(null,data);
+
+          //  Only pick random if you dleted the one you were on.
+          if(manager.simulations.length > 0){
+            if(doRandom){
+              manager.pickRandom(()=>{});
+            } else {
+              res(null, data);
+            }
+          } else {
+            pager.changePage('Create', ()=>{});
+          }
         })  
         .error((data) => {
           res('Delete sim error: ' + data);

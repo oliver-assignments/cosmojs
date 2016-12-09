@@ -12,22 +12,22 @@ angular.module('simulationRendererApp')
     ];
 
     renderer.changeMapMode = (req,res) => {
-      if(req != context.mapMode) {
-        renderer.renderWorldAtDateWithMode(
-          { 
-            name:context.name
-            ,mode:req
-            ,days:context.days
-          },
-          (err,data) => {
-            if(err) {
-              res(err);
-            } else {
-              context.mode = req;
-              res(null);
-            }
-          });
-      }
+      // if(req != context.mapMode) {
+      //   renderer.renderWorldAtDateWithMode(
+      //     { 
+      //       name:context.name
+      //       ,mode:req
+      //       ,days:context.days
+      //     },
+      //     (err,data) => {
+      //       if(err) {
+      //         res(err);
+      //       } else {
+      //         context.mode = req;
+      //         res(null);
+      //       }
+      //     });
+      // }
     };
 
     renderer.renderWorldAtDateWithMode = (req,res) => {
