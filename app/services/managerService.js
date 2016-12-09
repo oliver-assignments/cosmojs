@@ -18,7 +18,7 @@ angular.module('simulationManagerApp')
       for(var s = 0 ; s < manager.simulations.length;s++) {
         if(manager.simulations[s].name == name) {
           context.name = name;
-          pager.changePage('Home',function(err){});
+          pager.changePage('Home', (err) => {});
 
           //update dates
           timeline.getDates((err,data) => {

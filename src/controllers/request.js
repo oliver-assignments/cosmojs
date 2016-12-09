@@ -16,7 +16,8 @@
 //         res(null, requests);
 //       });
 //     } else {
-//       res(`${request.name} cannot be simulated for ${request.days}. Year values must be above 0.`, requests);
+//       res(`${request.name} cannot be simulated for ${request.days}.
+//          Year values must be above 0.`, requests);
 //     }
 //   } else {
 //     res('Bad or missing request data.', requests);
@@ -58,7 +59,8 @@
 //       //   res(err);
 //       //   return;
 //       // }
-//       // var newDates = soilScape.simulate(simulation.dates[simulation.dates.length-1], request[r].days, 10);
+//       // var newDates = soilScape.simulate(
+//          simulation.dates[simulation.dates.length-1], request[r].days, 10);
 //       // for(var d = 0 ; d < newDates.length; d++)
 //       //   simulation.dates.push(newDates[d]);
 //       // }

@@ -6,14 +6,14 @@ const RedisStore = require('connect-redis')(session);
 const url = require('url');
 
 const passport = require('passport');
-const localStrategy = require('passport-local' ).Strategy;
+const LocalStrategy = require('passport-local').Strategy;
 
 const cookieParser = require('cookie-parser');
 const favicon = require('serve-favicon');
 const bodyParser = require('body-parser');
 
 const routes = require('./routes');
-const account = require('./models/account.js');
+const Account = require('./models/account.js');
 
 const dbURL = process.env.MONGODB_URI || 'mongodb://localhost/cosmo';
 mongoose.connect(dbURL, (err) => {
@@ -37,11 +37,11 @@ if (process.env.REDISCLOUD_URL) {
 
 const app = express();
 
-app.use(express.static(__dirname + '/../public') );
-app.use(favicon(__dirname + '/../public/images/none.ico') );
+app.use(express.static(`${__dirname}/../public`));
+app.use(favicon(`${__dirname}/../public/images/none.ico`));
 
-app.use(bodyParser.json() );
-app.use(bodyParser.urlencoded({extended: false})); 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(session({
@@ -62,13 +62,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new localStrategy(account.authenticate()));
-passport.serializeUser(account.serializeUser());
-passport.deserializeUser(account.deserializeUser());
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
 
 routes(app);
 
 const port = Number(process.env.PORT || 3000);
 app.listen(port);
 
-console.log("Listening on port " + port);
+console.log(`Listening on port ${port}`);

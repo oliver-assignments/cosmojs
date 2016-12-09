@@ -11,6 +11,9 @@ angular.module('pageApp')
     service.page = service.pages[0];
 
     service.changePage = (name, res) => {
+      if(name == "Home") {
+        service.page = { name:"Home", url: "partials/partial-home.html" }
+      }
       for(var p = 0 ; p < service.pages.length; p++) {
         if(service.pages[p].name == name) {
           service.page = service.pages[p];

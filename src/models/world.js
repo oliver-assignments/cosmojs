@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const snapshotModel = require('./snapshot.js');
+
 mongoose.Promise = global.Promise;
 
 let WorldModel = {};
@@ -10,26 +10,26 @@ const WorldSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim:true,
-    default: "Nameless Expanse"
+    trim: true,
+    default: 'Nameless Expanse',
   },
   rows: {
     type: Number,
     min: 1,
     required: true,
-    default: 50
+    default: 50,
   },
   columns: {
     type: Number,
     min: 1,
     required: true,
-    default: 80
+    default: 80,
   },
   plotsPer: {
     type: Number,
     min: 1,
     required: true,
-    defaut: 3
+    defaut: 3,
   },
   owner: {
     type: mongoose.Schema.ObjectId,
@@ -39,7 +39,7 @@ const WorldSchema = new mongoose.Schema({
   createdDate: {
     type: Date,
     default: Date.now,
-  }
+  },
 });
 
 WorldSchema.statics.toAPI = doc => ({
@@ -55,7 +55,7 @@ WorldSchema.statics.findByName = (name, res) => {
   const search = {
     name,
   };
- return WorldModel.findOne(search, res);
+  return WorldModel.findOne(search, res);
 };
 WorldSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
@@ -63,7 +63,7 @@ WorldSchema.statics.findByOwner = (ownerId, callback) => {
   };
   return WorldModel.find(search).select('name rows columns plotsPer').exec(callback);
 };
- 
+
 WorldModel = mongoose.model('Worlds', WorldSchema);
 
 module.exports.WorldModel = WorldModel;

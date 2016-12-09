@@ -804,7 +804,7 @@ angular.module('simulationManagerApp')
       for(var s = 0 ; s < manager.simulations.length;s++) {
         if(manager.simulations[s].name == name) {
           context.name = name;
-          pager.changePage('Home',function(err){});
+          pager.changePage('Home', (err) => {});
 
           //update dates
           timeline.getDates((err,data) => {
@@ -897,6 +897,9 @@ angular.module('pageApp')
     service.page = service.pages[0];
 
     service.changePage = (name, res) => {
+      if(name == "Home") {
+        service.page = { name:"Home", url: "partials/partial-home.html" }
+      }
       for(var p = 0 ; p < service.pages.length; p++) {
         if(service.pages[p].name == name) {
           service.page = service.pages[p];
