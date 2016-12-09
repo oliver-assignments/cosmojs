@@ -1,9 +1,9 @@
-const renderer = require('../controllers/render.js');
+// const renderer = require('../controllers/render.js');
 
 //     Render apis    //
-module.exports = (app) => {
+// module.exports = (app) => {
   //  Gets the current data of a world
-  //app.get('/render/:name/latest/:mode', renderer.renderSimulationContextWithMode);
+  // app.get('/render/:name/latest/:mode', renderer.renderSimulationContextWithMode);
   //     {
   //       name: req.params.name,
   //       mode: req.params.mode,
@@ -19,5 +19,5 @@ module.exports = (app) => {
   // });
 
   //  Get teh world map data at a specifc date
-  //app.get('/render/:id/:mode', renderer.renderSimulationContextWithMode);
-};
+  // app.get('/render/:id/:mode', renderer.renderSimulationContextWithMode);
+// };

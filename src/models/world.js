@@ -53,8 +53,8 @@ WorldSchema.statics.toAPI = doc => ({
 
 WorldSchema.statics.findByNameAndOwner = (name, ownerId, res) => {
   const search = {
-    name:name,
-    owner: convertId(ownerId)
+    name,
+    owner: convertId(ownerId),
   };
   return WorldModel.findOne(search, res);
 };

@@ -10,36 +10,36 @@ const ShapshotSchema = new mongoose.Schema({
   day: {
     type: Number,
     min: 0,
-    default: 0
+    default: 0,
   },
   tilt: {
     type: Number,
     min: 0,
     max: 1,
     required: true,
-    default: 0.6
+    default: 0.6,
   },
   rotation: {
     type: Number,
     min: 0,
     max: 3,
     required: true,
-    default: 1
+    default: 1,
   },
   rules: [
     {
       name: String,
       type: mongoose.Schema.Types.Mixed,
-      value: mongoose.Schema.Types.Mixed
-    }
+      value: mongoose.Schema.Types.Mixed,
+    },
   ],
   datasets: [
     {
       name: String,
       minValue: Number,
       maxValue: Number,
-      value: [Number]
-    }
+      value: [Number],
+    },
   ],
   world: {
     type: String,
@@ -68,14 +68,14 @@ ShapshotSchema.statics.toAPI = doc => ({
 ShapshotSchema.statics.findByWorldNameAndOwner = (worldName, ownerId, res) => {
   const search = {
     world: worldName,
-    owner: convertId(ownerId)
+    owner: convertId(ownerId),
   };
   return SnapshotModel.find(search).select('day tilt rotation rules datasets').exec(res);
 };
 
 ShapshotSchema.statics.findByID = (id, res) => {
   const search = {
-    _id,
+    _id: id,
   };
   return SnapshotModel.findOne(search).select('day tilt rotation rules datasets').exec(res);
 };

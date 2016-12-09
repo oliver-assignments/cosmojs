@@ -17,7 +17,7 @@ module.exports.createSimulation = function (req, res) {
     plotsPer: req.body.plantsPer,
     owner: req.user._doc._id,
   };
-  
+
   // const worldData = soilScape.createSimulation(req);
 
   const newWorld = new World.WorldModel(worldData);
@@ -50,46 +50,42 @@ module.exports.createSimulation = function (req, res) {
 };
 
 module.exports.deleteSimulation = function (req, res) {
-  if(!req.params.name) {
-    return res.status(400).json({error: "No world name specified for delete."});
+  if (!req.params.name) {
+    return res.status(400).json({ error: 'No world name specified for delete.' });
   }
-  return World.WorldModel.remove({name: req.params.name, owner: req.user._doc._id}, 
-    (err, doc) => {
-    
-    if(err) {
-      return res.status(500).json(err);
-    }
+  return World.WorldModel.remove({ name: req.params.name, owner: req.user._doc._id },
+    (err) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
 
     //  Delete associated snapshots
-    return Snapshot.SnapshotModel.remove({world: req.params.name, owner: req.user._doc._id}, 
-      (snapshotErr, doc) => {
-      
-      if(snapshotErr) {
-        return res.status(500).json(snapshotErr);
-      }
-      return module.exports.getSimulationDescriptions(req, res);
+      return Snapshot.SnapshotModel.remove({ world: req.params.name, owner: req.user._doc._id },
+      (snapshotErr) => {
+        if (snapshotErr) {
+          return res.status(500).json(snapshotErr);
+        }
+        return module.exports.getSimulationDescriptions(req, res);
+      });
     });
-  });
 };
 module.exports.clearSimulations = function (req, res) {
-  return World.WorldModel.remove({owner: req.user._doc._id}, 
-    (err, docs) => {
-    
-    if(err) {
-      return res.status(500).json(err);
-    }
-
-//  Delete associated snapshots
-    return Snapshot.SnapshotModel.remove({owner: req.user._doc._id}, 
-      (snapshotErr, docs) => {
-      
-      if(snapshotErr) {
-        return res.status(500).json(snapshotErr);
+  return World.WorldModel.remove({ owner: req.user._doc._id },
+    (err) => {
+      if (err) {
+        return res.status(500).json(err);
       }
 
-      return module.exports.getSimulationDescriptions(req, res);
+//  Delete associated snapshots
+      return Snapshot.SnapshotModel.remove({ owner: req.user._doc._id },
+      (snapshotErr) => {
+        if (snapshotErr) {
+          return res.status(500).json(snapshotErr);
+        }
+
+        return module.exports.getSimulationDescriptions(req, res);
       });
-  });
+    });
 };
 
 module.exports.getSimulationDescriptions = function (req, res) {
@@ -150,12 +146,15 @@ module.exports.getSimulationContext = function (req, res) {
 };
 
 module.exports.getSimulationTimeline = function (req, res) {
-  Snapshot.SnapshotModel.findByWorldNameAndOwner(req.params.name, req.user._doc._id, (err, docs) => {
-    if (err) {
-      return res.status(400).json(err);
-    }
-    return res.status(200).json(docs);
-  });
+  Snapshot.SnapshotModel.findByWorldNameAndOwner(
+    req.params.name,
+    req.user._doc._id,
+    (err, docs) => {
+      if (err) {
+        return res.status(400).json(err);
+      }
+      return res.status(200).json(docs);
+    });
 };
 
 module.exports.getSimulationDescription = function (req, res) {
