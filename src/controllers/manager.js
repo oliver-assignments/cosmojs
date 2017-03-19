@@ -1,124 +1,93 @@
-const World = require('../models').World;
 const Snapshot = require('../models').Snapshot;
 // const soilScape = require('soil-scape');
 
 module.exports.createSimulation = function (req, res) {
   if (!req.body.name ||
       !req.body.size ||
-      !req.body.plantsPer) {
+      !req.body.plantsPer ||
+      !req.body.tilt ||
+      !req.body.rotation) {
     return res
       .status(400)
-      .json({ error: 'Name, rows, columns, and plant plos per province are all required' });
+      .json({ error: 'Name, rows, columns, plant plots per province, tilt, and rotation are all required' });
   }
-  const worldData = {
+  const snapshotData = {
     name: req.body.name,
     rows: req.body.size.rows,
     columns: req.body.size.columns,
     plotsPer: req.body.plantsPer,
     owner: req.user._doc._id,
+    day: 0,
+    tilt: 0.5,
+    rotation: 1,
+    datasets: [],
+    rules: [],
   };
 
   // const worldData = soilScape.createSimulation(req);
 
-  const newWorld = new World.WorldModel(worldData);
+  const newSnapshot = new Snapshot.SnapshotModel(snapshotData);
 
-  return newWorld.save((worldSaveErr) => {
-    if (worldSaveErr) {
-      return res.status(400).json(worldSaveErr);
+  return newSnapshot.save((snapshotSaveError) => {
+    if (snapshotSaveError) {
+      return res.status(400).json(snapshotSaveError);
     }
-
-    //  Create the first day
-    const snapshotData = {
-      day: 0,
-      tilt: 0.5,
-      rotaion: 1,
-      datasets: [],
-      rules: [],
-      owner: req.user._doc._id,
-      world: req.body.name,
-    };
-    const newSnapshot = new Snapshot.SnapshotModel(snapshotData);
-
-    return newSnapshot.save((snapshotSaveErr) => {
-      if (snapshotSaveErr) {
-        //  Delete simulation ^
-        return res.status(400).json(snapshotSaveErr);
-      }
-      return module.exports.getSimulationDescriptions(req, res);
-    });
+    //  Return descriptions of simulations if we create a new one
+    return module.exports.getSimulationDescriptions(req, res);
   });
 };
 
-module.exports.deleteSimulation = function (req, res) {
+module.exports.deleteWorld = function (req, res) {
   if (!req.params.name) {
-    return res.status(400).json({ error: 'No world name specified for delete.' });
+    return res.status(400).json({ error: 'No world name specified for deletion.' });
   }
-  return World.WorldModel.remove({ name: req.params.name, owner: req.user._doc._id },
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
-
-    //  Delete associated snapshots
-      return Snapshot.SnapshotModel.remove({ world: req.params.name, owner: req.user._doc._id },
-      (snapshotErr) => {
-        if (snapshotErr) {
-          return res.status(500).json(snapshotErr);
-        }
-        return module.exports.getSimulationDescriptions(req, res);
-      });
-    });
+  //  Delete snapshots associated with name and account
+  return Snapshot.SnapshotModel.remove({ name: req.params.name, owner: req.user._doc._id },
+  (snapshotErr) => {
+    if (snapshotErr) {
+      return res.status(500).json(snapshotErr);
+    }
+    return module.exports.getSimulationDescriptions(req, res);
+  });
 };
-module.exports.clearSimulations = function (req, res) {
-  return World.WorldModel.remove({ owner: req.user._doc._id },
-    (err) => {
-      if (err) {
-        return res.status(500).json(err);
-      }
-
-//  Delete associated snapshots
-      return Snapshot.SnapshotModel.remove({ owner: req.user._doc._id },
-      (snapshotErr) => {
-        if (snapshotErr) {
-          return res.status(500).json(snapshotErr);
-        }
-
-        return module.exports.getSimulationDescriptions(req, res);
-      });
-    });
+module.exports.clearWorlds = function (req, res) {
+  //  Delete snapshots associated with my account
+  return Snapshot.SnapshotModel.remove({ owner: req.user._doc._id },
+  (snapshotErr) => {
+    if (snapshotErr) {
+      return res.status(500).json(snapshotErr);
+    }
+    return module.exports.getSimulationDescriptions(req, res);
+  });
 };
 
-module.exports.getSimulationDescriptions = function (req, res) {
-  World.WorldModel.findByOwner(req.user._doc._id, (err, docs) => {
+module.exports.getWorldDescriptions = function (req, res) {
+  
+  res.status(501).send('Not implemented.');
+
+  //  Get unique by owner or just grab the oldest
+  Snapshot.SnapshotModel.findByOwner(req.user._doc._id, Snapshot.descriptionData, (err, docs) => {
     if (err) {
       return res.status(400).json(err);
     }
     return res.status(200).json(docs);
   });
-  // const descriptions = [];
-  // for (let i = 0; i < simulations.length; i += 1) {
-  //   descriptions.push(
-  //     {
-  //       name: simulations[i].name,
-  //       days: simulations[i].dates[simulations[i].dates.length - 1].days,
-  //       rules: simulations[i].dates[simulations[i].dates.length - 1].rules,
-  //     });
-  // }
 };
 
-module.exports.getSimulation = function (req, res) {
-  // for (let s = 0; s < simulations.length; s += 1) {
-  //   // console.log(simulations[s].name + " equals " + req + "?");
-  //   if (simulations[s].name === req) {
-  //     res(null, simulations[s]);
-  //     return;
-  //   }
-  // }
-  // res.status(404).send(`Cannot find simulation named ${req}.`);
+module.exports.getWorld = function (req, res) {
+
   res.status(501).send('Not implemented.');
-};
+  
+  Snapshot.SnapshotModel.findById(
+    req.params._id,
+    Snapshot.allData,
+    (err, doc) => {
+      if (err) {
+        return res.status(400).json(err);
+      }
+      return res.status(200).json(doc);
+    });
 
-module.exports.getSimulationContext = function (req, res) {
   // exports.getSimulation(req.name, (err, simulation) => {
   //   if (err) {
   //     res(err);
@@ -142,13 +111,13 @@ module.exports.getSimulationContext = function (req, res) {
   //   }
   // });
   // res.status(404).send(`Cannot find simulation named ${req}.`);
-  res.status(501).send('Not implemented.');
 };
 
-module.exports.getSimulationTimeline = function (req, res) {
-  Snapshot.SnapshotModel.findByWorldNameAndOwner(
+module.exports.getWorldTimeline = function (req, res) {
+  Snapshot.SnapshotModel.findByNameAndOwner(
     req.params.name,
     req.user._doc._id,
+    Snapshot.descriptionData,
     (err, docs) => {
       if (err) {
         return res.status(400).json(err);
@@ -157,17 +126,14 @@ module.exports.getSimulationTimeline = function (req, res) {
     });
 };
 
-module.exports.getSimulationDescription = function (req, res) {
-  // exports.getSimulation(req, (err, simulation) => {
-  //   if (err) {
-  //     res(err);
-  //     return;
-  //   }
-  //   res(null, {
-  //     name: simulation.name,
-  //     days: simulation.dates[simulation.dates.length - 1].days,
-  //     rules: simulation.dates[simulation.dates.length - 1].rules,
-  //   });
-  // });
-  res.status(501).send('Not implemented.');
+module.exports.getWorldDescription = function (req, res) {
+
+  Snapshot.SnapshotModel.findByNameAndOwner(
+    req.params.name,
+    req.user._doc._id, Snapshot.descriptionData, (err, docs) => {
+    if (err) {
+      return res.status(400).json(err);
+    }
+    res.status(200).json(docs[doc.length-1]);
+  });
 };

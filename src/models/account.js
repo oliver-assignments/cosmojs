@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 
 //                                                                           //
-//  PLEASE NOTE: Passport handles salting and hashing, I've checked the db!  //
+//  Passport handles salting and hashing, I've checked the db!  //
 //                                                                           //
 
 const Account = new mongoose.Schema({

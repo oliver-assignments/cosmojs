@@ -713,11 +713,13 @@ angular.module('contextApp')
   .factory('contextService', [() => {
     var context = {
       name: 'No Simulation'
+      ,id: "0000"
       ,days: 0
       ,columns: 0
       ,rows: 0
       ,mode: 'Satellite'
       ,snapshot: {}
+
     };
 
     context.getSim = (res) => {
@@ -805,10 +807,11 @@ angular.module('simulationManagerApp')
       }
     };
 
-    manager.pickSim = (name,res) => {
+    manager.pickSim = (id,res) => {
       for(var s = 0 ; s < manager.simulations.length;s++) {
-        if(manager.simulations[s].name == name) {
-          context.name = name;
+        if(manager.simulations[s].id == id) {
+          context.name = manager.simulations[s].name;
+          context.id = manager.simulations[s].id;
           context.rows = manager.simulations[s].rows;
           context.columns = manager.simulations[s].columns;
           pager.changePage('Home', (err) => {});
@@ -861,10 +864,10 @@ angular.module('simulationManagerApp')
           res('Create sim error: ' + data.error);
         });
     };
-    manager.deleteSim = (name, res) => {
-      let doRandom = name == context.name;
+    manager.deleteSim = (id, res) => {
+      let doRandom = id == context.id;
 
-      $http.delete('/worlds/' + name)
+      $http.delete('/worlds/' + id)
         .success((data) => {
           manager.simulations = data;
 
@@ -1213,7 +1216,7 @@ angular.module("timelineApp")
         if(err) {
           res(err);
         } else {
-          $http.get('/worlds/' + context.name + '/timeline')
+          $http.get('/worlds/' + context.id + '/timeline')
             .success((data) => {
               timeline.dates = data;
               res(null,data);
@@ -1248,7 +1251,7 @@ angular.module("timelineApp")
     };
 
     timeline.pickDate = (snapshot,res) => {
-      context.snapshot = snapshot;      
+      // context.snapshot = snapshot;      
       // renderer.renderWorldAtDateWithMode(
       //   {
       //     name:context.name

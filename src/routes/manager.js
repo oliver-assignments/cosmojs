@@ -6,9 +6,9 @@ module.exports = (app) => {
   app.get('/worlds/descriptions', manager.getSimulationDescriptions);
   app.delete('/worlds', manager.clearSimulations);
 
-  app.get('/worlds/:name/decription', manager.getSimulationDescriptions);
-  app.get('/worlds/:name/timeline', manager.getSimulationTimeline);
-  app.get('/worlds/:name/:day', manager.getSimulationContext);
-  app.get('/worlds/:name/latest', manager.getSimulationContext);
-  app.delete('/worlds/:name', manager.deleteSimulation);
+  app.get('/worlds/:id/decription', manager.getSimulationDescriptions);
+  app.get('/worlds/:id/timeline', manager.getSimulationTimeline);
+  app.get('/worlds/:id/:day', manager.getSimulationContext);
+  app.get('/worlds/:id/latest', manager.getSimulationContext);
+  app.delete('/worlds/:id', manager.deleteSimulation);
 };

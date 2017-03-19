@@ -7,6 +7,30 @@ let SnapshotModel = {};
 const convertId = mongoose.Types.ObjectId;
 
 const ShapshotSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+    default: 'Nameless Expanse',
+  },
+  rows: {
+    type: Number,
+    min: 1,
+    required: true,
+    default: 50,
+  },
+  columns: {
+    type: Number,
+    min: 1,
+    required: true,
+    default: 80,
+  },
+  plotsPer: {
+    type: Number,
+    min: 1,
+    required: true,
+    defaut: 3,
+  },
   day: {
     type: Number,
     min: 0,
@@ -29,7 +53,7 @@ const ShapshotSchema = new mongoose.Schema({
   rules: [
     {
       name: String,
-      type: mongoose.Schema.Types.Mixed,
+      type: String,
       value: mongoose.Schema.Types.Mixed,
     },
   ],
@@ -41,10 +65,6 @@ const ShapshotSchema = new mongoose.Schema({
       value: [Number],
     },
   ],
-  world: {
-    type: String,
-    required: true,
-  },
   owner: {
     type: mongoose.Schema.ObjectId,
     required: true,
@@ -58,6 +78,10 @@ const ShapshotSchema = new mongoose.Schema({
 
 ShapshotSchema.statics.toAPI = doc => ({
   // _id is built into your mongo document and is guaranteed to be unique
+  name: doc.name,
+  rows: doc.rows,
+  columns: doc.columns,
+  plotsPer: doc.plotsPer,
   day: doc.day,
   tilt: doc.tilt,
   rotation: doc.rotations,
@@ -65,22 +89,30 @@ ShapshotSchema.statics.toAPI = doc => ({
   datasets: doc.datasets,
 });
 
-ShapshotSchema.statics.findByWorldNameAndOwner = (worldName, ownerId, res) => {
+SnapshotSchema.statics.findByNameAndOwner = (name, ownerId, searchParameters, res) => {
   const search = {
-    world: worldName,
+    name,
     owner: convertId(ownerId),
   };
-  return SnapshotModel.find(search).select('day tilt rotation rules datasets').exec(res);
+  return SnapshotModel.find(search, res).select(searchParameters).exec(res);
 };
-
-ShapshotSchema.statics.findByID = (id, res) => {
+ShapshotSchema.statics.findById = (id, searchParameters, res) => {
   const search = {
     _id: id,
   };
-  return SnapshotModel.findOne(search).select('day tilt rotation rules datasets').exec(res);
+  return SnapshotModel.findOne(search).select(searchParameters).exec(res);
+};
+SnapshotSchema.statics.findByOwner = (ownerId, searchParameters, res) => {
+  const search = {
+    owner: convertId(ownerId),
+  };
+  return SnapshotModel.find(search).select(searchParameters).exec(res);
 };
 
-SnapshotModel = mongoose.model('Snapshots', ShapshotSchema);
+SnapshotModel = mongoose.model('snapshots', ShapshotSchema);
+
+module.exports.allData = "name rows columns day tilt rotation rules datasets";
+module.exports.descriptionData = "name rows columns day rules";
 
 module.exports.SnapshotModel = SnapshotModel;
 module.exports.ShapshotSchema = ShapshotSchema;

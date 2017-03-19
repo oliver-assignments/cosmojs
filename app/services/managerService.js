@@ -14,10 +14,11 @@ angular.module('simulationManagerApp')
       }
     };
 
-    manager.pickSim = (name,res) => {
+    manager.pickSim = (id,res) => {
       for(var s = 0 ; s < manager.simulations.length;s++) {
-        if(manager.simulations[s].name == name) {
-          context.name = name;
+        if(manager.simulations[s].id == id) {
+          context.name = manager.simulations[s].name;
+          context.id = manager.simulations[s].id;
           context.rows = manager.simulations[s].rows;
           context.columns = manager.simulations[s].columns;
           pager.changePage('Home', (err) => {});
@@ -70,10 +71,10 @@ angular.module('simulationManagerApp')
           res('Create sim error: ' + data.error);
         });
     };
-    manager.deleteSim = (name, res) => {
-      let doRandom = name == context.name;
+    manager.deleteSim = (id, res) => {
+      let doRandom = id == context.id;
 
-      $http.delete('/worlds/' + name)
+      $http.delete('/worlds/' + id)
         .success((data) => {
           manager.simulations = data;
 

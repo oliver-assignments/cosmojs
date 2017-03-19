@@ -9,7 +9,7 @@ angular.module("timelineApp")
         if(err) {
           res(err);
         } else {
-          $http.get('/worlds/' + context.name + '/timeline')
+          $http.get('/worlds/' + context.id + '/timeline')
             .success((data) => {
               timeline.dates = data;
               res(null,data);
@@ -44,7 +44,7 @@ angular.module("timelineApp")
     };
 
     timeline.pickDate = (snapshot,res) => {
-      context.snapshot = snapshot;      
+      // context.snapshot = snapshot;      
       // renderer.renderWorldAtDateWithMode(
       //   {
       //     name:context.name
