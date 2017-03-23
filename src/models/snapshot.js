@@ -96,7 +96,15 @@ SnapshotSchema.statics.findByNameAndOwner = (name, ownerId, searchParameters, re
     name,
     owner: convertId(ownerId),
   };
-  return SnapshotModel.find(search, res).select(searchParameters).exec(res);
+  return SnapshotModel.find(search).select(searchParameters).exec(res);
+};
+SnapshotSchema.statics.findByNameDayAndOwner = (name, day, ownerId, searchParameters, res) => {
+  const search = {
+    name,
+    day,
+    owner: convertId(ownerId),
+  };
+  return SnapshotModel.find(search).select(searchParameters).exec(res);
 };
 SnapshotSchema.statics.findById = (id, searchParameters, res) => {
   const search = {

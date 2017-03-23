@@ -146,11 +146,11 @@ angular.module('creationApp')
         //   'cosmo-' + rulesService.rules[r].variable, 
         //   $scope.formData.rules[rulesService.rules[r].variable]);
       }
-
       creationService.createSim($scope.formData, (err) => {
         if(err) {
           alert(err);
         } else {
+          console.log($scope.formData.name);
           creationService.navigateToSim($scope.formData.name);
         }
       });
@@ -751,8 +751,7 @@ angular.module('contextApp')
         if(err) {
           console.log(err)
         } else {
-          renderer.renderWorldAtDateWithMode(
-            { 
+          renderer.renderWorldAtDateWithMode({ 
               name:context.name
               ,days:context.days
             },
@@ -767,12 +766,6 @@ angular.module('contextApp')
                 });
               }
             });
-
-          simulationManagerService.getSimulationDescriptions((err,data) => {
-            if(err) {
-              console.log(err);
-            }
-          })
         }
       });
     }
@@ -806,11 +799,12 @@ angular.module('simulationManagerApp')
       }
     };
 
-    manager.pickSim = (id,res) => {
+    manager.pickSim = (name,res) => {
       for(var s = 0 ; s < manager.simulations.length;s++) {
-        if(manager.simulations[s].id == id) {
-          context.name = manager.simulations[s].name;
-          context.id = manager.simulations[s].id;
+
+        if(manager.simulations[s].name == name) {
+          context.name = manager.simulations[s].name;    
+          context.id = manager.simulations[s]._id;
           context.rows = manager.simulations[s].rows;
           context.columns = manager.simulations[s].columns;
           pager.changePage('Home', (err) => {});
@@ -1215,7 +1209,7 @@ angular.module("timelineApp")
         if(err) {
           res(err);
         } else {
-          $http.get('/worlds/' + context.id + '/timeline')
+          $http.get('/worlds/' + context.name + '/timeline')
             .success((data) => {
               timeline.dates = data;
               res(null,data);

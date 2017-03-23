@@ -17,8 +17,7 @@
         if(err) {
           console.log(err)
         } else {
-          renderer.renderWorldAtDateWithMode(
-            { 
+          renderer.renderWorldAtDateWithMode({ 
               name:context.name
               ,days:context.days
             },
@@ -33,12 +32,6 @@
                 });
               }
             });
-
-          simulationManagerService.getSimulationDescriptions((err,data) => {
-            if(err) {
-              console.log(err);
-            }
-          })
         }
       });
     }

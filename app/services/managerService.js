@@ -14,11 +14,12 @@ angular.module('simulationManagerApp')
       }
     };
 
-    manager.pickSim = (id,res) => {
+    manager.pickSim = (name,res) => {
       for(var s = 0 ; s < manager.simulations.length;s++) {
-        if(manager.simulations[s].id == id) {
-          context.name = manager.simulations[s].name;
-          context.id = manager.simulations[s].id;
+
+        if(manager.simulations[s].name == name) {
+          context.name = manager.simulations[s].name;    
+          context.id = manager.simulations[s]._id;
           context.rows = manager.simulations[s].rows;
           context.columns = manager.simulations[s].columns;
           pager.changePage('Home', (err) => {});

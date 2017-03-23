@@ -12,9 +12,7 @@ module.exports.createWorld = function (req, res) {
       .json({ error: 'Name, rows, columns, plant plots per province, tilt, and rotation are all required' });
   }
 
-
-
-  let snapshotData = {
+  let snapshotData = soilScape.createSimulation({
     name: req.body.name,
     rows: 80,//req.body.size.rows,
     columns: 50,//req.body.size.columns,
@@ -24,20 +22,17 @@ module.exports.createWorld = function (req, res) {
     rotation: 1,
     datasets: {},
     rules: req.body.rules,
-  };
-
-  snapshotData = soilScape.createSimulation(snapshotData);
+  });
   snapshotData.owner = req.user._doc._id;
 
   const newSnapshot = new Snapshot.SnapshotModel(snapshotData);
 
   return newSnapshot.save((err) => {
     if (err) {
-      console.log(err);
       return res.status(400).json(err);
     }
     //  Return descriptions of simulations if we create a new one
-    return module.exports.getWorldDescriptions(req, res);
+    module.exports.getWorldDescriptions(req, res);
   });
 };
 
@@ -69,12 +64,15 @@ module.exports.clearWorlds = function (req, res) {
 module.exports.getWorldDescriptions = function (req, res) {
   
   //  Get unique by owner or just grab the oldest
-  Snapshot.SnapshotModel.findUniquesByOwner(req.user._doc._id, Snapshot.descriptionData, (err, docs) => {
-    if (err) {
-      return res.status(400).json(err);
-    }
-    return res.status(200).json(docs);
-  });
+  Snapshot.SnapshotModel.findUniquesByOwner(
+    req.user._doc._id, 
+    Snapshot.descriptionData, 
+    (err, docs) => {
+      if (err) {
+        return res.status(400).json(err);
+      }
+      res.status(200).json(docs);
+    });
 };
 
 module.exports.getWorld = function (req, res) {
@@ -88,7 +86,7 @@ module.exports.getWorld = function (req, res) {
       if (err) {
         return res.status(400).json(err);
       }
-      return res.status(200).json(doc);
+      res.status(200).json(doc);
     });
 
   // exports.getSimulation(req.name, (err, simulation) => {
@@ -116,16 +114,16 @@ module.exports.getWorld = function (req, res) {
   // res.status(404).send(`Cannot find simulation named ${req}.`);
 };
 
-module.exports.getWorldTimeline = function (req, res) {
+module.exports.getSimulationTimeline = function (req, res) {
   Snapshot.SnapshotModel.findByNameAndOwner(
     req.params.name,
     req.user._doc._id,
-    Snapshot.descriptionData,
+    "name day",
     (err, docs) => {
       if (err) {
         return res.status(400).json(err);
       }
-      return res.status(200).json(docs);
+      res.status(200).json(docs);
     });
 };
 

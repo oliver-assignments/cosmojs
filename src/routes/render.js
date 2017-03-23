@@ -2,7 +2,8 @@ const renderer = require('../controllers/render.js');
 
 module.exports = (app) => {
   //app.get("render/:id/latest/:mode", renderer.renderSimulation);
-  //app.get("render/:id/:day/:mode", renderer.renderSimulation);
+  app.get("render/:name/:day/:mode", renderer.renderSimulationWithNameDayAndMode);
+  app.get("render/:id/:mode", renderer.renderSimulationWithIdandMode);
 };
 
 //     Render apis    //

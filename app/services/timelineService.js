@@ -9,7 +9,7 @@ angular.module("timelineApp")
         if(err) {
           res(err);
         } else {
-          $http.get('/worlds/' + context.id + '/timeline')
+          $http.get('/worlds/' + context.name + '/timeline')
             .success((data) => {
               timeline.dates = data;
               res(null,data);

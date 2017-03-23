@@ -1,4 +1,4 @@
-// const render = require('./render.js');
+const render = require('./render.js');
 // const request = require('./request.js');
 const controllers = require('../controllers');
 const manager = require('./manager.js');
@@ -13,6 +13,6 @@ module.exports = (app) => {
   account(app);
   manager(app);
   utility(app);
-  // render(app);
+  render(app);
   // request(app);
 };

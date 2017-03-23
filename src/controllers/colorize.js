@@ -95,7 +95,7 @@ const types = {
   vegetation: [sparseVegetation, thickVegetation],
 }
 
-function colorize (value, lowest, highest, type) => {
+colorize = (value, lowest, highest, type) => {
   const cmyk = colorValueBetween(value, lowest, highest, types[type][0], types[type][1]);
   return cmykToHex(cmyk);
 }
@@ -105,14 +105,14 @@ module.exports = (snapshot, world, mode) => {
     colors.push(mode(ctx, q));
   }
 }
-function shouldDepth (ctx, z) {
+shouldDepth = (ctx, z) => {
   return ctx.depth[z] > 0;
 }
-function colorizeDepth (ctx, z) {
+colorizeDepth = (ctx, z) => {
   return colorize(ctx.depth[z], 0, ctx.deepest, "depth");
 }
 
-function depth = (ctx, q) => {
+depth = (ctx, q) => {
   return shouldDepth(ctx,q) ? 
     colorizeDepth(ctx,q) : 
     colorize(ctx.height[q], 0, ctx.highest, "earth");

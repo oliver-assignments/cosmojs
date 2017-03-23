@@ -45,11 +45,11 @@ angular.module('creationApp')
         //   'cosmo-' + rulesService.rules[r].variable, 
         //   $scope.formData.rules[rulesService.rules[r].variable]);
       }
-
       creationService.createSim($scope.formData, (err) => {
         if(err) {
           alert(err);
         } else {
+          console.log($scope.formData.name);
           creationService.navigateToSim($scope.formData.name);
         }
       });
