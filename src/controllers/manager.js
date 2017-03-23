@@ -1,7 +1,7 @@
 const Snapshot = require('../models').Snapshot;
-// const soilScape = require('soil-scape');
+const soilScape = require('../../../soil-scape');
 
-module.exports.createSimulation = function (req, res) {
+module.exports.createWorld = function (req, res) {
   if (!req.body.name ||
       !req.body.size ||
       !req.body.plantsPer ||
@@ -11,29 +11,33 @@ module.exports.createSimulation = function (req, res) {
       .status(400)
       .json({ error: 'Name, rows, columns, plant plots per province, tilt, and rotation are all required' });
   }
-  const snapshotData = {
+
+
+
+  let snapshotData = {
     name: req.body.name,
-    rows: req.body.size.rows,
-    columns: req.body.size.columns,
+    rows: 80,//req.body.size.rows,
+    columns: 50,//req.body.size.columns,
     plotsPer: req.body.plantsPer,
-    owner: req.user._doc._id,
     day: 0,
     tilt: 0.5,
     rotation: 1,
-    datasets: [],
-    rules: [],
+    datasets: {},
+    rules: req.body.rules,
   };
 
-  // const worldData = soilScape.createSimulation(req);
+  snapshotData = soilScape.createSimulation(snapshotData);
+  snapshotData.owner = req.user._doc._id;
 
   const newSnapshot = new Snapshot.SnapshotModel(snapshotData);
 
-  return newSnapshot.save((snapshotSaveError) => {
-    if (snapshotSaveError) {
-      return res.status(400).json(snapshotSaveError);
+  return newSnapshot.save((err) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json(err);
     }
     //  Return descriptions of simulations if we create a new one
-    return module.exports.getSimulationDescriptions(req, res);
+    return module.exports.getWorldDescriptions(req, res);
   });
 };
 
@@ -47,9 +51,10 @@ module.exports.deleteWorld = function (req, res) {
     if (snapshotErr) {
       return res.status(500).json(snapshotErr);
     }
-    return module.exports.getSimulationDescriptions(req, res);
+    return module.exports.getWorldDescriptions(req, res);
   });
 };
+
 module.exports.clearWorlds = function (req, res) {
   //  Delete snapshots associated with my account
   return Snapshot.SnapshotModel.remove({ owner: req.user._doc._id },
@@ -57,16 +62,14 @@ module.exports.clearWorlds = function (req, res) {
     if (snapshotErr) {
       return res.status(500).json(snapshotErr);
     }
-    return module.exports.getSimulationDescriptions(req, res);
+    return module.exports.getWorldDescriptions(req, res);
   });
 };
 
 module.exports.getWorldDescriptions = function (req, res) {
   
-  res.status(501).send('Not implemented.');
-
   //  Get unique by owner or just grab the oldest
-  Snapshot.SnapshotModel.findByOwner(req.user._doc._id, Snapshot.descriptionData, (err, docs) => {
+  Snapshot.SnapshotModel.findUniquesByOwner(req.user._doc._id, Snapshot.descriptionData, (err, docs) => {
     if (err) {
       return res.status(400).json(err);
     }

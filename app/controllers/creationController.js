@@ -7,7 +7,7 @@ angular.module('creationApp')
        name: ""
       , rotation: 1
       , tilt: 0.75
-      , size: '{"columns":50,"rows":40}'
+      , size: {"columns":50,"rows":40}
       , plantsPer: 9
 
       , rules: {

@@ -6,7 +6,7 @@ let SnapshotModel = {};
 
 const convertId = mongoose.Types.ObjectId;
 
-const ShapshotSchema = new mongoose.Schema({
+const SnapshotSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -50,21 +50,23 @@ const ShapshotSchema = new mongoose.Schema({
     required: true,
     default: 1,
   },
-  rules: [
-    {
-      name: String,
-      type: String,
-      value: mongoose.Schema.Types.Mixed,
-    },
-  ],
-  datasets: [
-    {
-      name: String,
-      minValue: Number,
-      maxValue: Number,
-      value: [Number],
-    },
-  ],
+  rules: mongoose.Schema.Types.Mixed,
+  // rules: [
+  //   {
+  //     name: String,
+  //     type: String,
+  //     value: mongoose.Schema.Types.Mixed,
+  //   },
+  // ],
+  datasets: mongoose.Schema.Types.Mixed,
+  // datasets: [
+  //   {
+  //     name: String,
+  //     minValue: Number,
+  //     maxValue: Number,
+  //     value: [Number],
+  //   },
+  // ],
   owner: {
     type: mongoose.Schema.ObjectId,
     required: true,
@@ -76,7 +78,7 @@ const ShapshotSchema = new mongoose.Schema({
   },
 });
 
-ShapshotSchema.statics.toAPI = doc => ({
+SnapshotSchema.statics.toAPI = doc => ({
   // _id is built into your mongo document and is guaranteed to be unique
   name: doc.name,
   rows: doc.rows,
@@ -96,7 +98,7 @@ SnapshotSchema.statics.findByNameAndOwner = (name, ownerId, searchParameters, re
   };
   return SnapshotModel.find(search, res).select(searchParameters).exec(res);
 };
-ShapshotSchema.statics.findById = (id, searchParameters, res) => {
+SnapshotSchema.statics.findById = (id, searchParameters, res) => {
   const search = {
     _id: id,
   };
@@ -108,11 +110,20 @@ SnapshotSchema.statics.findByOwner = (ownerId, searchParameters, res) => {
   };
   return SnapshotModel.find(search).select(searchParameters).exec(res);
 };
+SnapshotSchema.statics.findUniquesByOwner = (ownerId, searchParameters, res) => {
+  const search = {
+    owner: convertId(ownerId),
+  };
+  return SnapshotModel
+    .find(search)
+    .select(searchParameters)
+    .exec(res);
+};
 
-SnapshotModel = mongoose.model('snapshots', ShapshotSchema);
+SnapshotModel = mongoose.model('snapshots', SnapshotSchema);
 
 module.exports.allData = "name rows columns day tilt rotation rules datasets";
-module.exports.descriptionData = "name rows columns day rules";
+module.exports.descriptionData = "name rows columns rules";
 
 module.exports.SnapshotModel = SnapshotModel;
-module.exports.ShapshotSchema = ShapshotSchema;
+module.exports.SnapshotSchema = SnapshotSchema;
