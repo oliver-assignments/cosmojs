@@ -1,9 +1,7 @@
 # CosmoJS
 ## Mean Stack Implementation of the Cosmopolitos Suite
 
-Cosmopolitos is a plate tectonics and plant genetics simulation built into an all JS website. Users can create custom simulations and request days to years of simulation time. The simulation rules are customizable, allowing for a variety of environmental pressures on the plant agents. Users can select various map modes to render the simulation data at different dates in aesthically pleasing blended colors. 
-
-Want to try the demo? [Visit the website](http://cosmopolitos.herokuapp.com/).
+Cosmopolitos is a plate tectonics and plant genetics simulation built into an all JS website. Users can create custom simulations and request days to years of simulation time. The simulation rules are customizable, allowing for a variety of environmental pressures on the plant agents. Users can select various map modes to render the simulation data at different dates in aesthically pleasing blended colors.
 
 ###Built With
 * [Random Color](https://github.com/davidmerfield/randomColor) 
